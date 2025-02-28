@@ -34,6 +34,7 @@ ___
 | 2.1.0 | Windows | Live | CN | [resources.json](https://pcdownload-huoshan.aki-game.com/pcstarter/prod/game/G152/2.1.0/6KQ52xSK2ndELoez6xDaopwdKY5m0hum/resource.json) | [Resources Base Path](https://pcdownload-huoshan.aki-game.com/pcstarter/prod/game/G152/2.1.0/6KQ52xSK2ndELoez6xDaopwdKY5m0hum/zip/) | Active |
 | 2.1.0 | Windows | Live | OS | [resources.json](https://hw-pcdownload-qcloud.aki-game.net/pcstarter/prod/game/G153/2.1.0/WoNF1cngaC4vfk7g78MAncv6hXbjbm5R/resource.json) | [Resources Base Path](https://hw-pcdownload-qcloud.aki-game.net/pcstarter/prod/game/G153/2.1.0/WoNF1cngaC4vfk7g78MAncv6hXbjbm5R/zip/) | Active |
 | 2.2.0 | Windows | BETA | CN | [resources.json](https://pcdownload-huoshan.aki-game.com/pcstarter/prod/game/G152/2.2.0/4qOQXRgFtEbYo6glSpYrG6N5yMuscF97/resource.json) | [Resources Base Path](https://pcdownload-huoshan.aki-game.com/pcstarter/prod/game/G152/2.2.0/4qOQXRgFtEbYo6glSpYrG6N5yMuscF97/zip/) | Active |
+| 2.2.0 | Windows | BETA | OS | [resources.json](https://hw-pcdownload-qcloud.aki-game.net/pcstarter/prod/game/G153/2.2.0/PNyVttT68k0NOl81JsW0YpwiG37MtIoX/resource.json) | [Resources Base Path](https://hw-pcdownload-qcloud.aki-game.net/pcstarter/prod/game/G153/2.2.0/PNyVttT68k0NOl81JsW0YpwiG37MtIoX/zip/) | Active |
 ___
 ## How to download the files?
 
