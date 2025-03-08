@@ -1,0 +1,10 @@
+[launcher]
+executable_file = 'client.exe'
+cmd_line_args = '-fileopenlog'
+current_dir = 'D:\'
+dll_list = ['patch.dll']
+
+[environment]
+vars = ['ENV1=value1', 'ENV2=value2']
+use_system_env = true
+environment_append = false

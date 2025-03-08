@@ -1,0 +1,10 @@
+[launcher]
+executable_file = 'Client-Win64-Shipping.exe'
+cmd_line_args = '-fileopenlog'
+current_dir = '<REPLACE_THIS_FOR_YOUR_GAME_FOLDER>\Client\Binaries\Win64'
+dll_list = ['<FULL_PATH_TO_SHOREKEEPER_DLL>']
+
+[environment]
+#environment = ['TESTVAR1=AAAAAA', 'TESTVAR2=AAAAAA']
+#use_system_env = true
+#environment_append = false
