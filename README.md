@@ -1,7 +1,10 @@
 # Wuthering Waves Download Library
 
 Library of Wuthering Waves Live and Beta clients.
-
+| Version | Predownload | json |
+|:-------:|:-----------:|:----:|
+| OS | Predownload.json | https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json |
+| CN | Predownload.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json |
 ___
 
 | Version | OS | Beta or Live? | Server |                                Resources URL                                 | Resources Base Path URL | Status |
