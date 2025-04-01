@@ -5,6 +5,7 @@
 | Version | File name | Download link|
 | :--- | :--- | :--- |
 | BETA 1.1.0 | installer.exe | https://pcdownload-huoshan.aki-game.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/1.5.3.0/SW7AB9XnK9C6eXcoqInsPuSRB4bWJPuu/installer.exe |
+| BETA 1.1.0 | PredownloadLauncher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 1.1.0 | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 1.1.0 | index.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
 | BETA 1.1.0 | Predownload.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
@@ -14,6 +15,7 @@
 | Version | File name | Download link|
 | :--- | :--- | :--- |
 | BETA 1.2.0 | installer.exe | https://pcdownload-huoshan.aki-game.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/1.5.3.0/SW7AB9XnK9C6eXcoqInsPuSRB4bWJPuu/installer.exe |
+| BETA 1.2.0 | PredownloadLauncher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 1.2.0 | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 1.2.0 | index.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
 | BETA 1.2.0 | Predownload.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
@@ -23,6 +25,7 @@
 | Version | File name | Download link|
 | :--- | :--- | :--- |
 | BETA 1.3.0 | installer.exe | https://pcdownload-huoshan.aki-game.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/1.6.1.0/lrXV5DtqdqnCMFAqMctsXWmZyjLeZxHF/installer.exe |
+| BETA 1.3.0 | PredownloadLauncher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 1.3.0 | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 1.3.0 | index.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
 | BETA 1.3.0 | Predownload.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
@@ -32,6 +35,7 @@
 | Version | File name | Download link|
 | :--- | :--- | :--- |
 | BETA 1.4.0 | installer.exe | https://pcdownload-huoshan.aki-game.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/1.6.4.0/DzShblKI5z3ylF1eRFo6yTgnvnZiJVLa/installer.exe |
+| BETA 1.4.0 | PredownloadLauncher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 1.4.0 | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 1.4.0 | index.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
 | BETA 1.4.0 | Predownload.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
@@ -41,6 +45,7 @@
 | Version | File name | Download link|
 | :--- | :--- | :--- |
 | BETA 2.0.0 | installer.exe | https://pcdownload-huoshan.aki-game.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/1.7.1.0/cDKioEuJvj9zCC9Q04iF3pNG2JBm9rhj/installer.exe |
+| BETA 2.0.0 | PredownloadLauncher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 2.0.0 | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 2.0.0 | index.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
 | BETA 2.0.0 | Predownload.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
@@ -50,6 +55,7 @@
 | Version | File name | Download link|
 | :--- | :--- | :--- |
 | BETA 2.1.0 | installer.exe | https://pcdownload-huoshan.aki-game.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/1.7.1.0/cDKioEuJvj9zCC9Q04iF3pNG2JBm9rhj/installer.exe |
+| BETA 2.1.0 | PredownloadLauncher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 2.1.0 | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 2.1.0 | index.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
 | BETA 2.2.0 | Predownload.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
@@ -59,6 +65,7 @@
 | Version | File name | Download link|
 | :--- | :--- | :--- |
 | BETA 2.2.0 | installer.exe | https://pcdownload-huoshan.aki-game.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/2.0.0.0/vgu4E1bmg2r5GMCydmVPcIvKpVwqdqDl/installer.exe |
+| BETA 2.2.0 | PredownloadLauncher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 2.2.0 | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 | BETA 2.2.0 | index.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
 | BETA 2.2.0 | Predownload.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
