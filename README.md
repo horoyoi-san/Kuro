@@ -68,7 +68,7 @@
 | BETA 2.3.0 | PredownloadBeta.json | https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json |
 | BETA 2.3.0 | LauncherBeta.json | https://prod-volcdn-gamestarter.kurogame.net/pcstarter/prod/starter/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/index.json |
 | BETA 2.3.0 | indexBeta.json | https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json |
-| BETA 2.3.0 | installer.exe |  |
-| BETA 2.3.0 | resource.json |  |
+| BETA 2.3.0 | installer.exe | https://hw-pcdownload-qcloud.aki-game.net/launcher/launcher/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/2.0.5.0/dEnspjJDnUBjDEottCVbhUwCbEVxNnSn/launcher.zip |
+| BETA 2.3.0 | resource.json | https://hw-pcdownload-aws.aki-game.net/launcher/game/G153/2.3.0/DHzxNllhvghLZTAgMDAkMAzqqqCjIonk/resource.json |
 
 
