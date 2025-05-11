@@ -5,25 +5,22 @@ Library of Wuthering Waves Live and Beta clients.
 # Wuthering waves CN 
 | Version | File name | Download link|
 | :--- | :--- | :--- |
-| CN | PredownloadLauncher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json |
-| CN | Predownload.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json |
-| CN | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json |
-| CN | index.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json |
-| CN | PredownloadLauncherBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
-| CN | PredownloadBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
-| CN | LauncherBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
-| CN | indexBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
+| CN | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json |
+| CN | game.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json |
+| CN | LauncherBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
+| CN | gameBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
+
 
 ```diff
 # Wuthering waves CN 
 | Version | File name | Download link|
 | :--- | :--- | :--- |
-+| CN | PredownloadLauncher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json |
-+| CN | Predownload.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json |
++| CN | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json |
++| CN | .json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json |
 -| CN | Launcher.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json |
 -| CN | index.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json |
-+| CN | PredownloadLauncherBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
-+| CN | PredownloadBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
++| CN | LauncherBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
++| CN | Beta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
 -| CN | LauncherBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/starter/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
 -| CN | indexBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
 ```
@@ -31,25 +28,22 @@ Library of Wuthering Waves Live and Beta clients.
 # Wuthering waves OS 
 | Version | File name | Download link|
 | :--- | :--- | :--- |
-| OS | PredownloadLauncher.json | https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json |
-| OS | Predownload.json | https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json |
-| OS | Launcher.json | https://prod-volcdn-gamestarter.kurogame.net/pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json |
-| OS | index.json | https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json |
-| OS | PredownloadLauncherBeta.json | https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/index.json |
-| OS | PredownloadBeta.json | https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json |
-| OS | LauncherBeta.json | https://prod-volcdn-gamestarter.kurogame.net/pcstarter/prod/starter/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/index.json |
-| OS | indexBeta.json | https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json |
+| OS | Launcher.json | https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json |
+| OS | game.json | https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json |
+| OS | LauncherBeta.json | https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/index.json |
+| OS | gameBeta.json | https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json |
+
 
 ```diff
 # Wuthering waves OS 
 | Version | File name | Download link|
 | :--- | :--- | :--- |
-+| OS | PredownloadLauncher.json | https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json |
-+| OS | Predownload.json | https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json |
++| OS | Launcher.json | https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json |
++| OS | .json | https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json |
 -| OS | Launcher.json | https://prod-volcdn-gamestarter.kurogame.net/pcstarter/prod/starter/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json |
 -| OS | index.json | https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json |
-+| OS | PredownloadLauncherBeta.json | https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/index.json |
-+| OS | PredownloadBeta.json | https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json |
++| OS | LauncherBeta.json | https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/index.json |
++| OS | Beta.json | https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json |
 -| OS | LauncherBeta.json | https://prod-volcdn-gamestarter.kurogame.net/pcstarter/prod/starter/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/index.json |
 -| OS | indexBeta.json | https://prod-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json |
 ```
@@ -90,8 +84,8 @@ ___
 | 2.2.0 | Windows | Live | OS | [resources.json](https://hw-pcdownload-qcloud.aki-game.net/launcher/game/G153/2.2.0/onnOqcAkPIKgfEoFdwJcgRzLRNLohWAm/resource.json) | [Resources Base Path](https://hw-pcdownload-qcloud.aki-game.net/launcher/game/G153/2.2.0/onnOqcAkPIKgfEoFdwJcgRzLRNLohWAm/zip/) | Active |
 | 2.3.0 | Windows | BETA | CN | [resources.json](https://pcdownload-huoshan.aki-game.com/launcher/game/G152/2.3.0/rgDCoaMikpbzZqfRwDDtKaYFZKieFDDd/resource.json) | [Resources Base Path](https://pcdownload-huoshan.aki-game.com/launcher/game/G152/2.3.0/rgDCoaMikpbzZqfRwDDtKaYFZKieFDDd/zip/) | Active |
 | 2.3.0 | Windows | BETA | OS | [resources.json](https://hw-pcdownload-aws.aki-game.net/launcher/game/G153/2.3.0/DHzxNllhvghLZTAgMDAkMAzqqqCjIonk/resource.json) | [Resources Base Path](https://hw-pcdownload-aws.aki-game.net/launcher/game/G153/2.3.0/DHzxNllhvghLZTAgMDAkMAzqqqCjIonk/zip/) | Active |
-| 2.3.0 | Windows | Live | CN | [resources.json]() | [Resources Base Path]() | Active |
-| 2.3.0 | Windows | Live | OS | [resources.json]() | [Resources Base Path]() | Active |
+| 2.3.0 | Windows | Live | CN | [resources.json](https://pcdownload-huoshan.aki-game.com/launcher/game/G152/2.3.0/RABESsjbHjMStTvIbpwBbjDnnheQBwOs/resource.json) | [Resources Base Path](https://pcdownload-huoshan.aki-game.com/launcher/game/G152/2.3.0/RABESsjbHjMStTvIbpwBbjDnnheQBwOs/zip) | Active |
+| 2.3.0 | Windows | Live | OS | [resources.json](https://hw-pcdownload-qcloud.aki-game.net/launcher/game/G153/2.3.0/RGbMgHqjYkPmFROGPOSUvcMqrNSXrGgk/resource.json) | [Resources Base Path](https://hw-pcdownload-qcloud.aki-game.net/launcher/game/G153/2.3.0/RGbMgHqjYkPmFROGPOSUvcMqrNSXrGgk/zip) | Active |
 ___
 ## How to download the files?
 
