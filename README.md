@@ -86,6 +86,10 @@ ___
 | 2.3.0 | Windows | BETA | OS | [resources.json](https://hw-pcdownload-aws.aki-game.net/launcher/game/G153/2.3.0/DHzxNllhvghLZTAgMDAkMAzqqqCjIonk/resource.json) | [Resources Base Path](https://hw-pcdownload-aws.aki-game.net/launcher/game/G153/2.3.0/DHzxNllhvghLZTAgMDAkMAzqqqCjIonk/zip/) | Active |
 | 2.3.0 | Windows | Live | CN | [resources.json](https://pcdownload-huoshan.aki-game.com/launcher/game/G152/2.3.0/RABESsjbHjMStTvIbpwBbjDnnheQBwOs/resource.json) | [Resources Base Path](https://pcdownload-huoshan.aki-game.com/launcher/game/G152/2.3.0/RABESsjbHjMStTvIbpwBbjDnnheQBwOs/zip) | Active |
 | 2.3.0 | Windows | Live | OS | [resources.json](https://hw-pcdownload-qcloud.aki-game.net/launcher/game/G153/2.3.0/RGbMgHqjYkPmFROGPOSUvcMqrNSXrGgk/resource.json) | [Resources Base Path](https://hw-pcdownload-qcloud.aki-game.net/launcher/game/G153/2.3.0/RGbMgHqjYkPmFROGPOSUvcMqrNSXrGgk/zip) | Active |
+| 2.4.0 | Windows | BETA | CN | [resources.json]() | [Resources Base Path]() | Active |
+| 2.4.0 | Windows | BETA | OS | [resources.json]() | [Resources Base Path]() | Active |
+| 2.4.0 | Windows | Live | CN | [resources.json]() | [Resources Base Path]() | Active |
+| 2.4.0 | Windows | Live | OS | [resources.json]() | [Resources Base Path]() | Active |
 ___
 ## How to download the files?
 
