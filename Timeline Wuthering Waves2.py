@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 # กำหนดวันเริ่มต้น Beta และ Release (ตัวอย่าง)
 start_dates = {
     "Drip": datetime(2025, 6, 19, 11, 0),     # 2568 6/19 11:00
-    "Beta": datetime(2025, 6, 26, 17, 0),     # 2568 6/26 17:00
-    "Release": datetime(2025, 7, 24, 20, 0)   # 2568 7/22 10:00
+    "Beta": datetime(2025, 6, 26, 10, 0),     # 2568 6/26 17:00
+    "Release": datetime(2025, 7, 24, 10, 0)   # 2568 7/22 10:00
 }
 
 start_version = 2.5
@@ -36,6 +36,7 @@ version_dates = {}
 # เริ่มต้นวันที่ Drip
 current_drip = start_dates["Drip"]
 current_beta = start_dates["Beta"]
+
 # Release เริ่มต้นอาจจะต่างจาก Beta ตามระยะห่างที่กำหนด
 current_release = current_beta + timedelta(days=release_after_beta_days)
 
