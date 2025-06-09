@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 dates_corrected = {
     "Drip": datetime.fromtimestamp(1750219200),    # 18 กรกฎาคม 2025
     "Beta": datetime.fromtimestamp(1750933200),    # 26 กรกฎาคม 2025
-    "Release": datetime.fromtimestamp(1753153200)  # 22 สิงหาคม 2025
+    "Release": datetime.fromtimestamp(1753196400)  # 22 สิงหาคม 2025
 }
 
 start_version = 2.5
