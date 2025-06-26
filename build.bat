@@ -13,7 +13,7 @@ EXIT /B 0
 
 :buildAllVariants
     SETLOCAL ENABLEDELAYEDEXPANSION
-        call:cargoReleaseBuild "cn_beta_2_4_0,%~1" %~1
+        call:cargoReleaseBuild "cn_beta_2_5_1,%~1" %~1
         : call:cargoReleaseBuild "os_live_2_2_0,%~1" %~1
     ENDLOCAL
 EXIT /B 0
