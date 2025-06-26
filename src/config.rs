@@ -51,21 +51,21 @@ pub(crate) struct InjectConfiguration {
     pub(crate) kr_curl: KrCurlConfiguration,
 }
 
-#[cfg(feature = "cn_beta_2_4_0")]
+#[cfg(feature = "cn_beta_2_5_1")]
 pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
-    f_pak_file_check: 0x42CF240,
+    f_pak_file_check: 0x439E080,
     f_pak_file_check_preamble: 0x8D48574157565540,
-    resize_grow: 0x08E1690,
-    f_print_f: 0x2912CF0,
-    add_pak_folders_entry: 0x42D6720,
-    add_pak_folders_ret: 0x42D8FC0,
+    resize_grow: 0x08EEFF0,
+    f_print_f: 0x29DA500,
+    add_pak_folders_entry: 0x43A5560,
+    add_pak_folders_ret: 0x43A7E00,
     #[cfg(all(not(feature = "only-sig-bypass"), feature = "regular"))]
     ue_curl_config: CurlConfig {
         handle_rcx_relative_offset: 0x110,
         url_handle_relative_offset: 0x880,
         http_headers_handle_relative_offset: None,
-        curl_easy_setopt: 0x66B3720,
-        curl_easy_perform: 0x3C65C60,
+        curl_easy_setopt: 0x678DFC0,
+        curl_easy_perform: 0x3D2E9F0,
     },
     #[cfg(all(not(feature = "only-sig-bypass"), feature = "regular"))]
     replacement_config: ReplacementConfig {
@@ -85,8 +85,8 @@ pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
     #[cfg(all(not(feature = "enable-sdk"), not(feature = "only-sig-bypass"), feature = "regular"))]
     disable_sdk: DisableSdkConfiguration {
         sdk_dll: s!("KRSDKEx.dll"),
-        eula_accept: 0x4F490,
-        sdk_go_away: 0x93FD0,
+        eula_accept: 0x50E20,
+        sdk_go_away: 0x95AD0,
     },
     #[cfg(all(feature = "enable-sdk", not(feature = "only-sig-bypass"), feature = "regular"))]
     kr_curl: KrCurlConfiguration {
