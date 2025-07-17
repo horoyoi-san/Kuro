@@ -1,0 +1,254 @@
+{
+  "Version DEV": "2.6.0",
+  "chunkDownloadSwitch": 0,
+  "default": {
+    "cdnList": [
+      {
+        "P": 0,
+        "K1": 1,
+        "K2": 1,
+        "url": "https://cn-download-dev.api-game.net/"
+      },
+    ],
+    "changelog": {
+
+    },
+    "changelogVisible": 0,
+    "config": {
+      "indexFileMd5": "13faf80040ab89b319bd0735b2fe2555",
+      "unCompressSize": 40729610068,
+      "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/zip/",
+      "size": 40729610068,
+      "patchType": "patch",
+      "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/indexFile.json",
+      "version": "2.6.0",
+      "patchConfig": [
+        {
+          "indexFileMd5": "501b55b779f99abcd853f61f2fbdefc7",
+          "unCompressSize": 20802937054,
+          "ext": {
+            "maxFileSize": 16769248914
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.0/resources/",
+          "size": 36333323283,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.0/indexFile.json",
+          "version": "2.5.0"
+        },
+        {
+          "indexFileMd5": "cfa95500dabfd565034f42ea10416a53",
+          "unCompressSize": 20802937054,
+          "ext": {
+            "maxFileSize": 7203634021
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.1/resources/",
+          "size": 26767708390,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.1/indexFile.json",
+          "version": "2.5.0"
+        },
+        {
+          "indexFileMd5": "0545sd8gs5q3asc5455dgs2v0av1e23ew",
+          "unCompressSize": 95338271178,
+          "ext": {
+            "maxFileSize": 14578803089
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.2/resources/",
+          "size": 99685523267,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.2/indexFile.json",
+          "version": "2.5.0"
+        },
+                {
+          "indexFileMd5": "0v2sf5h45df87h8978asb20sadcbs2sd",
+          "unCompressSize": 85655742300,
+          "ext": {
+            "maxFileSize": 75444123520
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.3/resources/",
+          "size": 955586233014,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.3/indexFile.json",
+          "version": "2.5.0"
+        },
+                {
+          "indexFileMd5": "2198rhf4e3c5vd63axvn3h5k4tker57",
+          "unCompressSize": 985244511014,
+          "ext": {
+            "maxFileSize": 85655712143
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.4/resources/",
+          "size": 521147803250,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.4/indexFile.json",
+          "version": "2.5.0"
+        },
+                {
+          "indexFileMd5": "31a4s68f74a6v1sd2gz4dv6s5d4f36s",
+          "unCompressSize": 104745788235,
+          "ext": {
+            "maxFileSize": 32004578990
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.5/resources/",
+          "size": 955881477740,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.5/indexFile.json",
+          "version": "2.5.0"
+        },
+                {
+          "indexFileMd5": "e89rhs1ssv5czx3sd1b15165dgsf1a2",
+          "unCompressSize": 102245788369,
+          "ext": {
+            "maxFileSize": 12558988860
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.6/resources/",
+          "size": 104478777430,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.6/indexFile.json",
+          "version": "2.5.0"
+        },
+                {
+          "indexFileMd5": "saf6811r0brt59t7h9db51efea35aw82",
+          "unCompressSize": 13555897720,
+          "ext": {
+            "maxFileSize": 32558697410
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.7/resources/",
+          "size": 314457966250,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.7/indexFile.json",
+          "version": "2.5.0"
+        },
+                        {
+          "indexFileMd5": "ear5g4adfg8a7w82w133sd21fsgr86e7h",
+          "unCompressSize": 78973244213,
+          "ext": {
+            "maxFileSize": 57675311447
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.8/resources/",
+          "size": 96385271230,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.8/indexFile.json",
+          "version": "2.5.0"
+        },
+                        {
+          "indexFileMd5": "ty2k5468weq32b1hrt0b4d64989e7tsdfh3",
+          "unCompressSize": 96853474120,
+          "ext": {
+            "maxFileSize": 85721037850
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.9/resources/",
+          "size": 875641124500,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.9/indexFile.json",
+          "version": "2.5.0"
+        },
+                        {
+          "indexFileMd5": "wewr213df2erybb2e19765wefsh5ns5d4qq5",
+          "unCompressSize": 341007086705,
+          "ext": {
+            "maxFileSize": 678354107746
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.10/resources/",
+          "size": 789543107750,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.10/indexFile.json",
+          "version": "2.5.0"
+        },
+                        {
+          "indexFileMd5": "JR14J687efh3ej2e1er6h87wv3mngtuii34s3",
+          "unCompressSize": 5745370767544,
+          "ext": {
+            "maxFileSize": 6358247159752
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.11/resources/",
+          "size": 7655424112500,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.11/indexFile.json",
+          "version": "2.5.0"
+        },
+                        {
+          "indexFileMd5": "j1k4e5q2bd2xz2wg4654e6q8e7r35d1gwru54y",
+          "unCompressSize": 24077343788537,
+          "ext": {
+            "maxFileSize": 78344042183675
+          },
+          "baseUrl": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.12/resources/",
+          "size": 45377754210130,
+          "indexFile": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource/80055/2.6.0/2.5.12/indexFile.json",
+          "version": "2.5.0"
+        },
+      ]
+    },
+    "resources": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/resource.json",
+    "resourcesBasePath": "dev/game/G153/2.6.0/sRrFtBpUorKqwKW2sajI5fs0v35dHrl/zip",
+    "resourcesDiff": {
+      "currentGameInfo": {
+        "fileName": "Wuthering Waves.zip",
+        "md5": "d60348f2fedb332709f0664dc2258e92",
+        "version": "2.6.0"
+      },
+      "previousGameInfo": {
+        "fileName": "Wuthering Waves.zip.zip",
+        "md5": "",
+        "version": "2.5.0"
+      }
+    },
+    "resourcesExcludePath": [],
+    "resourcesExcludePathNeedUpdate": [],
+    "sampleHashSwitch": 0,
+    "version": "2.5.0"
+  },
+  "keyFileCheckSwitch": 1,
+  "RHIOptionSwitch": 1,
+  "predownloadSwitch": 1,
+  "RHIOptionList": [
+    {
+      "cmdOption": "-dx12",
+      "text": {
+
+      },
+      "isShow": 0
+    },
+    {
+      "cmdOption": "-dx11",
+      "text": {
+        "zh-Hans": "使用DX11启动（游戏异常时选择）",
+        "de": "Start mit DX11 (bei Anomalie)",
+        "zh-Hant": "使用DX11啟動（遊戲異常時選擇）",
+        "ko": "DX11로 시작하기 (게임 에러 시 선택)",
+        "ja": "DX11で起動（不具合発生時に選択）",
+        "en": "Launch with DirectX 11 (in case of game anomalies)",
+        "fr": "Démarrer en DX11 (à choisir en cas d'anomalie)",
+        "es": "Iniciar con DirectX 11 (si hay problemas)",
+        "pt": "Iniciar com DirectX 11 (em caso de problemas no jogo)",
+        "ru": "Запуск с DirectX 11 (в случае сбоев в игре)",
+        "th": "เปิดด้วย DirectX 11 (ใช้เมื่อเกมมีปัญหา)",
+        "vi": "Khởi chạy bằng DirectX 11 (trong trường hợp trò chơi gặp sự cố)"
+      },
+      "isShow": 1
+    }
+  ],
+  "resourcesLogin": {
+    "host": "https://pc-dev-sdk-api.kurogame.net",
+    "loginSwitch": 1
+  },
+  "experiment": {
+    "download": {
+      "downloadReadBlockTimeout": "30"
+    },
+    "res_check": {
+      "fileChunkCheckSwitch": "1",
+      "fileSizeCheckSwitch": "1",
+      "resValidCheckTimeOut": "10",
+      "fileCheckWhiteListConfig": "Client/Config/RTX.json:Engine/Plugins/Runtime/Nvidia/Streamline/Binaries/ThirdParty/Win64/sl.pcl.dll"
+    }
+  },
+  "checkExeIsRunning": 0,
+  "hashCacheCheckAccSwitch": 1,
+  "keyFileCheckList": [
+    "Client/Binaries/Win64/Client-Win64-Shipping.exe",
+    "Client/Binaries/Win64/Client-Win64-ShippingBase.dll",
+    "Wuthering Waves.exe",
+    "Client/Binaries/Win64/ThirdParty/KrPcSdk_Global/KRSDKRes/KRSDK.bin"
+  ],
+  "fingerprints": [
+    "abd0851f12fabe6c77c223012318490214263661",
+    "78db074ad3d5cd803e1e422eeb7224121f5e19de"
+  ]
+},
+{
+ "Data User DEV": "Horoyoisan@kurogame.com",
+ "Code": 0, 
+  "Msg": "success",
+  "Success": true,
+  "Time": 0.000
+}
