@@ -81,3 +81,11 @@
 | BETA 2.5.0 | GameBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
 | BETA 2.5.0 | installer.exe | https://pcdownload-huoshan.aki-game.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/2.2.0.0/bvVPYjHPpfDjoBDJMkzEkZgdzOgBObTF/launcher.zip |
 | BETA 2.5.0 | resource.json | https://beta-pcdownload-huoshan.aki-game.com/launcher/game/G152/10008/2.5.1/UwzMRFJBBipgUTKVIEpZpEDEWCBQfJju/resource.json |
+
+# Wuthering waves 2.6 BETA 
+| Version | File name | Download link|
+| :--- | :--- | :--- |
+| BETA 2.6.0 | LauncherBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json |
+| BETA 2.6.0 | GameBeta.json | https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json |
+| BETA 2.6.0 | installer.exe |  |
+| BETA 2.6.0 | resource.json |  |
