@@ -86,6 +86,10 @@ ___
 | 2.5.0 | Windows | BETA | OS | [resources.json](https://beta-pcdownload-qcloud.aki-game.net/launcher/game/G153/50013/2.5.0/FfUbHzOWPloGGIHcggLqsInhKeLzLPxI/resource.json) | [Resources Base Path](https://beta-pcdownload-qcloud.aki-game.net/launcher/game/G153/50013/2.5.0/FfUbHzOWPloGGIHcggLqsInhKeLzLPxI/zip) | Active |
 | 2.5.0 | Windows | Live | CN | [resources.json]() | [Resources Base Path]() | Active |
 | 2.5.0 | Windows | Live | OS | [resources.json]() | [Resources Base Path]() | Active |
+| 2.6.0 | Windows | BETA | CN | [resources.json]() | [Resources Base Path]() | Active |
+| 2.6.0 | Windows | BETA | OS | [resources.json]() | [Resources Base Path]() | Active |
+| 2.6.0 | Windows | Live | CN | [resources.json]() | [Resources Base Path]() | Active |
+| 2.6.0 | Windows | Live | OS | [resources.json]() | [Resources Base Path]() | Active |
 ___
 ## How to download the files?
 
