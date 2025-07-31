@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 # กำหนดวันเริ่มต้น Beta และ Release (ตัวอย่าง)
 start_dates = {
-    "Drip": datetime(2025, 6, 19, 11, 0),     # 2568 6/19 11:00
+    "Drip": datetime(2025, 6, 18, 11, 0),     # 2568 6/19 11:00
     "Beta": datetime(2025, 6, 26, 10, 0),     # 2568 6/26 17:00
     "Release": datetime(2025, 7, 24, 10, 0)   # 2568 7/22 10:00
 }
@@ -70,7 +70,7 @@ for ver, dates in version_dates.items():
     release_ts = int(dates["Release"].timestamp())
 
     
-    markdown_lines.append(f"Wuthering Wevas {ver}")
+    markdown_lines.append(f"Wuthering Waves {ver}")
     markdown_lines.append(f"Version {ver} Drip: <t:{drip_ts}:R> | <t:{drip_ts}:F> | {drip_str}")
     markdown_lines.append(f"Version {ver} Beta: <t:{beta_ts}:R> | <t:{beta_ts}:F> | {beta_str}")
     markdown_lines.append(f"Version {ver} Release: <t:{release_ts}:R> | <t:{release_ts}:F> | {release_str}")
