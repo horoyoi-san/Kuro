@@ -2,19 +2,19 @@ from datetime import datetime, timedelta
 
 # กำหนดวันเริ่มต้น Beta และ Release (ตัวอย่าง)
 start_dates = {
-    "Drip": datetime(2025, 6, 18, 11, 0),     # 2568 6/19 11:00
-    "Beta": datetime(2025, 6, 26, 10, 0),     # 2568 6/26 17:00
-    "Release": datetime(2025, 7, 24, 10, 0)   # 2568 7/22 10:00
+    "Drip": datetime(2025, 7, 30, 11, 0),     # 2568 6/19 11:00
+    "Beta": datetime(2025, 8, 7, 17, 0),     # 2568 6/26 17:00
+    "Release": datetime(2025, 8, 27, 10, 0)   # 2568 7/22 10:00
 }
 
-start_version = 2.5
+start_version = 2.6
 end_version = 8.0
 
 # ปรับระยะห่างวันของแต่ละช่วง (กำหนดได้ตามต้องการ)
 drip_interval_days = 42          # ระยะห่าง Drip-to-Drip
 beta_interval_days = 42          # ระยะห่าง Beta-to-Beta
 release_interval_days = 42       # ระยะห่าง Release-to-Release
-release_after_beta_days = 28     # ระยะห่าง Release หลัง Beta (ถ้าต่างจาก beta_interval_days)
+# release_after_beta_days = 28     # ระยะห่าง Release หลัง Beta (ถ้าต่างจาก beta_interval_days)
 
 
 # ฟังก์ชันแปลงวันที่เป็นรูปแบบภาษาไทย (ตัวอย่าง)
@@ -38,8 +38,8 @@ current_drip = start_dates["Drip"]
 current_beta = start_dates["Beta"]
 
 # Release เริ่มต้นอาจจะต่างจาก Beta ตามระยะห่างที่กำหนด
-current_release = current_beta + timedelta(days=release_after_beta_days)
-
+# current_release = current_beta + timedelta(days=release_after_beta_days)
+current_release = start_dates["Release"]
 
 version = start_version
 while version <= end_version:
