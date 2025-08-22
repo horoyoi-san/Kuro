@@ -104,7 +104,7 @@ def send_webhook(data, url, title, webhook_key, last_data):
                 "color": 16711680,  # สีแดง
                 "fields": embed_fields,
                 "image": {
-                    "url": "https://cdn.oneesports.gg/cdn-data/2024/03/WutheringWaves_Game_Rover_Wallpaper-1024x576.jpg"  # เพิ่มรูปภาพที่ด้านล่าง
+                    "url": "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJuczV2MGVvOWUxa3hsaGZpMDRzOTJ5eGE2ZmczM2lvaWJhcjkzdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1RCKEiSdMbYsMWRfXR/giphy.gif"  # เพิ่มรูปภาพที่ด้านล่าง
                 }
             }
         ]
