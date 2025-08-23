@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 start_dates = {
     "Drip": datetime(2025, 7, 30, 11, 0),     # 2568 6/19 11:00
     "Beta": datetime(2025, 8, 7, 17, 0),     # 2568 6/26 17:00
-    "Release": datetime(2025, 8, 27, 10, 0)   # 2568 7/22 10:00
+    "Release": datetime(2025, 8, 28, 10, 0)   # 2568 7/22 10:00
 }
 
 start_version = 2.6
