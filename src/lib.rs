@@ -123,7 +123,9 @@ unsafe extern "win64" fn fpakfile_check_replacement(
     _: usize,
 ) -> usize {
     let pak_name = unsafe {
-        PCWSTR::from_raw(*(((*reg).rcx + 8) as *const usize) as *const u16)
+        let v4_ptr = *(((*reg).rcx + 16) as *const usize);
+        let parent_ptr = *(v4_ptr as *const usize);
+        PCWSTR::from_raw(*((parent_ptr + 8) as *const usize) as *const u16)
             .to_string()
             .unwrap()
     };
@@ -144,7 +146,9 @@ unsafe extern "win64" fn add_pak_folders(reg: *mut Registers, _: usize) {
 }
 
 unsafe extern "win64" fn debug_get_pak_folders(reg: *mut Registers, _: usize) {
-    println!("Loading Paks from: {}", unsafe { TArray::read((*reg).rbx as usize) });
+    println!("Loading Paks from: {}", unsafe {
+        TArray::read((*reg).rbx as usize)
+    });
 }
 
 #[unsafe(no_mangle)]

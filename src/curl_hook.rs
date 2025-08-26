@@ -43,6 +43,17 @@ pub(crate) fn configure_ue_curl(
             ),
             force_http: std::env::var("LOG_SERVER_FORCE_HTTP").map_env_bool(true),
         }),
+        // Watermark replacer
+        AbstractReplacer::GenericReplacer(curly_injector::replacer::GenericReplacer {
+            regex: regex::Regex::new(replacement.watermark_server_regex).unwrap(),
+            replacement: std::env::var("WATERMARK_SERVER_URL").unwrap_or(
+                replacement
+                    .replacement_defaults
+                    .watermark_server_default
+                    .to_string(),
+            ),
+            force_http: std::env::var("WATERMARK_SERVER_FORCE_HTTP").map_env_bool(true),
+        }),
     ];
     unsafe {
         curly_injector::hook_curl(
