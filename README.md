@@ -87,9 +87,9 @@ ___
 | 2.5.0 | Windows | Live | CN | [resources.json](https://pcdownload-huoshan.aki-game.com/launcher/game/G152/10003/2.5.0/ieSwSdtdphmQnCTauimbDmdmjpiqYecF/resource.json) | [Resources Base Path](https://pcdownload-huoshan.aki-game.com/launcher/game/G152/10003/2.5.0/ieSwSdtdphmQnCTauimbDmdmjpiqYecF/zip) | Active |
 | 2.5.0 | Windows | Live | OS | [resources.json](https://hw-pcdownload-qcloud.aki-game.netlauncher/game/G153/50004/2.5.0/jLYdEEVBgAgPqJgUZlVztdMPFnUJnRjQ/resource.json/) | [Resources Base Path](https://hw-pcdownload-qcloud.aki-game.netlauncher/game/G153/50004/2.5.0/jLYdEEVBgAgPqJgUZlVztdMPFnUJnRjQ/zip) | Active |
 | 2.6.0 | Windows | BETA | CN | [resources.json](https://beta-pcdownload-huoshan.aki-game.com/launcher/game/G152/10008/2.6.0/QeuZpedqfvpRYEVbIRLQdYxAfAlrrnqT/resource.json) | [Resources Base Path](https://beta-pcdownload-huoshan.aki-game.com/launcher/game/G152/10008/2.6.0/QeuZpedqfvpRYEVbIRLQdYxAfAlrrnqT/zip) | Active |
-| 2.6.0 | Windows | BETA | OS | [resources.json]() | [Resources Base Path]() | Active |
-| 2.6.0 | Windows | Live | CN | [resources.json]() | [Resources Base Path]() | Active |
-| 2.6.0 | Windows | Live | OS | [resources.json]() | [Resources Base Path]() | Active |
+| 2.6.0 | Windows | BETA | OS | [resources.json](https://beta-pcdownload-qcloud.aki-game.net/launcher/game/G153/50013/2.6.0/EbEAtWgpccTFeaMiWnSYcKOJxQWDJTxR/resource.json) | [Resources Base Path](https://beta-pcdownload-qcloud.aki-game.net/launcher/game/G153/50013/2.6.0/EbEAtWgpccTFeaMiWnSYcKOJxQWDJTxR/zip) | Active |
+| 2.6.0 | Windows | Live | CN | [resources.json](https://pcdownload-aliyun.aki-game.com/launcher/game/G152/10003/2.6.0/PvvUtPgrOKbiVwNKSABGishwOHYgFPUf/resource.json) | [Resources Base Path](https://pcdownload-aliyun.aki-game.com/launcher/game/G152/10003/2.6.0/PvvUtPgrOKbiVwNKSABGishwOHYgFPUf/zip) | Active |
+| 2.6.0 | Windows | Live | OS | [resources.json](https://hw-pcdownload-qcloud.aki-game.net/launcher/game/G153/50004/2.6.0/vjRSVRVUcliHOxTgAIIBaYdozsxSvujT/resource.json) | [Resources Base Path](https://hw-pcdownload-qcloud.aki-game.net/launcher/game/G153/50004/2.6.0/vjRSVRVUcliHOxTgAIIBaYdozsxSvujT/zip) | Active |
 ___
 ## How to download the files?
 
