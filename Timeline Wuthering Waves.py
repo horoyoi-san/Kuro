@@ -1,37 +1,75 @@
 from datetime import datetime, timedelta
 
-# วันที่เริ่มต้น 2.5 ตาม timestamp ที่คุณให้
-dates_corrected = {
-    "Drip": datetime.fromtimestamp(1750219200),    # 18 กรกฎาคม 2025
-    "Beta": datetime.fromtimestamp(1750933200),    # 26 กรกฎาคม 2025
-    "Release": datetime.fromtimestamp(1753196400)  # 22 สิงหาคม 2025
+# กำหนดวันเริ่มต้น Beta และ Release (ตัวอย่าง)
+start_dates = {
+    "Drip": datetime(2025, 7, 29, 11, 0),     # 2568 พุธ 11:00
+    "Beta CN": datetime(2025, 7, 31, 17, 0),  # 2568 พฤหัสบดี 17:00
+    "Beta OS": datetime(2025, 8, 7, 17, 0),   # 2568 พฤหัสบดี 17:00
+    "Release": datetime(2025, 8, 28, 10, 0)   # 2568 พฤหัสบดี 10:00
 }
 
-start_version = 2.5
+start_version = 2.6
 end_version = 8.0
 
-current_dates = dates_corrected.copy()
-output = []
+# ระยะห่างวัน
+drip_interval_days = 42
+beta_interval_days = 42
+release_interval_days = 42
+
+
+def format_date_th(dt):
+    days_th = ["จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์", "อาทิตย์"]
+    months_th = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+                 "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]
+    day_name = days_th[dt.weekday()]
+    return f"วัน{day_name}ที่ {dt.day} {months_th[dt.month-1]} {dt.year+543} {dt.hour:02d}:{dt.minute:02d}"
+
+
+# เก็บผลลัพธ์
+version_dates = {}
+
+# เริ่มต้นวันที่
+current_drip = start_dates["Drip"]
+current_beta_cn = start_dates["Beta CN"]
+current_beta_os = start_dates["Beta OS"]
+current_release = start_dates["Release"]
 
 version = start_version
 while version <= end_version:
-    # ข้ามเวอร์ชันที่ลงท้ายด้วย .9
-    if round(version * 10) % 10 == 9:
-        version = round(version + 0.1, 1)
-        continue
-    
-    version_str = f"{version:.1f}"
-    output.append(f"# Wuthering Waves {version_str}")
-    output.append(f"Version {version_str} Drip: <t:{int(current_dates['Drip'].timestamp())}:R> | <t:{int(current_dates['Drip'].timestamp())}:F>")
-    output.append(f"Version {version_str} Beta: <t:{int(current_dates['Beta'].timestamp())}:R> | <t:{int(current_dates['Beta'].timestamp())}:F>")
-    output.append(f"Version {version_str}: <t:{int(current_dates['Release'].timestamp())}:R> | <t:{int(current_dates['Release'].timestamp())}:F>")
-    output.append("")  # ว่างบรรทัดเพิ่มความอ่านง่าย
-    
-    # เพิ่มวันสำหรับเวอร์ชันถัดไป
-    current_dates["Drip"] += timedelta(days=42)
-    current_dates["Beta"] += timedelta(days=42)
-    current_dates["Release"] += timedelta(days=41)
-    
+    if round(version * 10) % 10 != 9:  # ข้าม .9
+        key = f"{version:.1f}"
+        version_dates[key] = {
+            "Drip": current_drip,
+            "Beta CN": current_beta_cn,
+            "Beta OS": current_beta_os,
+            "Release": current_release
+        }
+        # เลื่อนไปเวอร์ชันถัดไป
+        current_drip += timedelta(days=drip_interval_days)
+        current_beta_cn += timedelta(days=beta_interval_days)
+        current_beta_os += timedelta(days=beta_interval_days)
+        current_release += timedelta(days=release_interval_days)
     version = round(version + 0.1, 1)
 
-print("\n".join(output))
+# แปลงเป็นข้อความ Markdown
+markdown_lines = []
+for ver, dates in version_dates.items():
+    drip_str = format_date_th(dates["Drip"])
+    beta_cn_str = format_date_th(dates["Beta CN"])
+    beta_os_str = format_date_th(dates["Beta OS"])
+    release_str = format_date_th(dates["Release"])
+
+    drip_ts = int(dates["Drip"].timestamp())
+    beta_cn_ts = int(dates["Beta CN"].timestamp())
+    beta_os_ts = int(dates["Beta OS"].timestamp())
+    release_ts = int(dates["Release"].timestamp())
+
+    markdown_lines.append(f"Wuthering Waves {ver}")
+    markdown_lines.append(f" - Version {ver} Drip: <t:{drip_ts}:R> | <t:{drip_ts}:F> | {drip_str}")
+    markdown_lines.append(f" - Version {ver} Beta CN: <t:{beta_cn_ts}:R> | <t:{beta_cn_ts}:F> | {beta_cn_str}")
+    markdown_lines.append(f" - Version {ver} Beta OS: <t:{beta_os_ts}:R> | <t:{beta_os_ts}:F> | {beta_os_str}")
+    markdown_lines.append(f" - Version {ver} Release: <t:{release_ts}:R> | <t:{release_ts}:F> | {release_str}")
+    markdown_lines.append("")
+
+markdown_text = "\n".join(markdown_lines)
+print(markdown_text)
