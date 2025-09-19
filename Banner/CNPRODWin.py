@@ -49,71 +49,44 @@ def send_webhooks(data, url, title, last_data):
 def send_webhook(data, url, title, webhook_key, last_data):
     embed_fields = []
 
-    # ข้อมูลเพิ่มเติมจาก URL
+    # ดึงข้อมูลจาก index.json
     current_version = data["default"].get("version", "No data")
     current_installer = data["default"].get("installer", "No data")
     current_resources = data["default"].get("resources", "No data")
     resource_path = data["default"].get("resource", {}).get("path", "No data")
 
-    # ข้อมูลเพิ่มเติมสำหรับ "resourceChunk"
-
-
-    # ตรวจสอบว่า "predownload" มีอยู่ในข้อมูลหรือไม่
-    predownload = data["predownload"] if "predownload" in data else {}
-
-
+    predownload = data.get("predownload", {})
     predownload_resources = predownload.get("resources", "No data")
 
-
-    # เพิ่มข้อมูลลงใน embed_fields
     embed_fields.extend([
-        {
-            "name": "Version",
-            "value": current_version,
-            "inline": True
-        },
-        {
-            "name": "Installer",
-            "value": json.dumps(current_installer, ensure_ascii=False),
-            "inline": False
-        },
-        {
-            "name": "Resources",
-            "value": current_resources,  # Display the resources path as a string
-            "inline": False
-        },
-        {
-            "name": "Resource Path",
-            "value": resource_path,
-            "inline": False
-        },
-        {
-            "name": "Predownload Resources",
-            "value": predownload_resources,
-            "inline": False
-        }
-
+        {"name": "Version", "value": current_version, "inline": True},
+        {"name": "Installer", "value": json.dumps(current_installer, ensure_ascii=False), "inline": False},
+        {"name": "Resources", "value": str(current_resources), "inline": False},
+        {"name": "Resource Path", "value": resource_path, "inline": False},
+        {"name": "Predownload Resources", "value": str(predownload_resources), "inline": False},
     ])
 
-    # ส่งข้อมูลไปยัง Webhook
+    # ✅ ดึงรูปจาก en.json
+    extra_url = "https://prod-alicdn-gamestarter.kurogame.com/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/background/U82Wn9dbNc2o7zZBWz1cOnJm9r52qFKH/en.json"
+    extra_resp = requests.get(extra_url).json()
+
+    first_frame_img = extra_resp.get("firstFrameImage", "")
+    slogan_img = extra_resp.get("slogan", "")
+
+    # สร้าง embed
     webhook_data = {
         "embeds": [
             {
                 "title": title,
-                "description": f"{url}",  # แสดงลิงก์เท่านั้น
-                "color": 16711680,  # สีแดง
+                "description": f"{url}",  
+                "color": 65535,  # สีแดง
                 "fields": embed_fields,
-                "image": {
-                    "url": "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnJuczV2MGVvOWUxa3hsaGZpMDRzOTJ5eGE2ZmczM2lvaWJhcjkzdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1RCKEiSdMbYsMWRfXR/giphy.gif"  # เพิ่มรูปภาพที่ด้านล่าง
-                }
+                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},  # ✅ ใช้ slogan เป็น thumbnail
+                "image": {"url": first_frame_img}  # ✅ ใช้ firstFrameImage เป็นภาพหลัก
             }
         ]
     }
 
-    # เพิ่มรูปภาพที่ด้านบนขวา
-    webhook_data["embeds"][0]["thumbnail"] = {
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"  # เพิ่มลิงก์รูปภาพที่ด้านบนขวา
-    }
 
     webhook_url = webhook_urls.get(webhook_key)
     if webhook_url:
