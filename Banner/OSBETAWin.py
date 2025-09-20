@@ -4,9 +4,9 @@ import json
 
 # กำหนด Webhook URLs
 webhook_urls = {
-    "Wuthering Waves Beta": 'https://discord.com/api/webhooks/1288821857469988965/zLuca-BLv_K1OwlSDh-zPhKw4W8yhI13uNHJkbVY-wG8I4aEG0wIF8m2RyGWPV5BT41M',
-    "Wuthering Waves Beta 2": 'https://discord.com/api/webhooks/1290276844213506098/GUgxJKlfomvt90B_kgaZmOunWiAQ6qHkOc8BuvQXHenMyeJpA6PsyTfshHslY_VjUoJp',
-    "Teat": 'https://discord.com/api/webhooks/1291725154937999444/CeBZotZNDREE7KM7mFx7DJ--Z2TD8tKKmfgZ8gqPUrLs2Bs2rALXjm6HPqv_VKNxGfQJ'
+    "Wuthering Waves Beta": 'YOUR_DISCORD_WEBHOOK_URL',
+    "Wuthering Waves Beta 2": 'YOUR_DISCORD_WEBHOOK_URL',
+    "Teat": 'YOUR_DISCORD_WEBHOOK_URL'
 }
 
 # ตัวแปรสำหรับเก็บข้อมูลล่าสุด
