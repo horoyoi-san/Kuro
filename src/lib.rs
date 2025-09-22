@@ -26,8 +26,8 @@ static CUSTOM_PAK_FOLDER: OnceLock<String> = OnceLock::new();
 
 fn thread_func() {
     unsafe { Console::AllocConsole() }.unwrap();
-    println!("Wuthering Waves essential binary patcher");
-    println!("Don't forget to visit https://discord.gg/reversedrooms");
+    println!("Wuthering Waves สำหรับ Kuro ");
+    println!("BETA");
 
     println!("Waiting for ACE init");
     let module = unsafe { GetModuleHandleA(PCSTR::null()) }.unwrap();

@@ -53,7 +53,8 @@ pub(crate) struct InjectConfiguration {
     pub(crate) kr_curl: KrCurlConfiguration,
 }
 
-#[cfg(feature = "cn_beta_2_6_0")]
+// TODO: Too lazy
+#[cfg(feature = "cn_beta_2_7_0")]
 pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
     f_pak_file_check: 0x4618D30,
     f_pak_file_check_preamble: 0xCCCCCC050311F1E9,
@@ -105,21 +106,21 @@ pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
     }
 };
 
-#[cfg(feature = "os_beta_2_6_0")]
+#[cfg(feature = "os_beta_2_7_0")]
 pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
-    f_pak_file_check: 0x45BFFC0,
-    f_pak_file_check_preamble: 0xCCCCCC04F95A43E9,
-    resize_grow: 0x0907F50,
-    f_print_f: 0x2BD1DE0,
-    add_pak_folders_entry: 0x45B5B40,
-    add_pak_folders_ret: 0x45B83E0,
+    f_pak_file_check: 0x3FEA380,
+    f_pak_file_check_preamble: 0xCCCCCC053611C2E9,
+    resize_grow: 0x0918350,
+    f_print_f: 0x25E6740,
+    add_pak_folders_entry: 0x3FDFC20,
+    add_pak_folders_ret: 0x3FE24C0,
     #[cfg(all(not(feature = "only-sig-bypass"), feature = "regular"))]
     ue_curl_config: CurlConfig {
         handle_rcx_relative_offset: 0x110,
         url_handle_relative_offset: 0x880,
         http_headers_handle_relative_offset: None,
-        curl_easy_setopt: 0x6984060,
-        curl_easy_perform: 0x3F37ED0,
+        curl_easy_setopt: 0x6690240,
+        curl_easy_perform: 0x3961210,
     },
     #[cfg(all(not(feature = "only-sig-bypass"), feature = "regular"))]
     replacement_config: ReplacementConfig {
@@ -141,8 +142,8 @@ pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
     #[cfg(all(not(feature = "enable-sdk"), not(feature = "only-sig-bypass"), feature = "regular"))]
     disable_sdk: DisableSdkConfiguration {
         sdk_dll: s!("KRSDK.dll"),
-        eula_accept: 0xA20E0,
-        sdk_go_away: 0xAFE60,
+        eula_accept: 0xA4720,
+        sdk_go_away: 0xBBA70,
     },
     #[cfg(all(feature = "enable-sdk", not(feature = "only-sig-bypass"), feature = "regular"))]
     kr_curl: KrCurlConfiguration {
