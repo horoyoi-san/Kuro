@@ -84,15 +84,23 @@ def send_webhook(data, url, title, webhook_url):
         {"name": "Predownload Resources", "value": str(predownload_resources), "inline": False},
     ]
 
+    # ✅ ดึงรูปจาก en.json
+    extra_url = "https://prod-alicdn-gamestarter.kurogame.com/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/background/U82Wn9dbNc2o7zZBWz1cOnJm9r52qFKH/en.json"
+    extra_resp = requests.get(extra_url).json()
+
+    first_frame_img = extra_resp.get("firstFrameImage", "")
+    slogan_img = extra_resp.get("slogan", "")
+
+    # สร้าง embed
     webhook_data = {
         "embeds": [
             {
                 "title": title,
-                "description": url,
-                "color": 65535,
+                "description": f"{url}",  
+                "color": 65535,  # สีแดง
                 "fields": embed_fields,
-                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
-                "image": {"url": "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"}
+                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},  # ✅ ใช้ slogan เป็น thumbnail
+                "image": {"url": first_frame_img}  # ✅ ใช้ firstFrameImage เป็นภาพหลัก
             }
         ]
     }
