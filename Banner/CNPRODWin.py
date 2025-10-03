@@ -16,38 +16,44 @@ def log_and_check(api_url, game_name):
     try:
         resp = requests.get(api_url, timeout=10)
         data_text = resp.text
+        data_json = json.loads(data_text)
     except Exception as e:
         print(f"❌ Error fetching {game_name}: {e}")
         return False, None
 
+    # สร้าง hash ของข้อมูล
     current_hash = hashlib.md5(data_text.encode()).hexdigest()
 
+    # สร้างโฟลเดอร์ log
     log_dir = os.path.join(os.getcwd(), "Kuro", "log", game_name)
     os.makedirs(log_dir, exist_ok=True)
 
     hash_file = os.path.join(log_dir, "last_hash.txt")
     raw_file = os.path.join(log_dir, "raw_log.jsonl")
 
+    # บันทึก JSON ดิบทุกครั้ง
     try:
         with open(raw_file, "a", encoding="utf-8") as f:
             f.write(json.dumps({
                 "timestamp": datetime.now(timezone.utc).isoformat(),
-                "data": json.loads(data_text)
+                "data": data_json
             }, ensure_ascii=False) + "\n")
         print(f"✅ Wrote raw log for {game_name}")
     except Exception as e:
         print(f"❌ Error writing log file for {game_name}: {e}")
 
+    # อ่าน hash ก่อนหน้า
     last_hash = ""
     if os.path.exists(hash_file):
         with open(hash_file, "r") as f:
             last_hash = f.read().strip()
 
+    # ตรวจสอบว่าข้อมูลเปลี่ยนแปลงหรือไม่
     if current_hash != last_hash:
         with open(hash_file, "w") as f:
             f.write(current_hash)
-        return True, json.loads(data_text)
-    return False, None
+        return True, data_json
+    return False, data_json  # ส่ง data_json เพื่อให้ส่ง webhook ทุกครั้ง
 
 # ================= Discord =================
 def send_webhooks(data, url, title):
@@ -59,21 +65,24 @@ def send_webhook(data, url, title, webhook_url):
         print(f"⚠️ Webhook URL ไม่ถูกต้อง, ข้ามการส่ง")
         return
 
-    embed_fields = []
+    if not isinstance(data, dict) or "default" not in data:
+        print(f"❌ Unexpected JSON format for {title}, skipping webhook")
+        return
 
-    current_version = data["default"].get("version", "No data")
-    current_installer = data["default"].get("installer", "No data")
-    current_resources = data["default"].get("resources", "No data")
-    resource_path = data["default"].get("resource", {}).get("path", "No data")
+    default_data = data["default"]
+    current_version = default_data.get("version", "No data")
+    current_installer = default_data.get("installer", "No data")
+    current_resources = default_data.get("resources", "No data")
+    resource_path = default_data.get("resource", {}).get("path", "No data")
     predownload_resources = data.get("predownload", {}).get("resources", "No data")
 
-    embed_fields.extend([
-        {"name": "Version", "value": current_version, "inline": True},
+    embed_fields = [
+        {"name": "Version", "value": str(current_version), "inline": True},
         {"name": "Installer", "value": json.dumps(current_installer, ensure_ascii=False), "inline": False},
         {"name": "Resources", "value": str(current_resources), "inline": False},
         {"name": "Resource Path", "value": resource_path, "inline": False},
         {"name": "Predownload Resources", "value": str(predownload_resources), "inline": False},
-    ])
+    ]
 
     webhook_data = {
         "embeds": [
@@ -105,10 +114,10 @@ def check_for_updates():
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
-        if changed and data:
+        if data:
             send_webhooks(data, api_url, game_name)
-        else:
+        if not changed:
             print(f"[{game_name}] No changes detected")
 
 if __name__ == "__main__":
-    check_for_updates()  # รันครั้งเดียวจบ
+    check_for_updates()  # รันครั้งเดียว
