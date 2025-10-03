@@ -1,135 +1,112 @@
 import requests
 import time
 import json
+import os
 
-# กำหนด Webhook URLs
-webhook_urls = {
-    "Wuthering Waves Beta": 'YOUR_DISCORD_WEBHOOK_URL',
-    "Wuthering Waves Beta 2": 'YOUR_DISCORD_WEBHOOK_URL',
-    "Teat": 'YOUR_DISCORD_WEBHOOK_URL'
-}
+# ================== Discord Webhook URLs ==================
+webhook_urls = [
+    os.environ.get("WEBHOOK1"),
+    os.environ.get("WEBHOOK2"),
+    os.environ.get("WEBHOOK3"),
+]
 
-# ตัวแปรสำหรับเก็บข้อมูลล่าสุด
+# ================== ตัวแปรเก็บข้อมูลล่าสุด ==================
 last_data_1 = None
 last_data_2 = None
 
-# ฟังก์ชันในการตรวจสอบและส่งข้อความไปยัง Discord Webhook
+# ================== ฟังก์ชันตรวจสอบและส่ง Discord ==================
 def check_for_updates():
     global last_data_1, last_data_2
 
     url_1 = "https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json"
     url_2 = "https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json"
 
-    # ตรวจสอบข้อมูลจาก URL ที่ 1
-    response_1 = requests.get(url_1)
-    if response_1.status_code == 200:
+    # ====== URL 1 ======
+    try:
+        response_1 = requests.get(url_1, timeout=10)
+        response_1.raise_for_status()
         data_1 = response_1.json()
         if data_1 != last_data_1:
             send_webhooks(data_1, url_1, "Wuthering Waves BETA CN (LAUNCHER)", last_data_1)
             last_data_1 = data_1
-    else:
-        print(f"ไม่สามารถดึงข้อมูลจาก URL 1: {response_1.status_code}, {response_1.text}")
+        else:
+            print("[URL 1] No changes detected")
+    except Exception as e:
+        print(f"❌ ไม่สามารถดึงข้อมูลจาก URL 1: {e}")
 
-    # ตรวจสอบข้อมูลจาก URL ที่ 2
-    response_2 = requests.get(url_2)
-    if response_2.status_code == 200:
+    # ====== URL 2 ======
+    try:
+        response_2 = requests.get(url_2, timeout=10)
+        response_2.raise_for_status()
         data_2 = response_2.json()
         if data_2 != last_data_2:
             send_webhooks(data_2, url_2, "Wuthering Waves BETA CN (Game)", last_data_2)
             last_data_2 = data_2
-    else:
-        print(f"ไม่สามารถดึงข้อมูลจาก URL 2: {response_2.status_code}, {response_2.text}")
+        else:
+            print("[URL 2] No changes detected")
+    except Exception as e:
+        print(f"❌ ไม่สามารถดึงข้อมูลจาก URL 2: {e}")
 
-# ฟังก์ชันในการส่งข้อมูลไปยัง Discord Webhook หลายอัน
+# ================== ส่ง webhook หลายตัว ==================
 def send_webhooks(data, url, title, last_data):
-    for webhook_key in webhook_urls:
-        send_webhook(data, url, title, webhook_key, last_data)
+    for webhook_key, webhook_url in webhook_urls.items():
+        send_webhook(data, url, title, webhook_key, webhook_url, last_data)
 
-# ฟังก์ชันในการส่งข้อมูลไปยัง Discord Webhook หนึ่งอัน
-def send_webhook(data, url, title, webhook_key, last_data):
+# ================== ส่ง webhook ตัวเดียว ==================
+def send_webhook(data, url, title, webhook_key, webhook_url, last_data):
+    if not webhook_url:
+        print(f"⚠️ Webhook URL สำหรับ {webhook_key} ไม่ถูกต้อง, ข้ามการส่ง")
+        return
+
+    # ================== Prepare Embed Fields ==================
     embed_fields = []
-
-    # ข้อมูลเพิ่มเติมจาก URL
     current_version = data["default"].get("version", "No data")
     current_installer = data["default"].get("installer", "No data")
     current_resources = data["default"].get("resources", "No data")
     resource_path = data["default"].get("resource", {}).get("path", "No data")
     resource_version = data["default"].get("resource", {}).get("version", "No data")
-
-    # ข้อมูลเพิ่มเติมสำหรับ "resourceChunk"
-
-
-    # ตรวจสอบว่า "predownload" มีอยู่ในข้อมูลหรือไม่
-    predownload = data["predownload"] if "predownload" in data else {}
-
-
+    predownload = data.get("predownload", {})
     predownload_resources = predownload.get("resources", "No data")
 
-
-    # เพิ่มข้อมูลลงใน embed_fields
     embed_fields.extend([
-        {
-            "name": "Version",
-            "value": current_version,
-            "inline": True
-        },
-        {
-            "name": "Resource Version",
-            "value": resource_version,
-            "inline": True
-        },
-        {
-            "name": "Installer",
-            "value": json.dumps(current_installer, ensure_ascii=False),
-            "inline": False
-        },
-        {
-            "name": "Resources",
-            "value": current_resources,  # Display the resources path as a string
-            "inline": False
-        },
-        {
-            "name": "Resource Path",
-            "value": resource_path,
-            "inline": False
-        },
-        {
-            "name": "Predownload Resources",
-            "value": predownload_resources,
-            "inline": False
-        }
-
+        {"name": "Version", "value": current_version, "inline": True},
+        {"name": "Resource Version", "value": resource_version, "inline": True},
+        {"name": "Installer", "value": json.dumps(current_installer, ensure_ascii=False), "inline": False},
+        {"name": "Resources", "value": str(current_resources), "inline": False},
+        {"name": "Resource Path", "value": resource_path, "inline": False},
+        {"name": "Predownload Resources", "value": str(predownload_resources), "inline": False},
     ])
 
-    # ส่งข้อมูลไปยัง Webhook
+    # ================== Webhook Payload ==================
     webhook_data = {
         "embeds": [
             {
                 "title": title,
-                "description": f"{url}",  # แสดงลิงก์เท่านั้น
+                "description": url,
                 "color": 16711680,  # สีแดง
                 "fields": embed_fields,
+                "thumbnail": {
+                    "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"
+                },
                 "image": {
-                    "url": "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"  # เพิ่มรูปภาพที่ด้านล่าง
+                    "url": "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"
                 }
             }
         ]
     }
 
-    # เพิ่มรูปภาพที่ด้านบนขวา
-    webhook_data["embeds"][0]["thumbnail"] = {
-        "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"  # เพิ่มลิงก์รูปภาพที่ด้านบนขวา
-    }
-
-    webhook_url = webhook_urls.get(webhook_key)
-    if webhook_url:
-        response = requests.post(webhook_url, json=webhook_data)
+    # ================== ส่งไปยัง Discord ==================
+    try:
+        response = requests.post(webhook_url, json=webhook_data, timeout=10)
         if response.status_code == 204:
-            print(f"ส่งข้อความ {title} ไปยัง Discord ({webhook_key}) เรียบร้อยแล้ว!")
+            print(f"✅ ส่งข้อความ {title} ไปยัง Discord ({webhook_key}) เรียบร้อยแล้ว!")
         else:
-            print(f"ไม่สามารถส่งข้อความ {title} ได้ที่ Webhook {webhook_key}: {response.status_code}, {response.text}")
+            print(f"❌ ไม่สามารถส่ง {title} ได้ที่ {webhook_key}: {response.status_code}, {response.text}")
+    except Exception as e:
+        print(f"❌ Error sending webhook {webhook_key}: {e}")
 
-# ตรวจสอบข้อมูลทุก 60 วินาที
-while True:
-    check_for_updates()
-    time.sleep(1)
+# ================== Loop ทุก 60 วินาที ==================
+if __name__ == "__main__":
+    while True:
+        check_for_updates()
+        time.sleep(60)

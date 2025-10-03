@@ -1,60 +1,79 @@
 import requests
 import time
 import json
+import os
+import hashlib
+from datetime import datetime, timezone
 
-# กำหนด Webhook URLs
-webhook_urls = {
-    "Wuthering Waves": 'YOUR_DISCORD_WEBHOOK_URL',
-    "Wuthering Waves 2": 'YOUR_DISCORD_WEBHOOK_URL',
-    "Teat": 'YOUR_DISCORD_WEBHOOK_URL'
-}
+# ================== Discord Webhook URLs ==================
+webhook_urls = [
+    os.environ.get("WEBHOOK1"),
+    os.environ.get("WEBHOOK2"),
+    os.environ.get("WEBHOOK3"),
+]
 
-# ตัวแปรสำหรับเก็บข้อมูลล่าสุด
-last_data_1 = None
-last_data_2 = None
+# ================== Logging System ==================
+def log_and_check(api_url, game_name):
+    """ดึงข้อมูลจาก API, เก็บ log, และตรวจสอบการเปลี่ยนแปลง"""
+    try:
+        resp = requests.get(api_url, timeout=10)
+        data_text = resp.text
+    except Exception as e:
+        print(f"❌ Error fetching {game_name}: {e}")
+        return False, None
 
-# ฟังก์ชันในการตรวจสอบและส่งข้อความไปยัง Discord Webhook
-def check_for_updates():
-    global last_data_1, last_data_2
+    current_hash = hashlib.md5(data_text.encode()).hexdigest()
 
-    url_1 = "https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json"
-    url_2 = "https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json"
+    log_dir = os.path.join(os.getcwd(), "Kuro", "log", game_name)
+    os.makedirs(log_dir, exist_ok=True)
 
-    # ตรวจสอบข้อมูลจาก URL ที่ 1
-    response_1 = requests.get(url_1)
-    if response_1.status_code == 200:
-        data_1 = response_1.json()
-        if data_1 != last_data_1:
-            send_webhooks(data_1, url_1, "Wuthering Waves OS (LAUNCHER)", last_data_1)
-            last_data_1 = data_1
-    else:
-        print(f"ไม่สามารถดึงข้อมูลจาก URL 1: {response_1.status_code}, {response_1.text}")
+    hash_file = os.path.join(log_dir, "last_hash.txt")
+    raw_file = os.path.join(log_dir, "raw_log.jsonl")
 
-    # ตรวจสอบข้อมูลจาก URL ที่ 2
-    response_2 = requests.get(url_2)
-    if response_2.status_code == 200:
-        data_2 = response_2.json()
-        if data_2 != last_data_2:
-            send_webhooks(data_2, url_2, "Wuthering Waves OS (Game)", last_data_2)
-            last_data_2 = data_2
-    else:
-        print(f"ไม่สามารถดึงข้อมูลจาก URL 2: {response_2.status_code}, {response_2.text}")
+    # Save raw JSON
+    try:
+        with open(raw_file, "a", encoding="utf-8") as f:
+            f.write(json.dumps({
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "data": json.loads(data_text)
+            }, ensure_ascii=False) + "\n")
+        print(f"✅ Wrote raw log for {game_name}")
+    except Exception as e:
+        print(f"❌ Error writing log file for {game_name}: {e}")
 
-# ฟังก์ชันในการส่งข้อมูลไปยัง Discord Webhook หลายอัน
-def send_webhooks(data, url, title, last_data):
-    for webhook_key in webhook_urls:
-        send_webhook(data, url, title, webhook_key, last_data)
+    # Load last hash
+    last_hash = ""
+    if os.path.exists(hash_file):
+        with open(hash_file, "r") as f:
+            last_hash = f.read().strip()
 
-# ฟังก์ชันในการส่งข้อมูลไปยัง Discord Webhook หนึ่งอัน
-def send_webhook(data, url, title, webhook_key, last_data):
+    # เปรียบเทียบ hash
+    if current_hash != last_hash:
+        with open(hash_file, "w") as f:
+            f.write(current_hash)
+        return True, json.loads(data_text)
+
+    return False, None
+
+# ================== Discord Webhook Sender ==================
+def send_webhooks(data, url, title, last_data=None):
+    """ส่งข้อมูลไปยัง Discord Webhook ทุกตัว"""
+    for webhook_url in webhook_urls:
+        send_webhook(data, url, title, webhook_url, last_data)
+
+def send_webhook(data, url, title, webhook_url, last_data=None):
+    """ส่งข้อมูลไปยัง Discord Webhook ตัวเดียว"""
+    if not webhook_url:
+        print(f"⚠️ Webhook URL ไม่ถูกต้อง, ข้ามการส่ง")
+        return
+
+    # ================== Prepare Embed Fields ==================
     embed_fields = []
 
-    # ดึงข้อมูลจาก index.json
     current_version = data["default"].get("version", "No data")
     current_installer = data["default"].get("installer", "No data")
     current_resources = data["default"].get("resources", "No data")
     resource_path = data["default"].get("resource", {}).get("path", "No data")
-
     predownload = data.get("predownload", {})
     predownload_resources = predownload.get("resources", "No data")
 
@@ -66,36 +85,56 @@ def send_webhook(data, url, title, webhook_key, last_data):
         {"name": "Predownload Resources", "value": str(predownload_resources), "inline": False},
     ])
 
-    # ✅ ดึงรูปจาก en.json
+    # ================== Extra Images ==================
     extra_url = "https://prod-alicdn-gamestarter.kurogame.com/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/background/U82Wn9dbNc2o7zZBWz1cOnJm9r52qFKH/en.json"
-    extra_resp = requests.get(extra_url).json()
+    try:
+        extra_resp = requests.get(extra_url, timeout=10).json()
+    except:
+        extra_resp = {}
 
     first_frame_img = extra_resp.get("firstFrameImage", "")
     slogan_img = extra_resp.get("slogan", "")
 
-    # สร้าง embed
+    # ================== Build Webhook Payload ==================
     webhook_data = {
         "embeds": [
             {
                 "title": title,
-                "description": f"{url}",  
-                "color": 65535,  # สีแดง
+                "description": url,
+                "color": 65535,
                 "fields": embed_fields,
-                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},  # ✅ ใช้ slogan เป็น thumbnail
-                "image": {"url": first_frame_img}  # ✅ ใช้ firstFrameImage เป็นภาพหลัก
+                "thumbnail": {"url": slogan_img or "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+                "image": {"url": first_frame_img}
             }
         ]
     }
 
-    webhook_url = webhook_urls.get(webhook_key)
-    if webhook_url:
-        response = requests.post(webhook_url, json=webhook_data)
+    # ================== Send to Discord ==================
+    try:
+        response = requests.post(webhook_url, json=webhook_data, timeout=10)
         if response.status_code == 204:
-            print(f"ส่งข้อความ {title} ไปยัง Discord ({webhook_key}) เรียบร้อยแล้ว!")
+            print(f"✅ ส่งข้อความ {title} ไปยัง Discord เรียบร้อยแล้ว!")
         else:
-            print(f"ไม่สามารถส่งข้อความ {title} ได้ที่ Webhook {webhook_key}: {response.status_code}, {response.text}")
+            print(f"❌ ไม่สามารถส่ง {title} ได้: {response.status_code}, {response.text}")
+    except Exception as e:
+        print(f"❌ Error sending webhook: {e}")
 
-# ตรวจสอบข้อมูลทุก 60 วินาที
-while True:
-    check_for_updates()
-    time.sleep(60)
+# ================== Main Function ==================
+def check_for_updates():
+    urls = [
+        ("https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json", "Wuthering Waves OS (Launcher)"),
+        ("https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json", "Wuthering Waves OS (Game)")
+    ]
+    for api_url, game_name in urls:
+        changed, data = log_and_check(api_url, game_name)
+        if changed and data:
+            send_webhooks(data, api_url, game_name, None)
+        else:
+            print(f"[{game_name}] No changes detected")
+
+# ================== Run Loop ==================
+if __name__ == "__main__":
+    while True:
+        check_for_updates()
+        time.sleep(60)
+
