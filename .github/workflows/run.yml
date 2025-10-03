@@ -31,10 +31,11 @@ jobs:
 
         run: |
 
-          python Banner/CNPRODWin.py
           python Banner/CNBETAWin.py
-          python Banner/OSPRODWin.py
+          python Banner/CNPRODWin.py
           python Banner/OSBETAWin.py
+          python Banner/OSPRODWin.py
+
           
       - name: Commit and Push logs
         run: |
