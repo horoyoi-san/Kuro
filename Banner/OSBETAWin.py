@@ -110,7 +110,7 @@ def send_webhook(data, url, title, webhook_url):
 def check_for_updates():
     urls = [
         ("https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/index.json", "Wuthering Waves BETA OS (Launcher)"),
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json", "Wuthering Waves BETA OS (Game)")
+        ("https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json", "Wuthering Waves BETA OS (Game)")
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
