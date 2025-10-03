@@ -51,12 +51,15 @@ def log_and_check(api_url, game_name):
     return False, None
 
 # ฟังก์ชันส่งข้อมูลไปยัง Discord
-def send_webhooks(data, url, title):
+def send_webhooks(data, url, title, last_data):
     for webhook_url in webhook_urls:
-        if webhook_url:
-            send_webhook(data, url, title, webhook_url)
+        send_webhook(data, url, title, webhook_url, last_data)
 
-def send_webhook(data, url, title, webhook_url):
+def send_webhook(data, url, title, webhook_url, last_data):
+    if not webhook_url:
+        print(f"⚠️ Webhook URL ไม่ถูกต้อง, ข้ามการส่ง")
+        return
+
     embed_fields = []
 
     current_version = data["default"].get("version", "No data")
@@ -87,10 +90,10 @@ def send_webhook(data, url, title, webhook_url):
         "embeds": [
             {
                 "title": title,
-                "description": f"{url}",
+                "description": url,
                 "color": 65535,
                 "fields": embed_fields,
-                "thumbnail": {"url": slogan_img if slogan_img else "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+                "thumbnail": {"url": slogan_img or "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
                 "image": {"url": first_frame_img}
             }
         ]
@@ -99,9 +102,9 @@ def send_webhook(data, url, title, webhook_url):
     try:
         response = requests.post(webhook_url, json=webhook_data, timeout=10)
         if response.status_code == 204:
-            print(f"✅ Sent {title} to Discord successfully")
+            print(f"✅ ส่งข้อความ {title} ไปยัง Discord เรียบร้อยแล้ว!")
         else:
-            print(f"❌ Failed to send {title}: {response.status_code}, {response.text}")
+            print(f"❌ ไม่สามารถส่ง {title} ได้: {response.status_code}, {response.text}")
     except Exception as e:
         print(f"❌ Error sending webhook: {e}")
 
