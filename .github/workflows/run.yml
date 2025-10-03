@@ -30,10 +30,10 @@ jobs:
           WEBHOOK3: ${{ secrets.WEBHOOK3 }}
 
         run: |
-          python API/CNBETAWin.py
-          python API/CNPRODWin.py
-          python API/CNPRODWin.py
-          python API/OSBETAWin.py
+          python Banner/CNBETAWin.py
+          python Banner/CNPRODWin.py
+          python Banner/CNPRODWin.py
+          python Banner/OSBETAWin.py
           
       - name: Commit and Push logs
         run: |
