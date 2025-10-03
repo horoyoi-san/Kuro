@@ -136,5 +136,5 @@ def check_for_updates():
 if __name__ == "__main__":
     while True:
         check_for_updates()
-        time.sleep(10)
+        time.sleep(3)
 
