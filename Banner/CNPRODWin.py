@@ -111,4 +111,4 @@ def check_for_updates():
             print(f"[{game_name}] No changes detected")
 
 if __name__ == "__main__":
-    check_for_updates()  # รันแค่ครั้งเดียว ไม่ต้อง while True
+    check_for_updates()  # รันครั้งเดียวจบ
