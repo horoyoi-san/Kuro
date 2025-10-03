@@ -2,7 +2,7 @@ name: Kuro Game Monitor
 
 on:
   schedule:
-    - cron: "*/5 * * * *"  # ทุก 5 นาที
+    - cron: "*/6 * * * *"
   workflow_dispatch:
 
 jobs:
@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -23,13 +25,27 @@ jobs:
 
       - name: Run all game monitors
         env:
-          KuroWEBHOOK1: ${{ secrets.WEBHOOK1 }}
-          KuroWEBHOOK2: ${{ secrets.WEBHOOK2 }}
-          KuroWEBHOOK3: ${{ secrets.WEBHOOK3 }}
+          WEBHOOK1: ${{ secrets.WEBHOOK1 }}
+          WEBHOOK2: ${{ secrets.WEBHOOK2 }}
+          WEBHOOK3: ${{ secrets.WEBHOOK3 }}
 
         run: |
-          python API/GI.py
-          python API/HI3.py
-          python API/HSR.py
-          python API/ZZZ.py
-          python API/HNA.py
+          python API/CNBETAWin.py
+          python API/CNPRODWin.py
+          python API/CNPRODWin.py
+          python API/OSBETAWin.py
+          
+      - name: Commit and Push logs
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          mkdir -p Hoyo/log
+          git add Hoyo/log
+          if ! git diff --cached --quiet; then
+            git commit -m "Update logs [skip ci]"
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+          else
+            echo "No changes to commit"
+          fi
+
+
