@@ -122,10 +122,10 @@ def check_for_updates():
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
-        if data:
-            send_webhooks(data, api_url, game_name)
-        if not changed:
-            print(f"[{game_name}] No changes detected")
+    if changed and data:
+        send_webhooks(data, api_url, game_name)
+    else:
+        print(f"[{game_name}] No changes detected")
 
 if __name__ == "__main__":
     check_for_updates()  # รันครั้งเดียว
