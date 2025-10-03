@@ -5,15 +5,16 @@ import os
 import hashlib
 from datetime import datetime, timezone
 
-# กำหนด Webhook URLs
+# ================== Discord Webhook URLs ==================
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
     os.environ.get("WEBHOOK2"),
     os.environ.get("WEBHOOK3"),
 ]
 
-# ============ Logging System ============
+# ================== Logging System ==================
 def log_and_check(api_url, game_name):
+    """ดึงข้อมูลจาก API, เก็บ log, และตรวจสอบการเปลี่ยนแปลง"""
     try:
         resp = requests.get(api_url, timeout=10)
         data_text = resp.text
@@ -29,6 +30,7 @@ def log_and_check(api_url, game_name):
     hash_file = os.path.join(log_dir, "last_hash.txt")
     raw_file = os.path.join(log_dir, "raw_log.jsonl")
 
+    # Save raw JSON
     try:
         with open(raw_file, "a", encoding="utf-8") as f:
             f.write(json.dumps({
@@ -39,27 +41,33 @@ def log_and_check(api_url, game_name):
     except Exception as e:
         print(f"❌ Error writing log file for {game_name}: {e}")
 
+    # Load last hash
     last_hash = ""
     if os.path.exists(hash_file):
         with open(hash_file, "r") as f:
             last_hash = f.read().strip()
 
+    # เปรียบเทียบ hash
     if current_hash != last_hash:
         with open(hash_file, "w") as f:
             f.write(current_hash)
         return True, json.loads(data_text)
+
     return False, None
 
-# ฟังก์ชันส่งข้อมูลไปยัง Discord
-def send_webhooks(data, url, title, last_data):
+# ================== Discord Webhook Sender ==================
+def send_webhooks(data, url, title, last_data=None):
+    """ส่งข้อมูลไปยัง Discord Webhook ทุกตัว"""
     for webhook_url in webhook_urls:
         send_webhook(data, url, title, webhook_url, last_data)
 
-def send_webhook(data, url, title, webhook_url, last_data):
+def send_webhook(data, url, title, webhook_url, last_data=None):
+    """ส่งข้อมูลไปยัง Discord Webhook ตัวเดียว"""
     if not webhook_url:
         print(f"⚠️ Webhook URL ไม่ถูกต้อง, ข้ามการส่ง")
         return
 
+    # ================== Prepare Embed Fields ==================
     embed_fields = []
 
     current_version = data["default"].get("version", "No data")
@@ -77,6 +85,7 @@ def send_webhook(data, url, title, webhook_url, last_data):
         {"name": "Predownload Resources", "value": str(predownload_resources), "inline": False},
     ])
 
+    # ================== Extra Images ==================
     extra_url = "https://prod-alicdn-gamestarter.kurogame.com/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/background/U82Wn9dbNc2o7zZBWz1cOnJm9r52qFKH/en.json"
     try:
         extra_resp = requests.get(extra_url, timeout=10).json()
@@ -86,6 +95,7 @@ def send_webhook(data, url, title, webhook_url, last_data):
     first_frame_img = extra_resp.get("firstFrameImage", "")
     slogan_img = extra_resp.get("slogan", "")
 
+    # ================== Build Webhook Payload ==================
     webhook_data = {
         "embeds": [
             {
@@ -99,6 +109,7 @@ def send_webhook(data, url, title, webhook_url, last_data):
         ]
     }
 
+    # ================== Send to Discord ==================
     try:
         response = requests.post(webhook_url, json=webhook_data, timeout=10)
         if response.status_code == 204:
@@ -108,7 +119,7 @@ def send_webhook(data, url, title, webhook_url, last_data):
     except Exception as e:
         print(f"❌ Error sending webhook: {e}")
 
-# ฟังก์ชันหลัก
+# ================== Main Function ==================
 def check_for_updates():
     urls = [
         ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json", "Wuthering Waves CN (Launcher)"),
@@ -117,11 +128,12 @@ def check_for_updates():
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
         if changed and data:
-            send_webhooks(data, api_url, game_name)
+            send_webhooks(data, api_url, game_name, None)
         else:
             print(f"[{game_name}] No changes detected")
 
-# Loop ทุก 60 วินาที
-while True:
-    check_for_updates()
-    time.sleep(60)
+# ================== Run Loop ==================
+if __name__ == "__main__":
+    while True:
+        check_for_updates()
+        time.sleep(60)
