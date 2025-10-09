@@ -85,7 +85,7 @@ def send_webhook(data, url, title, webhook_url):
     ]
 
     # ✅ ดึงรูปจาก en.json
-    extra_url = "https://prod-alicdn-gamestarter.kurogame.com/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/background/U82Wn9dbNc2o7zZBWz1cOnJm9r52qFKH/en.json"
+    extra_url = "https://prod-alicdn-gamestarter.kurogame.com/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/background/nGmWMz0qGdCVicnGNmDmFUuoBwdd2ND8/en.json"
     extra_resp = requests.get(extra_url).json()
 
     first_frame_img = extra_resp.get("firstFrameImage", "")
