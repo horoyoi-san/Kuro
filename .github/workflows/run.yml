@@ -2,7 +2,7 @@ name: Kuro Game Monitor
 
 on:
   schedule:
-    - cron: "*/6 * * * *"
+    - cron: "0 22 * * *"
   workflow_dispatch:
 
 jobs:
