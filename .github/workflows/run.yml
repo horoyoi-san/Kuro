@@ -2,8 +2,8 @@ name: Kuro Game Monitor
 
 on:
   schedule:
-    - cron: "0 22 * * *"  # ตี 5 ไทย (22:00 UTC)
-    - cron: "30 11 * * *"  # 18:00 ไทย (11:00 UTC)
+    - cron: "0 22 * * *"  # ตี 5 ไทย (22:00 UTC) PROD
+    - cron: "30 11 * * *"  # 18:30 ไทย (11:00 UTC) BETA
   workflow_dispatch:
 
 jobs:
