@@ -123,9 +123,11 @@ def send_webhook(data, url, title, webhook_url):
             patch_versions.append(f"{ver}: {full_url_patch}")
         patch_text = "\n".join(patch_versions) if patch_versions else None
 
+        # สร้าง embeds สำหรับ patch text เฉพาะเมื่อมี patch_text
         patch_embeds = create_patch_embeds(patch_text) if patch_text else []
 
-        full_url = patch_versions[-1].split(": ")[-1] if patch_versions else "No URL"
+        # รวม Base embed + Patch embeds
+        webhook_data = {"embeds": [base_embed] + patch_embeds}
 
 
     extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
