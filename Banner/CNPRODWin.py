@@ -51,6 +51,10 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # ================= Discord =================
+def send_webhooks(data, url, title):
+    for webhook_url in webhook_urls:
+        send_webhook(data, url, title, webhook_url)
+
 def send_webhook(data, url, title, webhook_url):
     if not webhook_url:
         print(f"⚠️ Webhook URL ไม่ถูกต้อง, ข้ามการส่ง")
