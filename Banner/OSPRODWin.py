@@ -100,7 +100,7 @@ def send_webhook(data, url, title, webhook_url):
         size = resource.get("size", 0)
         cdn_list = default_data.get("cdnList", [])
         full_url = cdn_list[0]["url"] + path if cdn_list and path else path
-        patch_text = "Launcher resource"
+        #patch_text = "Launcher resource"
         cdn_text = "\n".join([cdn["url"] for cdn in cdn_list]) if cdn_list else "None"
     else:
         config = default_data.get("config", {})
@@ -125,7 +125,7 @@ def send_webhook(data, url, title, webhook_url):
     # Base embed (ข้อมูลหลัก)
     base_embed = {
         "title": title,
-        "description": f"[เปิดในเบราว์เซอร์]({url})",
+       # "description": f"[เปิดในเบราว์เซอร์]({url})",
         "color": 65535,
         "fields": [
             {"name": "Version", "value": version, "inline": True},
