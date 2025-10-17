@@ -94,6 +94,16 @@ def send_webhook(data, url, title, webhook_url):
             patch_versions.append(f"{ver}: {full_url_patch}")
         patch_text = "\n".join(patch_versions) if patch_versions else "None"
 
+            # แบ่ง patch_text เป็นหลาย field ไม่เกิน 1024 ตัวอักษร
+        patch_fields = []
+        max_len = 1024
+        for i in range(0, len(patch_text), max_len):
+            patch_fields.append({
+                "name": f"🧩 Patch Versions (Part {i//max_len + 1})",
+                "value": patch_text[i:i+max_len],
+                "inline": False
+            })
+
         full_url = patch_versions[-1].split(": ")[-1] if patch_versions else "No URL"
 
     extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
