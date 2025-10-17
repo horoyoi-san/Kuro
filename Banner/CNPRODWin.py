@@ -114,7 +114,7 @@ def send_webhook(data, url, title, webhook_url):
         {"name": "MD5", "value": md5, "inline": False},
         {"name": "Download (CDN 1)", "value": full_url, "inline": False},
         {"name": "🌐 CDN List", "value": cdn_text, "inline": False},
-        {"name": "🧩 Patch Versions", "value": patch_text[:1024], "inline": False},
+        {"name": "🧩 Patch Versions", "value": patch_text[:6000], "inline": False},
     ]
 
     webhook_data = {
