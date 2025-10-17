@@ -2,13 +2,13 @@ name: Kuro Game Monitor
 
 on:
   schedule:
-    - cron: "*/5 * * * *"  # ตี 5 ไทย (22:00 UTC)
-    - cron: "*/5 * * * *" # 18:30 ไทย (11:30 UTC)
+    - cron: "*/1 * * * *"  # ตี 5 ไทย (22:00 UTC)
+    - cron: "*/1 * * * *" # 18:30 ไทย (11:30 UTC)
   workflow_dispatch:
 
 jobs:
   prod-monitor:
-    if: github.event.schedule == '*/5 * * * *'
+    if: github.event.schedule == '*/1 * * * *'
     name: Run PROD Monitor (ตี 5)
     runs-on: ubuntu-latest
 
@@ -51,7 +51,7 @@ jobs:
           fi
 
   beta-monitor:
-    if: github.event.schedule == '*/5 * * * *'
+    if: github.event.schedule == '*/1 * * * *'
     name: Run BETA Monitor (18:30)
     runs-on: ubuntu-latest
 
