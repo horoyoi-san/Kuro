@@ -66,22 +66,21 @@ def send_webhook(data, url, title, webhook_url):
 
     default_data = data["default"]
 
-    # ✅ ดึงข้อมูลแบบยืดหยุ่น (รองรับทั้ง Launcher / Game)
-    version = (
-        default_data.get("version")
-        or default_data.get("resource", {}).get("version")
-        or "No data"
-    )
     cdn_list = default_data.get("cdnList", [])
-    resource_info = default_data.get("resource", {})
-    changelog = default_data.get("changelog", {})
+    resource = default_data.get("resource", {})
+    version = resource.get("version", "No version")
+    path = resource.get("path", "")
+    md5 = resource.get("md5", "")
+    size = resource.get("size", 0)
 
-    # ✅ Embed fields จัดให้ดูง่ายขึ้น
+    # ✅ รวม URL เต็มจาก CDN แรก
+    full_url = cdn_list[0]["url"] + path if cdn_list and path else "No URL"
+
     embed_fields = [
-        {"name": "📦 Version", "value": str(version), "inline": True},
-        {"name": "🌐 CDN Servers", "value": json.dumps(cdn_list, ensure_ascii=False, indent=2) if cdn_list else "No data", "inline": False},
-        {"name": "🗂️ Resource Info", "value": json.dumps(resource_info, ensure_ascii=False, indent=2) if resource_info else "No data", "inline": False},
-        {"name": "🧾 Changelog", "value": json.dumps(changelog, ensure_ascii=False, indent=2) if changelog else "No data", "inline": False},
+        {"name": "Version", "value": version, "inline": True},
+        {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
+        {"name": "MD5", "value": md5, "inline": False},
+        {"name": "Download (CDN 1)", "value": f"[{full_url}]({full_url})", "inline": False},
     ]
 
     extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
@@ -90,16 +89,13 @@ def send_webhook(data, url, title, webhook_url):
         "embeds": [
             {
                 "title": title,
-                "description": f"{url}",
+                "description": f"[เปิดในเบราว์เซอร์]({url})",
                 "color": 65535,
                 "fields": embed_fields,
                 "thumbnail": {
                     "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"
                 },
-                "image": {"url": extra_url},
-                "footer": {
-                    "text": f"Checked at {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}"
-                },
+                "image": {"url": extra_url}
             }
         ]
     }
@@ -112,6 +108,7 @@ def send_webhook(data, url, title, webhook_url):
             print(f"❌ ไม่สามารถส่ง {title} ได้: {response.status_code}, {response.text}")
     except Exception as e:
         print(f"❌ Error sending webhook: {e}")
+
 
 # ================= Main =================
 def check_for_updates():
