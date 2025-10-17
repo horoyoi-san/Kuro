@@ -158,15 +158,6 @@ def send_webhook(data, url, title, webhook_url):
         print(f"❌ Error sending webhook: {e}")
 
 
-    try:
-        response = requests.post(webhook_url, json=webhook_data, timeout=10)
-        if response.status_code == 204:
-            print(f"✅ ส่งข้อความ {title} ไปยัง Discord เรียบร้อยแล้ว!")
-        else:
-            print(f"❌ ไม่สามารถส่ง {title} ได้: {response.status_code}, {response.text}")
-    except Exception as e:
-        print(f"❌ Error sending webhook: {e}")
-
 # ================= Main =================
 def check_for_updates():
     urls = [
