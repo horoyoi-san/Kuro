@@ -7,8 +7,8 @@ from datetime import datetime, timezone
 # ================= Webhook =================
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
-    os.environ.get("WEBHOOK2"),
-    os.environ.get("WEBHOOK3"),
+  #  os.environ.get("WEBHOOK2"),
+  #  os.environ.get("WEBHOOK3"),
 ]
 
 # ================= Logging =================
@@ -21,17 +21,14 @@ def log_and_check(api_url, game_name):
         print(f"❌ Error fetching {game_name}: {e}")
         return False, None
 
-    # สร้าง hash ของข้อมูล
     current_hash = hashlib.md5(data_text.encode()).hexdigest()
 
-    # สร้างโฟลเดอร์ log
     log_dir = os.path.join(os.getcwd(), "Kuro", "log", game_name)
     os.makedirs(log_dir, exist_ok=True)
 
     hash_file = os.path.join(log_dir, "last_hash.txt")
     raw_file = os.path.join(log_dir, "raw_log.jsonl")
 
-    # บันทึก JSON ดิบทุกครั้ง
     try:
         with open(raw_file, "a", encoding="utf-8") as f:
             f.write(json.dumps({
@@ -42,18 +39,16 @@ def log_and_check(api_url, game_name):
     except Exception as e:
         print(f"❌ Error writing log file for {game_name}: {e}")
 
-    # อ่าน hash ก่อนหน้า
     last_hash = ""
     if os.path.exists(hash_file):
         with open(hash_file, "r") as f:
             last_hash = f.read().strip()
 
-    # ตรวจสอบว่าข้อมูลเปลี่ยนแปลงหรือไม่
     if current_hash != last_hash:
         with open(hash_file, "w") as f:
             f.write(current_hash)
         return True, data_json
-    return False, data_json  # ส่ง data_json เพื่อให้ส่ง webhook ทุกครั้ง
+    return False, data_json
 
 # ================= Discord =================
 def send_webhooks(data, url, title):
@@ -70,21 +65,25 @@ def send_webhook(data, url, title, webhook_url):
         return
 
     default_data = data["default"]
-    current_version = default_data.get("version", "No data")
-    current_installer = default_data.get("installer", "No data")
-    current_resources = default_data.get("resources", "No data")
-    resource_path = default_data.get("resource", {}).get("path", "No data")
-    predownload_resources = data.get("predownload", {}).get("resources", "No data")
 
+    # ✅ ดึงข้อมูลแบบยืดหยุ่น (รองรับทั้ง Launcher / Game)
+    version = (
+        default_data.get("version")
+        or default_data.get("resource", {}).get("version")
+        or "No data"
+    )
+    cdn_list = default_data.get("cdnList", [])
+    resource_info = default_data.get("resource", {})
+    changelog = default_data.get("changelog", {})
+
+    # ✅ Embed fields จัดให้ดูง่ายขึ้น
     embed_fields = [
-        {"name": "Version", "value": str(current_version), "inline": True},
-        {"name": "Installer", "value": json.dumps(current_installer, ensure_ascii=False), "inline": False},
-        {"name": "Resources", "value": str(current_resources), "inline": False},
-        {"name": "Resource Path", "value": resource_path, "inline": False},
-        {"name": "Predownload Resources", "value": str(predownload_resources), "inline": False},
+        {"name": "📦 Version", "value": str(version), "inline": True},
+        {"name": "🌐 CDN Servers", "value": json.dumps(cdn_list, ensure_ascii=False, indent=2) if cdn_list else "No data", "inline": False},
+        {"name": "🗂️ Resource Info", "value": json.dumps(resource_info, ensure_ascii=False, indent=2) if resource_info else "No data", "inline": False},
+        {"name": "🧾 Changelog", "value": json.dumps(changelog, ensure_ascii=False, indent=2) if changelog else "No data", "inline": False},
     ]
 
-    # ✅ ย้ายเข้ามาในฟังก์ชัน
     extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
 
     webhook_data = {
@@ -97,7 +96,10 @@ def send_webhook(data, url, title, webhook_url):
                 "thumbnail": {
                     "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"
                 },
-                "image": {"url": extra_url}
+                "image": {"url": extra_url},
+                "footer": {
+                    "text": f"Checked at {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC')}"
+                },
             }
         ]
     }
@@ -119,10 +121,10 @@ def check_for_updates():
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
-    if changed and data:
-        send_webhooks(data, api_url, game_name)
-    else:
-        print(f"[{game_name}] No changes detected")
+        if changed and data:
+            send_webhooks(data, api_url, game_name)
+        else:
+            print(f"[{game_name}] No changes detected")
 
 if __name__ == "__main__":
-    check_for_updates()  # รันครั้งเดียว
+    check_for_updates()
