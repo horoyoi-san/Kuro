@@ -1,0 +1,46 @@
+name: Kuro BETA Monitor
+
+on:
+  schedule:
+    - cron: "30 11 * * *"  # 18:30 ไทย (11:30 UTC)
+  workflow_dispatch:
+
+jobs:
+  beta-monitor:
+    name: Run BETA Monitor (18:30)
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - run: pip install requests
+
+      - name: Run BETA scripts
+        env:
+          WEBHOOK1: ${{ secrets.WEBHOOK1 }}
+          WEBHOOK2: ${{ secrets.WEBHOOK2 }}
+          WEBHOOK3: ${{ secrets.WEBHOOK3 }}
+          WEBHOOK4: ${{ secrets.WEBHOOK4 }}
+          WEBHOOK5: ${{ secrets.WEBHOOK5 }}
+        run: |
+          python Banner/CNBETAWin.py
+          python Banner/OSBETAWin.py
+
+      - name: Commit and Push BETA logs
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          mkdir -p kuro/log
+          git add kuro/log
+          if ! git diff --cached --quiet; then
+            git commit -m "Update BETA logs [skip ci]"
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+          else
+            echo "No changes to commit"
+          fi
