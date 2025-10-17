@@ -70,28 +70,31 @@ def send_webhook(data, url, title, webhook_url):
         return
 
     default_data = data["default"]
-    current_version = default_data.get("version", "No data")
-    current_installer = default_data.get("installer", "No data")
-    current_resources = default_data.get("resources", "No data")
-    resource_path = default_data.get("resource", {}).get("path", "No data")
-    predownload_resources = data.get("predownload", {}).get("resources", "No data")
+
+    cdn_list = default_data.get("cdnList", [])
+    resource = default_data.get("resource", {})
+    version = resource.get("version", "No version")
+    path = resource.get("path", "")
+    md5 = resource.get("md5", "")
+    size = resource.get("size", 0)
+
+    # ✅ รวม URL เต็มจาก CDN แรก
+    full_url = cdn_list[0]["url"] + path if cdn_list and path else "No URL"
 
     embed_fields = [
-        {"name": "Version", "value": str(current_version), "inline": True},
-        {"name": "Installer", "value": json.dumps(current_installer, ensure_ascii=False), "inline": False},
-        {"name": "Resources", "value": str(current_resources), "inline": False},
-        {"name": "Resource Path", "value": resource_path, "inline": False},
-        {"name": "Predownload Resources", "value": str(predownload_resources), "inline": False},
+        {"name": "Version", "value": version, "inline": True},
+        {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
+        {"name": "MD5", "value": md5, "inline": False},
+        {"name": "Download (CDN 1)", "value": f"[{full_url}]({full_url})", "inline": False},
     ]
 
-    # ✅ ย้ายเข้ามาในฟังก์ชัน
     extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
 
     webhook_data = {
         "embeds": [
             {
                 "title": title,
-                "description": f"{url}",
+                "description": f"[เปิดในเบราว์เซอร์]({url})",
                 "color": 65535,
                 "fields": embed_fields,
                 "thumbnail": {
@@ -110,6 +113,7 @@ def send_webhook(data, url, title, webhook_url):
             print(f"❌ ไม่สามารถส่ง {title} ได้: {response.status_code}, {response.text}")
     except Exception as e:
         print(f"❌ Error sending webhook: {e}")
+
 
 # ================= Main =================
 def check_for_updates():
