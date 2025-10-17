@@ -7,8 +7,7 @@ from datetime import datetime, timezone
 # ================= Webhook =================
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
-  #  os.environ.get("WEBHOOK2"),
-  #  os.environ.get("WEBHOOK3"),
+    # os.environ.get("WEBHOOK2"),
 ]
 
 # ================= Logging =================
@@ -65,22 +64,34 @@ def send_webhook(data, url, title, webhook_url):
         return
 
     default_data = data["default"]
-
+    config = default_data.get("config", {})
     cdn_list = default_data.get("cdnList", [])
-    resource = default_data.get("resource", {})
-    version = resource.get("version", "No version")
-    path = resource.get("path", "")
-    md5 = resource.get("md5", "")
-    size = resource.get("size", 0)
 
-    # ✅ รวม URL เต็มจาก CDN แรก
-    full_url = cdn_list[0]["url"] + path if cdn_list and path else "No URL"
+    version = config.get("version", "No version")
+    size = config.get("size", 0)
+    md5 = config.get("indexFileMd5", "")
+    index_file = config.get("indexFile", "")
+    base_url = config.get("baseUrl", "")
+
+    # Full download URL จาก CDN แรก (ถ้ามี)
+    full_url = cdn_list[0]["url"] + index_file if cdn_list else base_url + index_file
+
+    # Patch versions
+    patch_versions = []
+    for patch in config.get("patchConfig", []):
+        patch_index_file = patch.get("indexFile", "")
+        patch_version = patch.get("version", "No version")
+        patch_base_url = patch.get("baseUrl", base_url)
+        patch_full_url = cdn_list[0]["url"] + patch_index_file if cdn_list else patch_base_url + patch_index_file
+        patch_versions.append(f"{patch_version}: [Download]({patch_full_url})")
+    patch_text = "\n".join(patch_versions[:20])
 
     embed_fields = [
         {"name": "Version", "value": version, "inline": True},
         {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
         {"name": "MD5", "value": md5, "inline": False},
-        {"name": "Download (CDN 1)", "value": f"{full_url}", "inline": False},
+        {"name": "Download Link", "value": f"[Download]({full_url})", "inline": False},
+        {"name": "🧩 Patch Versions", "value": patch_text or "None", "inline": False},
     ]
 
     extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
@@ -109,12 +120,13 @@ def send_webhook(data, url, title, webhook_url):
     except Exception as e:
         print(f"❌ Error sending webhook: {e}")
 
-
 # ================= Main =================
 def check_for_updates():
     urls = [
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json", "Wuthering Waves CN (Launcher)"),
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json", "Wuthering Waves CN (Game)")
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json",
+         "Wuthering Waves CN (Launcher)"),
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json",
+         "Wuthering Waves CN (Game)")
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
