@@ -58,7 +58,9 @@ def create_patch_embeds(patch_text, max_len=1024):
             embeds.append({
                 "title": f"🧩 Patch Versions Part {part_num}",
                 "description": current_field,
-                "color": 65535
+                "color": 65535,
+                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+                "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
             })
             current_field = line
             part_num += 1
@@ -68,7 +70,9 @@ def create_patch_embeds(patch_text, max_len=1024):
         embeds.append({
             "title": f"🧩 Patch Versions Part {part_num}",
             "description": current_field,
-            "color": 65535
+            "color": 65535,
+            "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+            "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
         })
     return embeds
 
