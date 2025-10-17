@@ -95,14 +95,33 @@ def send_webhook(data, url, title, webhook_url):
         patch_text = "\n".join(patch_versions) if patch_versions else "None"
 
         # แบ่ง patch_text เป็นหลาย field ไม่เกิน 1024 ตัวอักษร
+# แบ่ง patch_text ตามบรรทัด ไม่เกิน 1024 ตัวอักษรต่อ field
         patch_fields = []
         max_len = 1024
-        for i in range(0, len(patch_text), max_len):
+        current_field = ""
+        part_num = 1
+
+        for line in patch_text.split("\n"):
+            # ถ้าเพิ่มบรรทัดนี้แล้วเกิน max_len ให้สร้าง field ใหม่
+            if len(current_field) + len(line) + 1 > max_len:
+                patch_fields.append({
+                    "name": f"🧩 Patch Versions (Part {part_num})",
+                    "value": current_field,
+                    "inline": False
+                })
+                current_field = line
+                part_num += 1
+            else:
+                current_field += ("\n" if current_field else "") + line
+
+        # เพิ่ม field สุดท้าย
+        if current_field:
             patch_fields.append({
-                "name": f"🧩 Patch Versions (Part {i//max_len + 1})",
-                "value": patch_text[i:i+max_len],
+                "name": f"🧩 Patch Versions (Part {part_num})",
+                "value": current_field,
                 "inline": False
             })
+
 
         full_url = patch_versions[-1].split(": ")[-1] if patch_versions else "No URL"
 
