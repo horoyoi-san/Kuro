@@ -58,7 +58,7 @@ def create_patch_embeds(patch_text, max_len=1024):
     for line in patch_text.split("\n"):
         if len(current_field) + len(line) + 1 > max_len:
             embeds.append({
-                "title": f"🧩 Patch Versions Part {part_num}",
+                "title": f"Patch Versions Part {part_num}",
                 "description": current_field,
                 "color": 65535,
                 "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
@@ -70,7 +70,7 @@ def create_patch_embeds(patch_text, max_len=1024):
             current_field += ("\n" if current_field else "") + line
     if current_field:
         embeds.append({
-            "title": f"🧩 Patch Versions Part {part_num}",
+            "title": f"Patch Versions Part {part_num}",
             "description": current_field,
             "color": 65535,
             "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
