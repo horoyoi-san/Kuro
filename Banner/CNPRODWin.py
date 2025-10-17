@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
     # os.environ.get("WEBHOOK2"),
+    # os.environ.get("WEBHOOK3"),
 ]
 
 # ================= Logging =================
@@ -59,45 +60,52 @@ def send_webhook(data, url, title, webhook_url):
         print(f"⚠️ Webhook URL ไม่ถูกต้อง, ข้ามการส่ง")
         return
 
-    if not isinstance(data, dict) or "default" not in data:
+    default_data = data.get("default")
+    if not default_data:
         print(f"❌ Unexpected JSON format for {title}, skipping webhook")
         return
 
-    default_data = data["default"]
-    cdn_list = default_data.get("cdnList", [])
-    resource = default_data.get("resource", {})
+    # ================= Launcher =================
+    resource = default_data.get("resource")
+    if resource:
+        version = resource.get("version", "No version")
+        path = resource.get("path", "")
+        md5 = resource.get("md5", "")
+        size = resource.get("size", 0)
+        cdn_list = default_data.get("cdnList", [])
+        full_url = cdn_list[0]["url"] + path if cdn_list and path else path
+        patch_text = "Launcher resource"
+        cdn_text = "\n".join([cdn["url"] for cdn in cdn_list]) if cdn_list else "None"
 
-    version = resource.get("version", "No version")
-    path = resource.get("path", "")
-    md5 = resource.get("md5", "")
-    size = resource.get("size", 0)
+    # ================= Game =================
+    else:
+        config = default_data.get("config", {})
+        version = config.get("version", "No version")
+        size = config.get("size", 0)
+        md5 = config.get("indexFileMd5", "")
+        cdn_list = default_data.get("cdnList", [])
+        cdn_text = "\n".join([cdn["url"] for cdn in cdn_list]) if cdn_list else "None"
 
-    # Full URL จาก CDN แรก
-    full_url = cdn_list[0]["url"] + path if cdn_list and path else "No URL"
+        patch_versions = []
+        for patch in config.get("patchConfig", []):
+            ver = patch.get("version")
+            index_file = patch.get("indexFile")
+            full_url_patch = cdn_list[0]["url"] + index_file if cdn_list else index_file
+            patch_versions.append(f"{ver}: {full_url_patch}")
+        patch_text = "\n".join(patch_versions) if patch_versions else "None"
 
-    # Patch versions
-    patch_versions = []
-    for patch in default_data.get("patches", []):
-        patch_version = patch.get("version", "No version")
-        patch_index = patch.get("indexFile", "")
-        patch_base = patch.get("baseUrl", "")
-        patch_cdn_url = cdn_list[0]["url"] + patch_index if cdn_list else patch_base + patch_index
-        patch_versions.append(f"{patch_version}: [Download]({patch_cdn_url})")
-    patch_text = "\n".join(patch_versions[:20])
+        full_url = patch_versions[-1].split(": ")[-1] if patch_versions else "No URL"
 
-    # CDN list text
-    cdn_text = "\n".join([cdn.get("url", "") for cdn in cdn_list])
+    extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
 
     embed_fields = [
         {"name": "Version", "value": version, "inline": True},
         {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
         {"name": "MD5", "value": md5, "inline": False},
-        {"name": "Download (CDN 1)", "value": f"{full_url}", "inline": False},
-        {"name": "🌐 CDN List", "value": cdn_text or "None", "inline": False},
-        {"name": "🧩 Patch Versions", "value": patch_text or "None", "inline": False},
+        {"name": "Download (CDN 1)", "value": full_url, "inline": False},
+        {"name": "🌐 CDN List", "value": cdn_text, "inline": False},
+        {"name": "🧩 Patch Versions", "value": patch_text[:1024], "inline": False},
     ]
-
-    extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
 
     webhook_data = {
         "embeds": [
