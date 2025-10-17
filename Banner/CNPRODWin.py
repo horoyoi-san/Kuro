@@ -7,8 +7,6 @@ from datetime import datetime, timezone
 # ================= Webhook =================
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
-    # os.environ.get("WEBHOOK2"),
-    # os.environ.get("WEBHOOK3"),
 ]
 
 # ================= Logging =================
@@ -51,6 +49,29 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # ================= Discord =================
+def create_patch_embeds(patch_text, max_len=1024):
+    embeds = []
+    current_field = ""
+    part_num = 1
+    for line in patch_text.split("\n"):
+        if len(current_field) + len(line) + 1 > max_len:
+            embeds.append({
+                "title": f"🧩 Patch Versions Part {part_num}",
+                "description": current_field,
+                "color": 65535
+            })
+            current_field = line
+            part_num += 1
+        else:
+            current_field += ("\n" if current_field else "") + line
+    if current_field:
+        embeds.append({
+            "title": f"🧩 Patch Versions Part {part_num}",
+            "description": current_field,
+            "color": 65535
+        })
+    return embeds
+
 def send_webhooks(data, url, title):
     for webhook_url in webhook_urls:
         send_webhook(data, url, title, webhook_url)
@@ -65,7 +86,6 @@ def send_webhook(data, url, title, webhook_url):
         print(f"❌ Unexpected JSON format for {title}, skipping webhook")
         return
 
-    # ================= Launcher =================
     resource = default_data.get("resource")
     if resource:
         version = resource.get("version", "No version")
@@ -74,10 +94,8 @@ def send_webhook(data, url, title, webhook_url):
         size = resource.get("size", 0)
         cdn_list = default_data.get("cdnList", [])
         full_url = cdn_list[0]["url"] + path if cdn_list and path else path
-        patch_fields = [{"name": "Launcher resource", "value": "Launcher resource", "inline": False}]
+        patch_text = "Launcher resource"
         cdn_text = "\n".join([cdn["url"] for cdn in cdn_list]) if cdn_list else "None"
-
-    # ================= Game =================
     else:
         config = default_data.get("config", {})
         version = config.get("version", "No version")
@@ -94,59 +112,30 @@ def send_webhook(data, url, title, webhook_url):
             patch_versions.append(f"{ver}: {full_url_patch}")
         patch_text = "\n".join(patch_versions) if patch_versions else "None"
 
-        # แบ่ง patch_text เป็นหลาย field ไม่เกิน 1024 ตัวอักษร
-# แบ่ง patch_text ตามบรรทัด ไม่เกิน 1024 ตัวอักษรต่อ field
-        patch_fields = []
-        max_len = 1024
-        current_field = ""
-        part_num = 1
-
-        for line in patch_text.split("\n"):
-            # ถ้าเพิ่มบรรทัดนี้แล้วเกิน max_len ให้สร้าง field ใหม่
-            if len(current_field) + len(line) + 1 > max_len:
-                patch_fields.append({
-                    "name": f"🧩 Patch Versions Part {part_num}",
-                    "value": current_field,
-                    "inline": False
-                })
-                current_field = line
-                part_num += 1
-            else:
-                current_field += ("\n" if current_field else "") + line
-
-        # เพิ่ม field สุดท้าย
-        if current_field:
-            patch_fields.append({
-                "name": f"🧩 Patch Versions Part {part_num}",
-                "value": current_field,
-                "inline": False
-            })
-
-
         full_url = patch_versions[-1].split(": ")[-1] if patch_versions else "No URL"
 
     extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
 
-    embed_fields = [
-        {"name": "Version", "value": version, "inline": True},
-        {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
-        {"name": "MD5", "value": md5, "inline": False},
-        {"name": "Download", "value": full_url, "inline": False},
-       # {"name": "🌐 CDN List", "value": cdn_text, "inline": False},
-    ] + patch_fields  # เอา patch_fields มาแทน field เดิม
-
-    webhook_data = {
-        "embeds": [
-            {
-                "title": title,
-                "description": f"[เปิดในเบราว์เซอร์]({url})",
-                "color": 65535,
-                "fields": embed_fields,
-                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
-                "image": {"url": extra_url}
-            }
-        ]
+    # Base embed (ข้อมูลหลัก)
+    base_embed = {
+        "title": title,
+        "description": f"[เปิดในเบราว์เซอร์]({url})",
+        "color": 65535,
+        "fields": [
+            {"name": "Version", "value": version, "inline": True},
+            {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
+            {"name": "MD5", "value": md5, "inline": False},
+            {"name": "Download", "value": full_url, "inline": False},
+            #{"name": "🌐 CDN List", "value": cdn_text, "inline": False},
+        ],
+        "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+        "image": {"url": extra_url}
     }
+
+    # สร้าง embeds สำหรับ patch text
+    patch_embeds = create_patch_embeds(patch_text)
+
+    webhook_data = {"embeds": [base_embed] + patch_embeds}
 
     try:
         response = requests.post(webhook_url, json=webhook_data, timeout=10)
@@ -156,7 +145,6 @@ def send_webhook(data, url, title, webhook_url):
             print(f"❌ ไม่สามารถส่ง {title} ได้: {response.status_code}, {response.text}")
     except Exception as e:
         print(f"❌ Error sending webhook: {e}")
-
 
 # ================= Main =================
 def check_for_updates():
