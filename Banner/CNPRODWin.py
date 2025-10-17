@@ -51,10 +51,6 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # ================= Discord =================
-def send_webhooks(data, url, title):
-    for webhook_url in webhook_urls:
-        send_webhook(data, url, title, webhook_url)
-
 def send_webhook(data, url, title, webhook_url):
     if not webhook_url:
         print(f"⚠️ Webhook URL ไม่ถูกต้อง, ข้ามการส่ง")
@@ -74,7 +70,7 @@ def send_webhook(data, url, title, webhook_url):
         size = resource.get("size", 0)
         cdn_list = default_data.get("cdnList", [])
         full_url = cdn_list[0]["url"] + path if cdn_list and path else path
-        patch_text = "Launcher resource"
+        patch_fields = [{"name": "Launcher resource", "value": "Launcher resource", "inline": False}]
         cdn_text = "\n".join([cdn["url"] for cdn in cdn_list]) if cdn_list else "None"
 
     # ================= Game =================
@@ -94,12 +90,12 @@ def send_webhook(data, url, title, webhook_url):
             patch_versions.append(f"{ver}: {full_url_patch}")
         patch_text = "\n".join(patch_versions) if patch_versions else "None"
 
-            # แบ่ง patch_text เป็นหลาย field ไม่เกิน 1024 ตัวอักษร
+        # แบ่ง patch_text เป็นหลาย field ไม่เกิน 1024 ตัวอักษร
         patch_fields = []
         max_len = 1024
         for i in range(0, len(patch_text), max_len):
             patch_fields.append({
-                "name": f"🧩 Patch Versions (Part {i//max_len + 10})",
+                "name": f"🧩 Patch Versions (Part {i//max_len + 1})",
                 "value": patch_text[i:i+max_len],
                 "inline": False
             })
@@ -114,8 +110,7 @@ def send_webhook(data, url, title, webhook_url):
         {"name": "MD5", "value": md5, "inline": False},
         {"name": "Download (CDN 1)", "value": full_url, "inline": False},
         {"name": "🌐 CDN List", "value": cdn_text, "inline": False},
-        {"name": "🧩 Patch Versions", "value": patch_text[:6000], "inline": False},
-    ]
+    ] + patch_fields  # เอา patch_fields มาแทน field เดิม
 
     webhook_data = {
         "embeds": [
@@ -124,13 +119,21 @@ def send_webhook(data, url, title, webhook_url):
                 "description": f"[เปิดในเบราว์เซอร์]({url})",
                 "color": 65535,
                 "fields": embed_fields,
-                "thumbnail": {
-                    "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"
-                },
+                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
                 "image": {"url": extra_url}
             }
         ]
     }
+
+    try:
+        response = requests.post(webhook_url, json=webhook_data, timeout=10)
+        if response.status_code == 204:
+            print(f"✅ ส่งข้อความ {title} ไปยัง Discord เรียบร้อยแล้ว!")
+        else:
+            print(f"❌ ไม่สามารถส่ง {title} ได้: {response.status_code}, {response.text}")
+    except Exception as e:
+        print(f"❌ Error sending webhook: {e}")
+
 
     try:
         response = requests.post(webhook_url, json=webhook_data, timeout=10)
