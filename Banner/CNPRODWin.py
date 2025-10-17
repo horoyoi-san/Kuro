@@ -93,8 +93,6 @@ def send_webhook(data, url, title, webhook_url):
         print(f"❌ Unexpected JSON format for {title}, skipping webhook")
         return
 
-    patch_text = None  # กำหนด default
-
     resource = default_data.get("resource")
     if resource:
         # Launcher
@@ -105,7 +103,6 @@ def send_webhook(data, url, title, webhook_url):
         cdn_list = default_data.get("cdnList", [])
         full_url = cdn_list[0]["url"] + path if cdn_list and path else path
         patch_embeds = []  # Launcher ไม่มี patch
-        cdn_text = "\n".join([cdn["url"] for cdn in cdn_list]) if cdn_list else "None"
     else:
         # Game
         config = default_data.get("config", {})
@@ -113,7 +110,7 @@ def send_webhook(data, url, title, webhook_url):
         size = config.get("size", 0)
         md5 = config.get("indexFileMd5", "")
         cdn_list = default_data.get("cdnList", [])
-        cdn_text = "\n".join([cdn["url"] for cdn in cdn_list]) if cdn_list else "None"
+        full_url = "No URL"
 
         patch_versions = []
         for patch in config.get("patchConfig", []):
@@ -123,35 +120,29 @@ def send_webhook(data, url, title, webhook_url):
             patch_versions.append(f"{ver}: {full_url_patch}")
         patch_text = "\n".join(patch_versions) if patch_versions else None
 
-        # สร้าง embeds สำหรับ patch text เฉพาะเมื่อมี patch_text
+        # สร้าง patch embeds **เฉพาะเมื่อ patch_text มีค่า**
         patch_embeds = create_patch_embeds(patch_text) if patch_text else []
 
-        # รวม Base embed + Patch embeds
-        webhook_data = {"embeds": [base_embed] + patch_embeds}
+        if patch_versions:
+            full_url = patch_versions[-1].split(": ")[-1]
 
+    extra_url = "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"
 
-    extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
-
-    # Base embed (ข้อมูลหลัก)
+    # Base embed
     base_embed = {
         "title": title,
-       # "description": f"[เปิดในเบราว์เซอร์]({url})",
         "color": 65535,
         "fields": [
             {"name": "Version", "value": version, "inline": True},
             {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
             {"name": "MD5", "value": md5, "inline": False},
             {"name": "Download", "value": full_url, "inline": False},
-            #{"name": "🌐 CDN List", "value": cdn_text, "inline": False},
         ],
-        "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+        "thumbnail": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"},
         "image": {"url": extra_url}
     }
 
-    # สร้าง embeds สำหรับ patch text
-    patch_embeds = create_patch_embeds(patch_text)
-
-    webhook_data = {"embeds": [base_embed] + patch_embeds}
+    webhook_data = {"embeds": [base_embed] + patch_embeds}  # รวม patch embeds เฉพาะเมื่อมี
 
     try:
         response = requests.post(webhook_url, json=webhook_data, timeout=10)
@@ -161,6 +152,7 @@ def send_webhook(data, url, title, webhook_url):
             print(f"❌ ไม่สามารถส่ง {title} ได้: {response.status_code}, {response.text}")
     except Exception as e:
         print(f"❌ Error sending webhook: {e}")
+
 
 # ================= Main =================
 def check_for_updates():
