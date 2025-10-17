@@ -6,9 +6,9 @@ from datetime import datetime, timezone
 
 # ================= Webhook =================
 webhook_urls = [
-  #  os.environ.get("WEBHOOK1"),
-   # os.environ.get("WEBHOOK2"),
-   # os.environ.get("WEBHOOK3"),
+    os.environ.get("WEBHOOK1"),
+    os.environ.get("WEBHOOK2"),
+    os.environ.get("WEBHOOK3"),
 ]
 
 # ================= Logging =================
@@ -21,17 +21,14 @@ def log_and_check(api_url, game_name):
         print(f"❌ Error fetching {game_name}: {e}")
         return False, None
 
-    # สร้าง hash ของข้อมูล
     current_hash = hashlib.md5(data_text.encode()).hexdigest()
 
-    # สร้างโฟลเดอร์ log
     log_dir = os.path.join(os.getcwd(), "Kuro", "log", game_name)
     os.makedirs(log_dir, exist_ok=True)
 
     hash_file = os.path.join(log_dir, "last_hash.txt")
     raw_file = os.path.join(log_dir, "raw_log.jsonl")
 
-    # บันทึก JSON ดิบทุกครั้ง
     try:
         with open(raw_file, "a", encoding="utf-8") as f:
             f.write(json.dumps({
@@ -42,20 +39,45 @@ def log_and_check(api_url, game_name):
     except Exception as e:
         print(f"❌ Error writing log file for {game_name}: {e}")
 
-    # อ่าน hash ก่อนหน้า
     last_hash = ""
     if os.path.exists(hash_file):
         with open(hash_file, "r") as f:
             last_hash = f.read().strip()
 
-    # ตรวจสอบว่าข้อมูลเปลี่ยนแปลงหรือไม่
     if current_hash != last_hash:
         with open(hash_file, "w") as f:
             f.write(current_hash)
         return True, data_json
-    return False, data_json  # ส่ง data_json เพื่อให้ส่ง webhook ทุกครั้ง
+    return False, data_json
 
 # ================= Discord =================
+def create_patch_embeds(patch_text, max_len=1024):
+    embeds = []
+    current_field = ""
+    part_num = 1
+    for line in patch_text.split("\n"):
+        if len(current_field) + len(line) + 1 > max_len:
+            embeds.append({
+                "title": f"🧩 Patch Versions Part {part_num}",
+                "description": current_field,
+                "color": 65535,
+                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+                "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
+            })
+            current_field = line
+            part_num += 1
+        else:
+            current_field += ("\n" if current_field else "") + line
+    if current_field:
+        embeds.append({
+            "title": f"🧩 Patch Versions Part {part_num}",
+            "description": current_field,
+            "color": 65535,
+            "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+            "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
+        })
+    return embeds
+
 def send_webhooks(data, url, title):
     for webhook_url in webhook_urls:
         send_webhook(data, url, title, webhook_url)
@@ -65,42 +87,61 @@ def send_webhook(data, url, title, webhook_url):
         print(f"⚠️ Webhook URL ไม่ถูกต้อง, ข้ามการส่ง")
         return
 
-    if not isinstance(data, dict) or "default" not in data:
+    default_data = data.get("default")
+    if not default_data:
         print(f"❌ Unexpected JSON format for {title}, skipping webhook")
         return
 
-    default_data = data["default"]
-    current_version = default_data.get("version", "No data")
-    current_installer = default_data.get("installer", "No data")
-    current_resources = default_data.get("resources", "No data")
-    resource_path = default_data.get("resource", {}).get("path", "No data")
-    predownload_resources = data.get("predownload", {}).get("resources", "No data")
+    resource = default_data.get("resource")
+    if resource:
+        version = resource.get("version", "No version")
+        path = resource.get("path", "")
+        md5 = resource.get("md5", "")
+        size = resource.get("size", 0)
+        cdn_list = default_data.get("cdnList", [])
+        full_url = cdn_list[0]["url"] + path if cdn_list and path else path
+        patch_text = "Launcher resource"
+        cdn_text = "\n".join([cdn["url"] for cdn in cdn_list]) if cdn_list else "None"
+    else:
+        config = default_data.get("config", {})
+        version = config.get("version", "No version")
+        size = config.get("size", 0)
+        md5 = config.get("indexFileMd5", "")
+        cdn_list = default_data.get("cdnList", [])
+        cdn_text = "\n".join([cdn["url"] for cdn in cdn_list]) if cdn_list else "None"
 
-    embed_fields = [
-        {"name": "Version", "value": str(current_version), "inline": True},
-        {"name": "Installer", "value": json.dumps(current_installer, ensure_ascii=False), "inline": False},
-        {"name": "Resources", "value": str(current_resources), "inline": False},
-        {"name": "Resource Path", "value": resource_path, "inline": False},
-        {"name": "Predownload Resources", "value": str(predownload_resources), "inline": False},
-    ]
+        patch_versions = []
+        for patch in config.get("patchConfig", []):
+            ver = patch.get("version")
+            index_file = patch.get("indexFile")
+            full_url_patch = cdn_list[0]["url"] + index_file if cdn_list else index_file
+            patch_versions.append(f"{ver}: {full_url_patch}")
+        patch_text = "\n".join(patch_versions) if patch_versions else "None"
 
-    # ✅ ย้ายเข้ามาในฟังก์ชัน
+        full_url = patch_versions[-1].split(": ")[-1] if patch_versions else "No URL"
+
     extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
 
-    webhook_data = {
-        "embeds": [
-            {
-                "title": title,
-                "description": f"{url}",
-                "color": 65535,
-                "fields": embed_fields,
-                "thumbnail": {
-                    "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"
-                },
-                "image": {"url": extra_url}
-            }
-        ]
+    # Base embed (ข้อมูลหลัก)
+    base_embed = {
+        "title": title,
+        "description": f"[เปิดในเบราว์เซอร์]({url})",
+        "color": 65535,
+        "fields": [
+            {"name": "Version", "value": version, "inline": True},
+            {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
+            {"name": "MD5", "value": md5, "inline": False},
+            {"name": "Download", "value": full_url, "inline": False},
+            #{"name": "🌐 CDN List", "value": cdn_text, "inline": False},
+        ],
+        "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+        "image": {"url": extra_url}
     }
+
+    # สร้าง embeds สำหรับ patch text
+    patch_embeds = create_patch_embeds(patch_text)
+
+    webhook_data = {"embeds": [base_embed] + patch_embeds}
 
     try:
         response = requests.post(webhook_url, json=webhook_data, timeout=10)
@@ -119,10 +160,10 @@ def check_for_updates():
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
-    if changed and data:
-        send_webhooks(data, api_url, game_name)
-    else:
-        print(f"[{game_name}] No changes detected")
+        if changed and data:
+            send_webhooks(data, api_url, game_name)
+        else:
+            print(f"[{game_name}] No changes detected")
 
 if __name__ == "__main__":
-    check_for_updates()  # รันครั้งเดียว
+    check_for_updates()
