@@ -93,6 +93,8 @@ def send_webhook(data, url, title, webhook_url):
         print(f"❌ Unexpected JSON format for {title}, skipping webhook")
         return
 
+    patch_text = None  # กำหนด default
+
     resource = default_data.get("resource")
     if resource:
         # Launcher
@@ -121,10 +123,7 @@ def send_webhook(data, url, title, webhook_url):
             patch_versions.append(f"{ver}: {full_url_patch}")
         patch_text = "\n".join(patch_versions) if patch_versions else None
 
-        if patch_text:
-            patch_embeds = create_patch_embeds(patch_text)
-        else:
-            patch_embeds = []
+        patch_embeds = create_patch_embeds(patch_text) if patch_text else []
 
         full_url = patch_versions[-1].split(": ")[-1] if patch_versions else "No URL"
 
