@@ -105,7 +105,7 @@ def send_webhook(data, url, title, webhook_url):
             # ถ้าเพิ่มบรรทัดนี้แล้วเกิน max_len ให้สร้าง field ใหม่
             if len(current_field) + len(line) + 1 > max_len:
                 patch_fields.append({
-                    "name": f"🧩 Patch Versions (Part {part_num})",
+                    "name": f"🧩 Patch Versions Part {part_num}",
                     "value": current_field,
                     "inline": False
                 })
@@ -117,7 +117,7 @@ def send_webhook(data, url, title, webhook_url):
         # เพิ่ม field สุดท้าย
         if current_field:
             patch_fields.append({
-                "name": f"🧩 Patch Versions (Part {part_num})",
+                "name": f"🧩 Patch Versions Part {part_num}",
                 "value": current_field,
                 "inline": False
             })
@@ -131,8 +131,8 @@ def send_webhook(data, url, title, webhook_url):
         {"name": "Version", "value": version, "inline": True},
         {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
         {"name": "MD5", "value": md5, "inline": False},
-        {"name": "Download (CDN 1)", "value": full_url, "inline": False},
-        {"name": "🌐 CDN List", "value": cdn_text, "inline": False},
+        {"name": "Download", "value": full_url, "inline": False},
+       # {"name": "🌐 CDN List", "value": cdn_text, "inline": False},
     ] + patch_fields  # เอา patch_fields มาแทน field เดิม
 
     webhook_data = {
