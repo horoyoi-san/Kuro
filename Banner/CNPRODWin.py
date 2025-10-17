@@ -80,7 +80,7 @@ def send_webhook(data, url, title, webhook_url):
         {"name": "Version", "value": version, "inline": True},
         {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
         {"name": "MD5", "value": md5, "inline": False},
-        {"name": "Download (CDN 1)", "value": f"[{full_url}]({full_url})", "inline": False},
+        {"name": "Download (CDN 1)", "value": f"{full_url}", "inline": False},
     ]
 
     extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
