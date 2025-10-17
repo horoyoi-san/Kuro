@@ -99,7 +99,7 @@ def send_webhook(data, url, title, webhook_url):
         max_len = 1024
         for i in range(0, len(patch_text), max_len):
             patch_fields.append({
-                "name": f"🧩 Patch Versions (Part {i//max_len + 1})",
+                "name": f"🧩 Patch Versions (Part {i//max_len + 10})",
                 "value": patch_text[i:i+max_len],
                 "inline": False
             })
