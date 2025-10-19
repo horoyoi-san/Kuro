@@ -60,7 +60,7 @@ def create_patch_embeds(patch_text, max_len=1024):
             embeds.append({
                 "title": f"Patch Versions Part {part_num}",
                 "description": current_field,
-                "color": 65535,
+                "color": 16711680,
                 "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
                 "image": {"url": "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"}
             })
@@ -72,7 +72,7 @@ def create_patch_embeds(patch_text, max_len=1024):
         embeds.append({
             "title": f"Patch Versions Part {part_num}",
             "description": current_field,
-            "color": 65535,
+            "color": 16711680,
             "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
             "image": {"url": "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"}
         })
@@ -132,7 +132,7 @@ def send_webhook(data, url, title, webhook_url):
     # Base embed
     base_embed = {
         "title": title,
-        "color": 65535,
+        "color": 16711680,
         "fields": [
             {"name": "Version", "value": version, "inline": True},
             {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
