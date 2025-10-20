@@ -2,12 +2,14 @@ name: Kuro BETA Monitor
 
 on:
   schedule:
-    - cron: "00 11 * * *"  # 18:30 ไทย (11:30 UTC)
+    - cron: "0 5 * * *"   # 12:00 ไทย
+    - cron: "0 6 * * *"   # 13:00 ไทย
+    - cron: "0 11 * * *"  # 18:00 ไทย
   workflow_dispatch:
 
 jobs:
   beta-monitor:
-    name: Run BETA Monitor (18:00)
+    name: Run BETA Monitor
     runs-on: ubuntu-latest
 
     steps:
@@ -43,4 +45,3 @@ jobs:
             git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
           else
             echo "No changes to commit"
-          fi
