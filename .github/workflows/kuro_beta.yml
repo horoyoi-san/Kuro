@@ -1,13 +1,13 @@
-name: Kuro BETA Monitor 12:00
+name: Kuro BETA Monitor 11:30
 
 on:
   schedule:
-    - cron: "0 5 * * *"   # 12:00 ไทย
+    - cron: "30 4 * * *"   # 11:30 ไทย
   workflow_dispatch:
 
 jobs:
   beta-monitor:
-    name: Run BETA Monitor 12:00
+    name: Run BETA Monitor 11:30
     runs-on: ubuntu-latest
 
     steps:
@@ -40,7 +40,4 @@ jobs:
           git add kuro/log
           if ! git diff --cached --quiet; then
             git commit -m "Update BETA logs [skip ci]"
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
-          else
-            echo "No changes to commit"
-            fi
+            git push https://x-access-tok
