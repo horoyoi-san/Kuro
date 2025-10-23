@@ -2,7 +2,7 @@ name: Kuro BETA Monitor 12:00
 
 on:
   schedule:
-    - cron: "0 5 * * *"   # 13:00 ไทย
+    - cron: "0 5 * * *"   # 12:00 ไทย
   workflow_dispatch:
 
 jobs:
