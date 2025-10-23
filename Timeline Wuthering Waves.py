@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 # กำหนดวันเริ่มต้น Beta และ Release (ตัวอย่าง)
 start_dates = {
     "Drip": datetime(2025, 7, 23, 11, 0),     # 2568 พุธ 11:00
-    "Beta CN": datetime(2025, 7, 31, 17, 0),  # 2568 พฤหัสบดี 17:00
-    "Beta OS": datetime(2025, 8, 7, 17, 0),   # 2568 พฤหัสบดี 17:00
+    "Beta CN": datetime(2025, 7, 24, 17, 0),  # 2568 พฤหัสบดี 17:00
+    "Beta OS": datetime(2025, 7, 31, 17, 0),   # 2568 พฤหัสบดี 17:00
     "Release": datetime(2025, 8, 28, 10, 0)   # 2568 พฤหัสบดี 10:00
 }
 
