@@ -127,7 +127,7 @@ def send_webhook(data, url, title, webhook_url):
         if patch_versions:
             full_url = patch_versions[-1].split(": ")[-1]
 
-    extra_url = "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"
+    extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
 
     # Base embed
     base_embed = {
@@ -139,7 +139,7 @@ def send_webhook(data, url, title, webhook_url):
             {"name": "MD5", "value": md5, "inline": False},
             {"name": "Download", "value": full_url, "inline": False},
         ],
-        "thumbnail": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"},
+        "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
         "image": {"url": extra_url}
     }
 
