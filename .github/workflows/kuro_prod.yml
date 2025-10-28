@@ -1,4 +1,4 @@
-name: Kuro BETA Monitor 05:00
+name: Kuro PROD Monitor 05:00
 
 on:
   schedule:
@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  beta-monitor:
-    name: Run BETA Monitor 05:00
+  prod-monitor:
+    name: Run PROD Monitor 05:00
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,7 @@ jobs:
         run: pip install requests
 
 
-      - name: Run BETA scripts
+      - name: Run PROD scripts
         env:
           WEBHOOK: ${{ secrets.WEBHOOK }}
           WEBHOOK1: ${{ secrets.WEBHOOK1 }}
@@ -34,10 +34,10 @@ jobs:
           WEBHOOK4: ${{ secrets.WEBHOOK4 }}
           WEBHOOK5: ${{ secrets.WEBHOOK5 }}
         run: |
-          python Banner/CNBETAWin.py
-          python Banner/OSBETAWin.py
+          python Banner/CNPRODWin.py
+          python Banner/OSPRODWin.py
 
-      - name: Commit and Push BETA logs
+      - name: Commit and Push PROD logs
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -46,7 +46,7 @@ jobs:
           mkdir -p kuro/log
           git add kuro/log
           if ! git diff --cached --quiet; then
-            git commit -m "Update BETA logs [skip ci]"
+            git commit -m "Update PROD logs [skip ci]"
             git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:Webhook
           else
             echo "No changes to commit"
