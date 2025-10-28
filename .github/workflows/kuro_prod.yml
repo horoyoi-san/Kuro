@@ -11,15 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
         with:
           persist-credentials: false
 
-      - uses: actions/setup-python@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
           python-version: "3.11"
 
-      - run: pip install requests
+      - name: Install dependencies
+        run: pip install requests
 
       - name: Run PROD scripts
         env:
@@ -32,21 +35,23 @@ jobs:
         run: |
           python Banner/CNPRODWin.py
           python Banner/OSPRODWin.py
-          mkdir -p kuro/log
-          echo "Log test at $(date)" >> kuro/log/run-$(date +%s).txt
 
-      - name: Check logs
-        run: |
-          echo "===== Log directory content ====="
-          ls -R kuro/log || echo "No logs found"
+          # สร้าง log file ทดสอบ
+          mkdir -p Kuro/log
+          echo "Log created at $(date)" >> Kuro/log/prod-$(date +%s).txt
 
       - name: Commit and Push PROD logs
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          PAT: ${{ secrets.PAT }}  # ใช้ Personal Access Token เหมือน workflow CN
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          git add kuro/log
-          git status
-          git commit -m "Update PROD logs [skip ci]" || echo "No changes"
-          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} HEAD:Webhook || echo "Push failed"
+
+          git add Kuro/log
+
+          if ! git diff --cached --quiet; then
+            git commit -m "Update PROD logs [skip ci]"
+            git push https://x-access-token:${PAT}@github.com/${{ github.repository }} HEAD:Webhook
+          else
+            echo "No log changes to commit"
+          fi
