@@ -47,7 +47,7 @@ jobs:
           git add kuro/log
           if ! git diff --cached --quiet; then
             git commit -m "Update BETA logs [skip ci]"
-            git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:main
+            git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:Webhook
           else
             echo "No changes to commit"
           fi
