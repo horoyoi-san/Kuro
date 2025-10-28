@@ -1,46 +1,53 @@
-name: Kuro PROD Monitor
+name: Kuro BETA Monitor 05:00
 
 on:
   schedule:
-    - cron: "0 22 * * *"  # ตี 5 ไทย (22:00 UTC)
+    - cron: "0 22 * * *"   # 05:00 ไทย
   workflow_dispatch:
 
 jobs:
-  prod-monitor:
-    name: Run PROD Monitor (05:00)
+  beta-monitor:
+    name: Run BETA Monitor 05:00
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
         with:
           persist-credentials: false
 
-      - uses: actions/setup-python@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: "3.11"
 
-      - run: pip install requests
+      - name: Install dependencies
+        run: pip install requests
 
-      - name: Run PROD scripts
+
+      - name: Run BETA scripts
         env:
+          WEBHOOK: ${{ secrets.WEBHOOK }}
           WEBHOOK1: ${{ secrets.WEBHOOK1 }}
           WEBHOOK2: ${{ secrets.WEBHOOK2 }}
           WEBHOOK3: ${{ secrets.WEBHOOK3 }}
           WEBHOOK4: ${{ secrets.WEBHOOK4 }}
           WEBHOOK5: ${{ secrets.WEBHOOK5 }}
         run: |
-          python Banner/CNPRODWin.py
-          python Banner/OSPRODWin.py
+          python Banner/CNBETAWin.py
+          python Banner/OSBETAWin.py
 
-      - name: Commit and Push PROD logs
+      - name: Commit and Push BETA logs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
           mkdir -p kuro/log
           git add kuro/log
           if ! git diff --cached --quiet; then
-            git commit -m "Update PROD logs [skip ci]"
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+            git commit -m "Update BETA logs [skip ci]"
+            git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:main
           else
             echo "No changes to commit"
           fi

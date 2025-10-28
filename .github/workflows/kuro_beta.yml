@@ -11,18 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
         with:
           persist-credentials: false
 
-      - uses: actions/setup-python@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: "3.11"
 
-      - run: pip install requests
+      - name: Install dependencies
+        run: pip install requests
+
 
       - name: Run BETA scripts
         env:
+          WEBHOOK: ${{ secrets.WEBHOOK }}
           WEBHOOK1: ${{ secrets.WEBHOOK1 }}
           WEBHOOK2: ${{ secrets.WEBHOOK2 }}
           WEBHOOK3: ${{ secrets.WEBHOOK3 }}
@@ -33,6 +38,8 @@ jobs:
           python Banner/OSBETAWin.py
 
       - name: Commit and Push BETA logs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
@@ -40,7 +47,7 @@ jobs:
           git add kuro/log
           if ! git diff --cached --quiet; then
             git commit -m "Update BETA logs [skip ci]"
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} HEAD:main
+            git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} HEAD:main
           else
             echo "No changes to commit"
           fi
