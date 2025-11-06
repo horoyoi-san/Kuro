@@ -34,8 +34,8 @@ jobs:
           WEBHOOK4: ${{ secrets.WEBHOOK4 }}
           WEBHOOK5: ${{ secrets.WEBHOOK5 }}
         run: |
-          python Banner/CNBETAWin.py
-          python Banner/OSBETAWin.py
+          python "Banner/Wuthering Waves CN BETA.py"
+          python "Banner/Wuthering Waves OS BETA.py"
 
       - name: Commit and Push BETA logs
         env:

@@ -33,8 +33,10 @@ jobs:
           WEBHOOK4: ${{ secrets.WEBHOOK4 }}
           WEBHOOK5: ${{ secrets.WEBHOOK5 }}
         run: |
-          python Banner/CNPRODWin.py
-          python Banner/OSPRODWin.py
+          python "Banner/Wuthering Waves CN PROD.py"
+          python "Banner/Wuthering Waves OS PROD.py"
+          python "Banner/Punishing Gray Raven CN PROD.py"
+          python "Banner/Punishing Gray Raven OS PROD.py"
 
       - name: Commit and Push PROD logs
         env:
