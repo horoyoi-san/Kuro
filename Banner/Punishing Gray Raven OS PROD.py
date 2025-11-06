@@ -61,7 +61,7 @@ def create_patch_embeds(patch_text, max_len=1024):
                 "title": f"Patch Versions Part {part_num}",
                 "description": current_field,
                 "color": 65535,
-                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+                "thumbnail": {"url": "https://play-lh.googleusercontent.com/EwolwmpxNBLGQgDW4wRJy1TkMjFE5-7sE93I0gpLHSc49oJy4TON8AGHBaHdFIA8nRU"},
                 "image": {"url": "https://static.wikia.nocookie.net/punishing-gray-raven/images/3/3c/V2-c836b61861815c5f798429ba1f021b87_1200x500.jpg"}
             })
             current_field = line
@@ -73,7 +73,7 @@ def create_patch_embeds(patch_text, max_len=1024):
             "title": f"Patch Versions Part {part_num}",
             "description": current_field,
             "color": 65535,
-            "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+            "thumbnail": {"url": "https://play-lh.googleusercontent.com/EwolwmpxNBLGQgDW4wRJy1TkMjFE5-7sE93I0gpLHSc49oJy4TON8AGHBaHdFIA8nRU"},
             "image": {"url": "https://static.wikia.nocookie.net/punishing-gray-raven/images/3/3c/V2-c836b61861815c5f798429ba1f021b87_1200x500.jpg"}
         })
     return embeds
@@ -139,7 +139,7 @@ def send_webhook(data, url, title, webhook_url):
             {"name": "MD5", "value": md5, "inline": False},
             {"name": "Download", "value": full_url, "inline": False},
         ],
-        "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+        "thumbnail": {"url": "https://play-lh.googleusercontent.com/EwolwmpxNBLGQgDW4wRJy1TkMjFE5-7sE93I0gpLHSc49oJy4TON8AGHBaHdFIA8nRU"},
         "image": {"url": extra_url}
     }
 
