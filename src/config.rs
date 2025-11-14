@@ -54,7 +54,7 @@ pub(crate) struct InjectConfiguration {
 }
 
 // TODO: Too lazy
-#[cfg(feature = "cn_beta_2_7_0")]
+#[cfg(feature = "cn_beta_2_8_0")]
 pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
     f_pak_file_check: 0x4618D30,
     f_pak_file_check_preamble: 0xCCCCCC050311F1E9,
@@ -81,7 +81,7 @@ pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
         replacement_defaults: &ReplacementDefaults {
             config_server_default: "127.0.0.1:10001",
             // hotpatch_server_default: "127.0.0.1:10001",
-            log_server_default: "127.0.0.1:10001",
+            log_server_default: "127.0.0.1:10010",
             #[cfg(feature = "enable-sdk")]
             sdk_server_default: "127.0.0.1:10001",
             watermark_server_default: "nigga.kys:1337",
@@ -106,21 +106,21 @@ pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
     }
 };
 
-#[cfg(feature = "os_beta_2_7_0")]
+#[cfg(feature = "os_beta_2_8_0")]
 pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
-    f_pak_file_check: 0x3FEA380,
-    f_pak_file_check_preamble: 0xCCCCCC053611C2E9,
-    resize_grow: 0x0918350,
-    f_print_f: 0x25E6740,
-    add_pak_folders_entry: 0x3FDFC20,
-    add_pak_folders_ret: 0x3FE24C0,
+    f_pak_file_check: 0x40BCB70,
+    f_pak_file_check_preamble: 0xCCCCCC0540CCE7E9,
+    resize_grow: 0x09226B0,
+    f_print_f: 0x26823A0,
+    add_pak_folders_entry: 0x40B2350,
+    add_pak_folders_ret: 0x40B4C40,
     #[cfg(all(not(feature = "only-sig-bypass"), feature = "regular"))]
     ue_curl_config: CurlConfig {
         handle_rcx_relative_offset: 0x110,
         url_handle_relative_offset: 0x880,
         http_headers_handle_relative_offset: None,
-        curl_easy_setopt: 0x6690240,
-        curl_easy_perform: 0x3961210,
+        curl_easy_setopt: 0x678CCE0,
+        curl_easy_perform: 0x3A33AF0,
     },
     #[cfg(all(not(feature = "only-sig-bypass"), feature = "regular"))]
     replacement_config: ReplacementConfig {
@@ -133,7 +133,111 @@ pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
         replacement_defaults: &ReplacementDefaults {
             config_server_default: "127.0.0.1:10001",
             // hotpatch_server_default: "127.0.0.1:10001",
-            log_server_default: "127.0.0.1:10001",
+            log_server_default: "127.0.0.1:10010",
+            #[cfg(feature = "enable-sdk")]
+            sdk_server_default: "127.0.0.1:10001",
+            watermark_server_default: "nigga.kys:1337",
+        },
+    },
+    #[cfg(all(not(feature = "enable-sdk"), not(feature = "only-sig-bypass"), feature = "regular"))]
+    disable_sdk: DisableSdkConfiguration {
+        sdk_dll: s!("KRSDK.dll"),
+        eula_accept: 0xA4720,
+        sdk_go_away: 0xBBA70,
+    },
+    #[cfg(all(feature = "enable-sdk", not(feature = "only-sig-bypass"), feature = "regular"))]
+    kr_curl: KrCurlConfiguration {
+        curl_dll: s!("libkrsdkcurl.dll"),
+        curl_config: CurlConfig {
+            handle_rcx_relative_offset: 0,
+            url_handle_relative_offset: 0x1220,
+            http_headers_handle_relative_offset: Some(0x340),
+            curl_easy_setopt: 0x36E50,
+            curl_easy_perform: 0xE3D0,
+        },
+    }
+};
+
+#[cfg(feature = "os_live_2_7_0")]
+pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
+    f_pak_file_check: 0x3FF9700,
+    f_pak_file_check_preamble: 0xCCCCCC05380F87E9,
+    resize_grow: 0x091A130,
+    f_print_f: 0x25F7C30,
+    add_pak_folders_entry: 0x3FEEEC0,
+    add_pak_folders_ret: 0x3FF17B0,
+    #[cfg(all(not(feature = "only-sig-bypass"), feature = "regular"))]
+    ue_curl_config: CurlConfig {
+        handle_rcx_relative_offset: 0x110,
+        url_handle_relative_offset: 0x880,
+        http_headers_handle_relative_offset: None,
+        curl_easy_setopt: 0x66A1EE0,
+        curl_easy_perform: 0x3972090,
+    },
+    #[cfg(all(not(feature = "only-sig-bypass"), feature = "regular"))]
+    replacement_config: ReplacementConfig {
+        config_server_regex: r#"^(https|http)://.*/([a-zA-Z0-9]{32}/index\.json)$"#,
+        // hotpatch_server_regex: "",
+        log_server_regex: r#"^(https|http)://.*\.cos\..*\.myqcloud\.com/(.*)$"#,
+        #[cfg(feature = "enable-sdk")]
+        sdk_server_regex: r#"^(https|http)://.*\.cos\..*\.myqcloud\.com/(.*)$"#,
+        watermark_server_regex: "^(https|http)://(?:(?:csas.aliyuncs.com)|(?:sase-public-server-files.oss-cn-hangzhou.aliyuncs.com)|(?:beta-package-server-sh.aki-game.com)|(?:beta-package-server-sg.aki-game.net))/(.*)$",
+        replacement_defaults: &ReplacementDefaults {
+            config_server_default: "127.0.0.1:10001",
+            // hotpatch_server_default: "127.0.0.1:10001",
+            log_server_default: "127.0.0.1:10010",
+            #[cfg(feature = "enable-sdk")]
+            sdk_server_default: "127.0.0.1:10001",
+            watermark_server_default: "nigga.kys:1337",
+        },
+    },
+    #[cfg(all(not(feature = "enable-sdk"), not(feature = "only-sig-bypass"), feature = "regular"))]
+    disable_sdk: DisableSdkConfiguration {
+        sdk_dll: s!("KRSDK.dll"),
+        eula_accept: 0xA4720,
+        sdk_go_away: 0xBBA70,
+    },
+    #[cfg(all(feature = "enable-sdk", not(feature = "only-sig-bypass"), feature = "regular"))]
+    kr_curl: KrCurlConfiguration {
+        curl_dll: s!("libkrsdkcurl.dll"),
+        curl_config: CurlConfig {
+            handle_rcx_relative_offset: 0,
+            url_handle_relative_offset: 0x1220,
+            http_headers_handle_relative_offset: Some(0x340),
+            curl_easy_setopt: 0x36E50,
+            curl_easy_perform: 0xE3D0,
+        },
+    }
+};
+
+#[cfg(feature = "cn_live_2_7_0")]
+pub(crate) const CONFIG: InjectConfiguration = InjectConfiguration {
+    f_pak_file_check: 0x3FF9700,
+    f_pak_file_check_preamble: 0xCCCCCC05380F87E9,
+    resize_grow: 0x091A130,
+    f_print_f: 0x25F7C30,
+    add_pak_folders_entry: 0x3FEEEC0,
+    add_pak_folders_ret: 0x3FF17B0,
+    #[cfg(all(not(feature = "only-sig-bypass"), feature = "regular"))]
+    ue_curl_config: CurlConfig {
+        handle_rcx_relative_offset: 0x110,
+        url_handle_relative_offset: 0x880,
+        http_headers_handle_relative_offset: None,
+        curl_easy_setopt: 0x66A1EE0,
+        curl_easy_perform: 0x3972090,
+    },
+    #[cfg(all(not(feature = "only-sig-bypass"), feature = "regular"))]
+    replacement_config: ReplacementConfig {
+        config_server_regex: r#"^(https|http)://.*/([a-zA-Z0-9]{32}/index\.json)$"#,
+        // hotpatch_server_regex: "",
+        log_server_regex: r#"^(https|http)://.*\.cos\..*\.myqcloud\.com/(.*)$"#,
+        #[cfg(feature = "enable-sdk")]
+        sdk_server_regex: r#"^(https|http)://.*\.cos\..*\.myqcloud\.com/(.*)$"#,
+        watermark_server_regex: "^(https|http)://(?:(?:csas.aliyuncs.com)|(?:sase-public-server-files.oss-cn-hangzhou.aliyuncs.com)|(?:beta-package-server-sh.aki-game.com)|(?:beta-package-server-sg.aki-game.net))/(.*)$",
+        replacement_defaults: &ReplacementDefaults {
+            config_server_default: "127.0.0.1:10001",
+            // hotpatch_server_default: "127.0.0.1:10001",
+            log_server_default: "127.0.0.1:10010",
             #[cfg(feature = "enable-sdk")]
             sdk_server_default: "127.0.0.1:10001",
             watermark_server_default: "nigga.kys:1337",
