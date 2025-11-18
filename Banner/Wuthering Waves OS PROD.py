@@ -51,55 +51,103 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # ================= Embed Helpers =================
-MAX_DESC = 4000  # Discord limit per embed description
+def create_main_embed(title, version, size, md5, url, thumbnail=None, image=None, color=65535):
+    embed = {
+        "title": title,
+        "color": color,
+        "fields": [
+            {"name": "Version", "value": version, "inline": True},
+            {"name": "File Size", "value": f"{size/1024/1024:.2f} MB", "inline": True},
+            {"name": "MD5", "value": md5, "inline": False},
+            {"name": "Download", "value": url, "inline": False},
+        ]
+    }
+    if thumbnail:
+        embed["thumbnail"] = {"url": thumbnail}
+    if image:
+        embed["image"] = {"url": image}
+    return embed
 
-def chunk_text(text, max_len=MAX_DESC):
-    """แบ่งข้อความยาว ๆ เป็นหลาย embed description"""
-    lines = text.splitlines()
-    chunks = []
-    current = ""
-    for line in lines:
-        if len(current) + len(line) + 1 > max_len:
-            chunks.append(current)
-            current = line
-        else:
-            current += ("\n" if current else "") + line
-    if current:
-        chunks.append(current)
-    return chunks
-
-def create_embeds(title, text, color=65535):
-    """สร้าง embeds จากข้อความยาว"""
-    chunks = chunk_text(text)
+def create_patch_embeds(title, patch_versions, thumbnail=None, image=None):
+    """สร้าง embed แยกทีละข้อความ (line) ไม่เกิน 1024 ตัวอักษร"""
     embeds = []
-    for idx, chunk in enumerate(chunks, start=1):
-        embeds.append({
-            "title": f"{title} (Part {idx})" if len(chunks) > 1 else title,
-            "description": chunk,
-            "color": color
-        })
+    for line in patch_versions:
+        embed = {
+            "title": title + " - Patch",
+            "description": line,
+            "color": 65535
+        }
+        if thumbnail:
+            embed["thumbnail"] = {"url": thumbnail}
+        if image:
+            embed["image"] = {"url": image}
+        embeds.append(embed)
     return embeds
 
-def send_to_webhooks(title, data):
-    """ส่งข้อมูลไป webhook แต่ละตัว"""
-    # แปลง JSON เป็น string แบบสวยงาม
-    full_text = json.dumps(data, indent=2, ensure_ascii=False)
-    embeds = create_embeds(title, full_text)
-    for webhook in webhook_urls:
-        if not webhook:
+def send_webhook_blocks(blocks):
+    """ส่ง embed หลาย block แบ่ง batch 10 embed ต่อ webhook"""
+    for webhook_url in webhook_urls:
+        if not webhook_url:
             continue
-        # Discord limit: max 10 embeds per request
-        for i in range(0, len(embeds), 10):
-            batch = embeds[i:i+10]
-            payload = {"embeds": batch}
+        for i in range(0, len(blocks), 10):
+            batch = blocks[i:i+10]
             try:
-                resp = requests.post(webhook, json=payload, timeout=10)
+                resp = requests.post(webhook_url, json={"embeds": batch}, timeout=10)
                 if resp.status_code not in (200, 204):
                     print(f"❌ ส่งไม่ได้: {resp.status_code} {resp.text}")
                 else:
                     print(f"✅ ส่ง Embed จำนวน {len(batch)} สำเร็จ")
             except Exception as e:
                 print(f"❌ Error sending webhook: {e}")
+
+def send_game_webhooks(title, data):
+    default = data.get("default")
+    predownload = data.get("predownload")
+    if not default:
+        print(f"❌ JSON ไม่ถูกต้อง: {title}")
+        return
+
+    blocks = []
+
+    thumbnail = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"
+    image = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
+
+    # ================= Default =================
+    resource = default.get("resource") or default.get("config", {})
+    cdn_list = default.get("cdnList", [])
+    path = resource.get("path", "") or resource.get("indexFile", "")
+    url = (cdn_list[0]["url"] + path) if cdn_list and path else "No URL"
+    version = resource.get("version", "No version")
+    size = resource.get("size", 0)
+    md5 = resource.get("md5", resource.get("indexFileMd5", ""))
+
+    blocks.append(create_main_embed(title + " - Default", version, size, md5, url, thumbnail, image))
+
+    # ================= Patch =================
+    config = default.get("config", {})
+    patch_configs = config.get("patchConfig", [])
+    patch_versions = []
+    for p in patch_configs:
+        ver = p.get("version")
+        idx_file = p.get("indexFile")
+        full_url = (cdn_list[0]["url"] + idx_file) if cdn_list else idx_file
+        patch_versions.append(f"{ver}: {full_url}")
+
+    if patch_versions:
+        blocks += create_patch_embeds(title, patch_versions, thumbnail, image)
+
+    # ================= Predownload =================
+    if predownload:
+        resource = predownload.get("resource") or predownload.get("config", {})
+        cdn_list = predownload.get("cdnList", [])
+        path = resource.get("path", "") or resource.get("indexFile", "")
+        url = (cdn_list[0]["url"] + path) if cdn_list and path else "No URL"
+        version = resource.get("version", "No version")
+        size = resource.get("size", 0)
+        md5 = resource.get("md5", resource.get("indexFileMd5", ""))
+        blocks.append(create_main_embed(title + " - Predownload", version, size, md5, url, thumbnail, image))
+
+    send_webhook_blocks(blocks)
 
 # ================= Main =================
 def check_for_updates():
@@ -116,10 +164,9 @@ def check_for_updates():
         changed, data = log_and_check(api_url, game_name)
         if changed and data:
             print(f"🔔 Detected update for {game_name}")
-            send_to_webhooks(game_name, data)
+            send_game_webhooks(game_name, data)
         else:
             print(f"[{game_name}] No changes detected")
 
-# ================= Run =================
 if __name__ == "__main__":
     check_for_updates()
