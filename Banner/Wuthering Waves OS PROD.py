@@ -50,96 +50,91 @@ def log_and_check(api_url, game_name):
         return True, data_json
     return False, data_json
 
-# ================= Discord =================
-def create_patch_embeds(patch_text, max_len=1024):
+
+# ================= Create Patch Embeds =================
+def create_patch_embeds(text, max_len=1024):
+    if not text:
+        return []
+
     embeds = []
-    current_field = ""
-    part_num = 1
-    for line in patch_text.split("\n"):
-        if len(current_field) + len(line) + 1 > max_len:
+    current = ""
+    part = 1
+
+    for line in text.split("\n"):
+        if len(current) + len(line) + 1 > max_len:
             embeds.append({
-                "title": f"Patch Versions Part {part_num}",
-                "description": current_field,
+                "title": f"Patch Versions Part {part}",
+                "description": current,
                 "color": 65535,
                 "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
                 "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
             })
-            current_field = line
-            part_num += 1
+            current = line
+            part += 1
         else:
-            current_field += ("\n" if current_field else "") + line
-    if current_field:
+            current += ("\n" if current else "") + line
+
+    if current:
         embeds.append({
-            "title": f"Patch Versions Part {part_num}",
-            "description": current_field,
+            "title": f"Patch Versions Part {part}",
+            "description": current,
             "color": 65535,
             "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
             "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
         })
+
     return embeds
 
-def send_webhook(data, url, title, webhook_url):
-    if not webhook_url:
-        print(f"⚠️ Webhook URL ไม่ถูกต้อง, ข้ามการส่ง")
-        return
 
+# ================= Send Discord =================
+def send_webhook_block(data, title, webhook_url):
     default_data = data.get("default")
-    predownload_data = data.get("predownload")  # ⭐ เพิ่มการอ่าน predownload
+    predownload_data = data.get("predownload")
 
     if not default_data:
-        print(f"❌ Unexpected JSON format for {title}, skipping webhook")
+        print(f"❌ Unexpected JSON structure, missing 'default': {title}")
         return
 
-    # ===================== HANDLE DEFAULT ======================
+    # -------- Parse function --------
     def parse_block(block):
         resource = block.get("resource")
         cdn_list = block.get("cdnList", [])
+
         if resource:
-            # Launcher type
             version = resource.get("version", "No version")
             path = resource.get("path", "")
             md5 = resource.get("md5", "")
             size = resource.get("size", 0)
-            full_url = cdn_list[0]["url"] + path if cdn_list and path else path
+            full_url = (cdn_list[0]["url"] + path) if (cdn_list and path) else "No URL"
             patch_embeds = []
+
         else:
-            # Game type
             config = block.get("config", {})
             version = config.get("version", "No version")
             size = config.get("size", 0)
             md5 = config.get("indexFileMd5", "")
             full_url = "No URL"
 
-            patch_versions = []
+            patch_texts = []
             for patch in config.get("patchConfig", []):
                 ver = patch.get("version")
-                index_file = patch.get("indexFile")
-                full_url_patch = cdn_list[0]["url"] + index_file if cdn_list else index_file
-                patch_versions.append(f"{ver}: {full_url_patch}")
+                fpath = patch.get("indexFile")
+                full_patch_url = cdn_list[0]["url"] + fpath if cdn_list else fpath
+                patch_texts.append(f"{ver}: {full_patch_url}")
 
-            patch_text = "\n".join(patch_versions) if patch_versions else None
-            patch_embeds = create_patch_embeds(patch_text) if patch_text else []
+            patch_text = "\n".join(patch_texts)
+            patch_embeds = create_patch_embeds(patch_text)
 
-            if patch_versions:
-                full_url = patch_versions[-1].split(": ")[-1]
+            if patch_texts:
+                full_url = patch_texts[-1].split(": ")[-1]
 
         return version, size, md5, full_url, patch_embeds
 
-    # Default block
-    d_version, d_size, d_md5, d_url, d_patch_embeds = parse_block(default_data)
+    # Parse default
+    d_version, d_size, d_md5, d_url, d_patches = parse_block(default_data)
 
-    # Predownload block ⭐ (อาจไม่มี)
-    if predownload_data:
-        p_version, p_size, p_md5, p_url, p_patch_embeds = parse_block(predownload_data)
-    else:
-        p_version = p_size = p_md5 = p_url = None
-        p_patch_embeds = []
-
-    extra_url = "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"
-
-    # ===================== DEFAULT EMBED ======================
-    base_embed = {
-        "title": title + " — Default",
+    embeds = [{
+        "title": f"{title} — Default",
         "color": 65535,
         "fields": [
             {"name": "Version", "value": d_version, "inline": True},
@@ -148,16 +143,15 @@ def send_webhook(data, url, title, webhook_url):
             {"name": "Download", "value": d_url, "inline": False},
         ],
         "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
-        "image": {"url": extra_url}
-    }
+        "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
+    }] + d_patches
 
-    embeds = [base_embed] + d_patch_embeds
-
-    # ===================== PREDOWNLOAD EMBED ======================
-    if p_version:
+    # Parse predownload
+    if predownload_data:
+        p_version, p_size, p_md5, p_url, p_patches = parse_block(predownload_data)
         pre_embed = {
-            "title": title + " — Predownload",
-            "color": 16776960,  # yellow-ish
+            "title": f"{title} — Predownload",
+            "color": 16776960,
             "fields": [
                 {"name": "Version", "value": p_version, "inline": True},
                 {"name": "File Size", "value": f"{p_size/1024/1024:.2f} MB", "inline": True},
@@ -165,22 +159,29 @@ def send_webhook(data, url, title, webhook_url):
                 {"name": "Download", "value": p_url, "inline": False},
             ],
             "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
-            "image": {"url": extra_url}
+            "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
         }
+        embeds += [pre_embed] + p_patches
 
-        embeds += [pre_embed] + p_patch_embeds
-
-    # ===================== SEND TO DISCORD ======================
-    webhook_data = {"embeds": embeds}
+    payload = {"embeds": embeds}
 
     try:
-        response = requests.post(webhook_url, json=webhook_data, timeout=10)
-        if response.status_code == 204:
-            print(f"✅ ส่งข้อความ {title} ไปยัง Discord เรียบร้อยแล้ว!")
+        r = requests.post(webhook_url, json=payload, timeout=10)
+        if r.status_code == 204:
+            print(f"✅ ส่ง {title} สำเร็จ → {webhook_url}")
         else:
-            print(f"❌ ไม่สามารถส่ง {title} ได้: {response.status_code}, {response.text}")
+            print(f"❌ ส่งไม่สำเร็จ ({r.status_code}): {r.text}")
     except Exception as e:
         print(f"❌ Error sending webhook: {e}")
+
+
+# ================= Wrapper (ส่งทุก Webhook) =================
+def send_webhooks(data, title):
+    for url in webhook_urls:
+        if url:
+            send_webhook_block(data, title, url)
+        else:
+            print("⚠️ ข้าม Webhook URL (ว่าง)")
 
 
 # ================= Main =================
@@ -189,12 +190,14 @@ def check_for_updates():
         ("https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json", "Wuthering Waves OS (Launcher)"),
         ("https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json", "Wuthering Waves OS (Game)")
     ]
+
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
         if changed and data:
-            send_webhooks(data, api_url, game_name)
+            send_webhooks(data, game_name)
         else:
             print(f"[{game_name}] No changes detected")
+
 
 if __name__ == "__main__":
     check_for_updates()
