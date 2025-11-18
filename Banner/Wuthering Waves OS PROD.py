@@ -112,7 +112,6 @@ def send_webhook(data, title, webhook_url, batch_size=5):
             size = config.get("size", 0)
             md5 = config.get("indexFileMd5", "")
             cdn_list = default.get("cdnList", [])
-            url_full = "No URL"
             patch_lines = []
             for patch in config.get("patchConfig", []):
                 ver = patch.get("version")
@@ -138,7 +137,9 @@ def send_webhook(data, title, webhook_url, batch_size=5):
             index_file = patch.get("indexFile")
             full_url_patch = cdn_list[0]["url"] + index_file if cdn_list else index_file
             patch_lines.append(f"{ver}: {full_url_patch}")
-        desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}"
+        # Pre-download main info with URL from cdnList
+        full_url_predownload = patch_lines[-1] if patch_lines else "No URL"
+        desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}\nDownload: {full_url_predownload}"
         blocks += split_text_to_embeds(title + " — Predownload", desc, color=16776960)
         blocks += split_text_to_embeds(title + " — Predownload Patch", "\n".join(patch_lines), color=16776960)
 
