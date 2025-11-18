@@ -31,13 +31,10 @@ def log_and_check(api_url, game_name):
 
     try:
         with open(raw_file, "a", encoding="utf-8") as f:
-            f.write(
-                json.dumps(
-                    {"timestamp": datetime.now(timezone.utc).isoformat(), "data": data_json},
-                    ensure_ascii=False,
-                )
-                + "\n"
-            )
+            f.write(json.dumps({
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "data": data_json
+            }, ensure_ascii=False) + "\n")
         print(f"✅ Wrote raw log for {game_name}")
     except Exception as e:
         print(f"❌ Error writing log file for {game_name}: {e}")
@@ -51,158 +48,69 @@ def log_and_check(api_url, game_name):
         with open(hash_file, "w") as f:
             f.write(current_hash)
         return True, data_json
-
     return False, data_json
 
+# ================= Discord Embed Helper =================
+MAX_EMBED = 6000
+MAX_EMBEDS_PER_REQUEST = 10
 
-# =============== Embed สร้าง Patch ===============
-def create_patch_embeds(patch_text, max_len=1024):
-    embeds = []
-    current_field = ""
-    part_num = 1
+def split_text(text, chunk_size=MAX_EMBED):
+    """แบ่งข้อความออกเป็นหลายก้อน ไม่เกิน chunk_size"""
+    return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
 
-    for line in patch_text.split("\n"):
-        if len(current_field) + len(line) + 1 > max_len:
-            embeds.append({
-                "title": f"Patch Versions Part {part_num}",
-                "description": current_field,
-                "color": 65535
-            })
-            current_field = line
-            part_num += 1
-        else:
-            current_field += ("\n" if current_field else "") + line
-
-    if current_field:
-        embeds.append({
-            "title": f"Patch Versions Part {part_num}",
-            "description": current_field,
-            "color": 65535
-        })
-
-    return embeds
-
-
-# =============== ส่งไปหลาย Webhook ===============
-def send_webhooks(data, title):
-    for url in webhook_urls:
-        if url:
-            send_webhook(data, title, url)
-        else:
-            print("⚠️ Webhook URL ว่าง – ข้าม")
-
-
-# =============== ส่ง Webhook หลัก ===============
-def send_webhook(data, title, webhook_url):
-
-    # Discord ต้องการ object {"embeds": [...]} เท่านั้น
+def send_big_message(webhook_url, title, full_text):
+    """ส่งข้อความยาวเป็น embed หลายตัว และหลาย request ถ้าจำเป็น"""
     if not webhook_url:
-        print("⚠️ ไม่มี URL")
         return
 
-    default_data = data.get("default")
-    predownload_data = data.get("predownload")
-
-    if not default_data:
-        print("❌ JSON ไม่ถูกต้อง")
-        return
-
-    def parse_block(block):
-        resource = block.get("resource")
-        cdn_list = block.get("cdnList", [])
-
-        if resource:  # Launcher
-            version = resource.get("version", "Unknown")
-            size = resource.get("size", 0)
-            md5 = resource.get("md5", "")
-            path = resource.get("path", "")
-            full_url = cdn_list[0]["url"] + path if cdn_list and path else ""
-            patch_embeds = []
-        else:  # Game
-            config = block.get("config", {})
-            version = config.get("version", "Unknown")
-            size = config.get("size", 0)
-            md5 = config.get("indexFileMd5", "")
-            cdn_list = block.get("cdnList", [])
-            full_url = ""
-
-            patch_versions = []
-            for p in config.get("patchConfig", []):
-                pv = p.get("version")
-                idx = p.get("indexFile")
-                url = cdn_list[0]["url"] + idx if cdn_list else idx
-                patch_versions.append(f"{pv}: {url}")
-
-            patch_text = "\n".join(patch_versions)
-            patch_embeds = create_patch_embeds(patch_text) if patch_versions else []
-
-            if patch_versions:
-                full_url = patch_versions[-1].split(": ")[1]
-
-        return version, size, md5, full_url, patch_embeds
-
-    # Default block
-    d_version, d_size, d_md5, d_url, d_patch_embeds = parse_block(default_data)
-
+    chunks = split_text(full_text, MAX_EMBED)
     embeds = []
 
-    # Base Embed (Default)
-    embeds.append({
-        "title": f"{title} — Default",
-        "color": 65535,
-        "fields": [
-            {"name": "Version", "value": d_version, "inline": True},
-            {"name": "File Size", "value": f"{d_size/1024/1024:.2f} MB", "inline": True},
-            {"name": "MD5", "value": d_md5, "inline": False},
-            {"name": "Download", "value": d_url or "No URL", "inline": False},
-        ]
-    })
-
-    embeds += d_patch_embeds
-
-    # Predownload block
-    if predownload_data:
-        p_version, p_size, p_md5, p_url, p_patch_embeds = parse_block(predownload_data)
-
+    for index, chunk in enumerate(chunks, start=1):
         embeds.append({
-            "title": f"{title} — Predownload",
-            "color": 16776960,
-            "fields": [
-                {"name": "Version", "value": p_version, "inline": True},
-                {"name": "File Size", "value": f"{p_size/1024/1024:.2f} MB", "inline": True},
-                {"name": "MD5", "value": p_md5, "inline": False},
-                {"name": "Download", "value": p_url or "No URL", "inline": False},
-            ]
+            "title": f"{title} (Part {index})" if len(chunks) > 1 else title,
+            "description": chunk,
+            "color": 0x2ECC71
         })
 
-        embeds += p_patch_embeds
+    batches = [embeds[i:i + MAX_EMBEDS_PER_REQUEST] for i in range(0, len(embeds), MAX_EMBEDS_PER_REQUEST)]
 
-    # ส่งจริง
-    payload = {"embeds": embeds}
+    for batch in batches:
+        payload = {"embeds": batch}
+        try:
+            resp = requests.post(webhook_url, json=payload, timeout=10)
+            if resp.status_code not in (200, 204):
+                print(f"❌ ส่งไม่ได้: {resp.status_code} {resp.text}")
+            else:
+                print(f"✅ ส่ง Embed จำนวน {len(batch)} สำเร็จ")
+        except Exception as e:
+            print(f"❌ Error sending webhook: {e}")
 
-    try:
-        r = requests.post(webhook_url, json=payload, timeout=10)
-        if r.status_code == 204:
-            print("✅ ส่งสำเร็จ:", title)
-        else:
-            print("❌ ส่งไม่ได้:", r.status_code, r.text)
-    except Exception as e:
-        print("❌ Error sending webhook:", e)
+# ================= Webhook Sender =================
+def send_webhooks(data, title):
+    raw_text = json.dumps(data, indent=4, ensure_ascii=False)
+    for webhook_url in webhook_urls:
+        send_big_message(webhook_url, title, raw_text)
 
-
-# =============== Main ===============
+# ================= Main =================
 def check_for_updates():
     urls = [
+        # CN
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json", "Wuthering Waves CN (Launcher)"),
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json", "Wuthering Waves CN (Game)"),
+        # OS
         ("https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json", "Wuthering Waves OS (Launcher)"),
         ("https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json", "Wuthering Waves OS (Game)")
     ]
 
-    for url, name in urls:
-        changed, data = log_and_check(url, name)
+    for api_url, game_name in urls:
+        changed, data = log_and_check(api_url, game_name)
         if changed and data:
-            send_webhooks(data, name)
+            print(f"🔔 Detected update for {game_name}")
+            send_webhooks(data, game_name)
         else:
-            print(f"[{name}] No changes detected")
+            print(f"[{game_name}] No changes detected")
 
+# ================= Run =================
 if __name__ == "__main__":
     check_for_updates()
