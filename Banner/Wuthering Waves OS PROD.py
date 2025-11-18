@@ -50,47 +50,56 @@ def log_and_check(api_url, game_name):
         return True, data_json
     return False, data_json
 
-# ================= Discord Embed Helper =================
-MAX_EMBED = 6000
-MAX_EMBEDS_PER_REQUEST = 10
+# ================= Embed Helpers =================
+MAX_DESC = 4000  # Discord limit per embed description
 
-def split_text(text, chunk_size=MAX_EMBED):
-    """แบ่งข้อความออกเป็นหลายก้อน ไม่เกิน chunk_size"""
-    return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
+def chunk_text(text, max_len=MAX_DESC):
+    """แบ่งข้อความยาว ๆ เป็นหลาย embed description"""
+    lines = text.splitlines()
+    chunks = []
+    current = ""
+    for line in lines:
+        if len(current) + len(line) + 1 > max_len:
+            chunks.append(current)
+            current = line
+        else:
+            current += ("\n" if current else "") + line
+    if current:
+        chunks.append(current)
+    return chunks
 
-def send_big_message(webhook_url, title, full_text):
-    """ส่งข้อความยาวเป็น embed หลายตัว และหลาย request ถ้าจำเป็น"""
-    if not webhook_url:
-        return
-
-    chunks = split_text(full_text, MAX_EMBED)
+def create_embeds(title, text, color=65535):
+    """สร้าง embeds จากข้อความยาว"""
+    chunks = chunk_text(text)
     embeds = []
-
-    for index, chunk in enumerate(chunks, start=1):
+    for idx, chunk in enumerate(chunks, start=1):
         embeds.append({
-            "title": f"{title} (Part {index})" if len(chunks) > 1 else title,
+            "title": f"{title} (Part {idx})" if len(chunks) > 1 else title,
             "description": chunk,
-            "color": 0x2ECC71
+            "color": color
         })
+    return embeds
 
-    batches = [embeds[i:i + MAX_EMBEDS_PER_REQUEST] for i in range(0, len(embeds), MAX_EMBEDS_PER_REQUEST)]
-
-    for batch in batches:
-        payload = {"embeds": batch}
-        try:
-            resp = requests.post(webhook_url, json=payload, timeout=10)
-            if resp.status_code not in (200, 204):
-                print(f"❌ ส่งไม่ได้: {resp.status_code} {resp.text}")
-            else:
-                print(f"✅ ส่ง Embed จำนวน {len(batch)} สำเร็จ")
-        except Exception as e:
-            print(f"❌ Error sending webhook: {e}")
-
-# ================= Webhook Sender =================
-def send_webhooks(data, title):
-    raw_text = json.dumps(data, indent=4, ensure_ascii=False)
-    for webhook_url in webhook_urls:
-        send_big_message(webhook_url, title, raw_text)
+def send_to_webhooks(title, data):
+    """ส่งข้อมูลไป webhook แต่ละตัว"""
+    # แปลง JSON เป็น string แบบสวยงาม
+    full_text = json.dumps(data, indent=2, ensure_ascii=False)
+    embeds = create_embeds(title, full_text)
+    for webhook in webhook_urls:
+        if not webhook:
+            continue
+        # Discord limit: max 10 embeds per request
+        for i in range(0, len(embeds), 10):
+            batch = embeds[i:i+10]
+            payload = {"embeds": batch}
+            try:
+                resp = requests.post(webhook, json=payload, timeout=10)
+                if resp.status_code not in (200, 204):
+                    print(f"❌ ส่งไม่ได้: {resp.status_code} {resp.text}")
+                else:
+                    print(f"✅ ส่ง Embed จำนวน {len(batch)} สำเร็จ")
+            except Exception as e:
+                print(f"❌ Error sending webhook: {e}")
 
 # ================= Main =================
 def check_for_updates():
@@ -107,7 +116,7 @@ def check_for_updates():
         changed, data = log_and_check(api_url, game_name)
         if changed and data:
             print(f"🔔 Detected update for {game_name}")
-            send_webhooks(data, game_name)
+            send_to_webhooks(game_name, data)
         else:
             print(f"[{game_name}] No changes detected")
 
