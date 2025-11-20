@@ -130,7 +130,7 @@ def send_webhook(data, title, webhook_url, batch_size=5):
         version = config.get("version", "No version")
         size = config.get("size", 0)
         md5 = config.get("indexFileMd5", "")
-        cdn_list = predownload.get("cdnList", [])
+        cdn_list = default.get("cdnList", [])
         patch_lines = []
         for patch in config.get("patchConfig", []):
             ver = patch.get("version")
