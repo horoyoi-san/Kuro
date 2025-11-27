@@ -51,7 +51,7 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # ================= Discord =================
-def split_text_to_embeds(title, text, color=65535, max_len=1024):
+def split_text_to_embeds(title, text, color=4290707647, max_len=1024):
     """ แบ่งข้อความยาวเป็นหลาย embed """
     if not text:
         return []
@@ -62,7 +62,7 @@ def split_text_to_embeds(title, text, color=65535, max_len=1024):
     for line in lines:
         if len(current) + len(line) + 1 > max_len:
             embeds.append({
-                "title": f"{title} Part {part}",
+                "title": f"{title} {part}",
                 "description": current,
                 "color": color,
                 "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
@@ -74,7 +74,7 @@ def split_text_to_embeds(title, text, color=65535, max_len=1024):
             current += ("\n" if current else "") + line
     if current:
         embeds.append({
-            "title": f"{title} Part {part}",
+            "title": f"{title} {part}",
             "description": current,
             "color": color,
             "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
@@ -105,7 +105,7 @@ def send_webhook(data, title, webhook_url, batch_size=5):
             path = resource.get("path", "")
             url_full = cdn_list[0]["url"] + path if cdn_list and path else path
             desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}\nDownload: {url_full}"
-            blocks += split_text_to_embeds(title + " — Default", desc)
+            blocks += split_text_to_embeds(title + " — Pord", desc)
         else:  # Game
             config = default.get("config", {})
             version = config.get("version", "No version")
@@ -120,8 +120,8 @@ def send_webhook(data, title, webhook_url, batch_size=5):
                 patch_lines.append(f"{ver}: {full_url_patch}")
             url_full = patch_lines[-1] if patch_lines else "No URL"
             desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}\nDownload: {url_full}"
-            blocks += split_text_to_embeds(title + " — Default", desc)
-            blocks += split_text_to_embeds(title + " — Patch", "\n".join(patch_lines))
+            blocks += split_text_to_embeds(title + " — Pord", desc)
+            blocks += split_text_to_embeds(title + " — Hdiff", "\n".join(patch_lines))
 
     # ================= Predownload =================
     predownload = data.get("predownload")
@@ -140,8 +140,8 @@ def send_webhook(data, title, webhook_url, batch_size=5):
         # Pre-download main info with URL from cdnList
         full_url_predownload = patch_lines[-1] if patch_lines else "No URL"
         desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}\nDownload: {full_url_predownload}"
-        blocks += split_text_to_embeds(title + " — Predownload", desc, color=16776960)
-        blocks += split_text_to_embeds(title + " — Predownload Patch", "\n".join(patch_lines), color=16776960)
+        blocks += split_text_to_embeds(title + " — Predownload", desc, color=4294934528)
+        blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=4294934528)
 
     # ================= Send in batches =================
     for i in range(0, len(blocks), batch_size):
