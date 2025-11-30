@@ -66,7 +66,7 @@ def split_text_to_embeds(title, text, color=16711680, max_len=1024):
                 "description": current,
                 "color": color,
                 "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
-                "image": {"url": "https://github.com/horoyoi-san/Kuro/blob/IM/kuro3.0-3.8.png"}
+                "image": {"url": "https://github.com/horoyoi-san/Kuro/blob/IM/kuro3.0-3.8.png?raw=true"}
             })
             current = line
             part += 1
@@ -78,7 +78,7 @@ def split_text_to_embeds(title, text, color=16711680, max_len=1024):
             "description": current,
             "color": color,
             "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
-            "image": {"url": "https://github.com/horoyoi-san/Kuro/blob/IM/kuro3.0-3.8.png"}
+            "image": {"url": "https://github.com/horoyoi-san/Kuro/blob/IM/kuro3.0-3.8.png?raw=true"}
         })
     return embeds
 
