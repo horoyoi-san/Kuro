@@ -7,8 +7,8 @@ from datetime import datetime, timezone
 # ================= Webhook =================
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
-  #  os.environ.get("WEBHOOK4"),
-  #  os.environ.get("WEBHOOK5"),
+    os.environ.get("WEBHOOK4"),
+    os.environ.get("WEBHOOK5"),
 ]
 
 # ================= Logging =================
@@ -190,8 +190,8 @@ def send_webhook(data, title, webhook_url, batch_size=1):
 # ================= Main =================
 def check_for_updates():
     urls = [
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json", "Wuthering Waves BETA CN"),
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json", "Wuthering Waves BETA CN")
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json", "Wuthering Waves BETA-L CN"),
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json", "Wuthering Waves BETA-G CN")
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
