@@ -86,9 +86,7 @@ def send_webhooks(data, title):
     for webhook_url in webhook_urls:
         send_webhook(data, title, webhook_url)
 
-BATCH_SIZE = 1
-
-def send_webhook(data, title, webhook_url, batch_size=BATCH_SIZE):
+def send_webhook(data, title, webhook_url, batch_size=1):
     if not webhook_url:
         print("⚠️ Webhook URL ไม่ถูกต้อง")
         return
