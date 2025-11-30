@@ -7,8 +7,8 @@ from datetime import datetime, timezone
 # ================= Webhook =================
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
-    os.environ.get("WEBHOOK4"),
-    os.environ.get("WEBHOOK5"),
+  #  os.environ.get("WEBHOOK4"),
+  #  os.environ.get("WEBHOOK5"),
 ]
 
 # ================= Logging =================
@@ -111,6 +111,12 @@ def send_webhook(data, title, webhook_url, batch_size=1):
             version = config.get("version", "No version")
             size = config.get("size", 0)
             md5 = config.get("indexFileMd5", "")
+
+            # ====== new fields ======
+            index_file_main = config.get("indexFile", "N/A")
+            resources_file = default.get("resources", "N/A")
+            # =========================
+
             cdn_list = default.get("cdnList", [])
             patch_lines = []
             for patch in config.get("patchConfig", []):
@@ -118,8 +124,19 @@ def send_webhook(data, title, webhook_url, batch_size=1):
                 index_file = patch.get("indexFile")
                 full_url_patch = cdn_list[0]["url"] + index_file if cdn_list else index_file
                 patch_lines.append(f"{ver}: {full_url_patch}")
+
             url_full = patch_lines[-1] if patch_lines else "No URL"
-            desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}\nDownload: {url_full}"
+
+            # === description now includes indexFile + resources ===
+            desc = (
+                f"Version: {version}\n"
+                f"Size: {size/1024/1024:.2f} MB\n"
+                f"MD5: {md5}\n"
+                f"Download: {url_full}\n"
+                f"IndexFile: {cdn_list[0]['url'] + index_file_main if cdn_list else index_file_main}\n"
+                f"Resources: {cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
+            )
+
             blocks += split_text_to_embeds(title + " — Game", desc)
             blocks += split_text_to_embeds(title + " — Hdiff", "\n".join(patch_lines))
 
@@ -130,6 +147,12 @@ def send_webhook(data, title, webhook_url, batch_size=1):
         version = config.get("version", "No version")
         size = config.get("size", 0)
         md5 = config.get("indexFileMd5", "")
+
+        # ====== new fields ======
+        index_file_main = config.get("indexFile", "N/A")
+        resources_file = predownload.get("resources", "N/A")
+        # =========================
+
         cdn_list = default.get("cdnList", [])
         patch_lines = []
         for patch in config.get("patchConfig", []):
@@ -137,11 +160,21 @@ def send_webhook(data, title, webhook_url, batch_size=1):
             index_file = patch.get("indexFile")
             full_url_patch = cdn_list[0]["url"] + index_file if cdn_list else index_file
             patch_lines.append(f"{ver}: {full_url_patch}")
-        # Pre-download main info with URL from cdnList
+
+        # Main predownload info
         full_url_predownload = patch_lines[-1] if patch_lines else "No URL"
-        desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}\nDownload: {full_url_predownload}"
+        desc = (
+            f"Version: {version}\n"
+            f"Size: {size/1024/1024:.2f} MB\n"
+            f"MD5: {md5}\n"
+            f"Download: {full_url_predownload}\n"
+            f"IndexFile: {cdn_list[0]['url'] + index_file_main if cdn_list else index_file_main}\n"
+            f"Resources: {cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
+        )
+
         blocks += split_text_to_embeds(title + " — Predownload", desc, color=16711680)
         blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=16711680)
+
 
     # ================= Send in batches =================
     for i, embed in enumerate(blocks, start=1):
