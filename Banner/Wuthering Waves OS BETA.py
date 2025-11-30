@@ -86,7 +86,7 @@ def send_webhooks(data, title):
     for webhook_url in webhook_urls:
         send_webhook(data, title, webhook_url)
 
-def send_webhook(data, title, webhook_url, batch_size=5):
+def send_webhook(data, title, webhook_url, batch_size=1):
     if not webhook_url:
         print("⚠️ Webhook URL ไม่ถูกต้อง")
         return
@@ -144,14 +144,13 @@ def send_webhook(data, title, webhook_url, batch_size=5):
         blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=4293585799)
 
     # ================= Send in batches =================
-    for i in range(0, len(blocks), batch_size):
-        batch = blocks[i:i+batch_size]
+    for i, embed in enumerate(blocks, start=1):
         try:
-            response = requests.post(webhook_url, json={"embeds": batch}, timeout=10)
+            response = requests.post(webhook_url, json={"embeds": [embed]}, timeout=10)
             if response.status_code == 204:
-                print(f"✅ ส่ง batch {i//batch_size+1} ของ {title} เรียบร้อยแล้ว")
+                print(f"✅ ส่ง embed {i} ของ {title} แล้ว")
             else:
-                print(f"❌ ไม่สามารถส่ง {title} batch {i//batch_size+1}: {response.status_code} {response.text}")
+                print(f"❌ ส่ง embed {i} ไม่สำเร็จ: {response.status_code} {response.text}")
         except Exception as e:
             print(f"❌ Error sending webhook: {e}")
 
