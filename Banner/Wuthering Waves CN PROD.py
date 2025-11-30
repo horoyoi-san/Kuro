@@ -105,7 +105,7 @@ def send_webhook(data, title, webhook_url, batch_size=1):
             path = resource.get("path", "")
             url_full = cdn_list[0]["url"] + path if cdn_list and path else path
             desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}\nDownload: {url_full}"
-            blocks += split_text_to_embeds(title + " — Pord", desc)
+            blocks += split_text_to_embeds(title + " — Launcher", desc)
         else:  # Game
             config = default.get("config", {})
             version = config.get("version", "No version")
@@ -120,7 +120,7 @@ def send_webhook(data, title, webhook_url, batch_size=1):
                 patch_lines.append(f"{ver}: {full_url_patch}")
             url_full = patch_lines[-1] if patch_lines else "No URL"
             desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}\nDownload: {url_full}"
-            blocks += split_text_to_embeds(title + " — Pord", desc)
+            blocks += split_text_to_embeds(title + " — Game", desc)
             blocks += split_text_to_embeds(title + " — Hdiff", "\n".join(patch_lines))
 
     # ================= Predownload =================
@@ -157,8 +157,8 @@ def send_webhook(data, title, webhook_url, batch_size=1):
 # ================= Main =================
 def check_for_updates():
     urls = [
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json", "Wuthering Waves Launcher CN PROD"),
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json", "Wuthering Waves Game CN PROD")
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json", "Wuthering Waves PROD CN"),
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json", "Wuthering Waves PROD CN")
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
