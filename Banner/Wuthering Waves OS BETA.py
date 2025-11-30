@@ -51,7 +51,7 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # ================= Discord =================
-def split_text_to_embeds(title, text, color=65535, max_len=1024):
+def split_text_to_embeds(title, text, color=65280, max_len=1024):
     """ แบ่งข้อความยาวเป็นหลาย embed """
     if not text:
         return []
@@ -140,8 +140,8 @@ def send_webhook(data, title, webhook_url, batch_size=1):
         # Pre-download main info with URL from cdnList
         full_url_predownload = patch_lines[-1] if patch_lines else "No URL"
         desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}\nDownload: {full_url_predownload}"
-        blocks += split_text_to_embeds(title + " — Predownload", desc, color=65535)
-        blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=65535)
+        blocks += split_text_to_embeds(title + " — Predownload", desc, color=65280)
+        blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=65280)
 
     # ================= Send in batches =================
     for i, embed in enumerate(blocks, start=1):
