@@ -1,8 +1,8 @@
-name: Kuro BETA Monitor 17:30
+name: Kuro BETA Monitor 17:00
 
 on:
   schedule:
-    - cron: "30 10 * * *"   # 17:30 ไทย
+    - cron: "00 10 * * *"   # 17:00 ไทย
   workflow_dispatch:
 
 jobs:
