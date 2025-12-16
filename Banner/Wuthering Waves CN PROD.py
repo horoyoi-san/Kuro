@@ -96,7 +96,7 @@ def extract_cmd_options(data, key, title_prefix):
 
         text = cmd.get("text", {})
 
-        desc_lines = [f"{option}: "]
+        desc_lines = [f"# {option}"]
 
         # เรียงภาษาให้อ่านง่าย
         for lang in ["zh-Hans", "de", "zh-Hant", "ko", "th", "ja", "en", "fr", "es"]:
@@ -139,7 +139,7 @@ def send_webhook(data, title, webhook_url, batch_size=1):
         blocks += extract_cmd_options(
             data,
             "RHIOptionList",
-            title + " — Graphics Options"
+            title + " — lang"
         )
 
     # ================= Default =================
