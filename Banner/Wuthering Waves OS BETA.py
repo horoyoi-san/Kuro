@@ -82,6 +82,40 @@ def split_text_to_embeds(title, text, color=65280, max_len=1024):
         })
     return embeds
 
+
+def extract_cmd_options(data, key, title_prefix):
+    options = []
+    cmd_list = data.get(key, [])
+
+    for cmd in cmd_list:
+        if cmd.get("isShow") != 1:
+            continue
+
+        option = cmd.get("cmdOption", "").strip()
+        if not option:
+            continue
+
+        text = cmd.get("text", {})
+
+        desc_lines = [f"{option}: "]
+
+        # เรียงภาษาให้อ่านง่าย
+        for lang in ["zh-Hans", "de", "zh-Hant", "ko", "th", "ja", "en", "fr", "es"]:
+            if lang in text:
+                desc_lines.append(f"`{lang}` {text[lang]}")
+
+        options.append("\n".join(desc_lines))
+
+    if not options:
+        return []
+
+    return split_text_to_embeds(
+        title_prefix,
+        "\n\n".join(options),
+        color=0x9B59B6  # ม่วง
+    )
+
+
 def send_webhooks(data, title):
     for webhook_url in webhook_urls:
         send_webhook(data, title, webhook_url)
@@ -92,6 +126,22 @@ def send_webhook(data, title, webhook_url, batch_size=1):
         return
 
     blocks = []
+
+    # ================= Launch Commands =================
+    if data.get("commandSwitch") == 1:
+        blocks += extract_cmd_options(
+            data,
+            "commandList",
+            title + " — Launch Commands"
+        )
+
+    # ================= RHI / DX Options =================
+    if data.get("RHIOptionSwitch") == 1:
+        blocks += extract_cmd_options(
+            data,
+            "RHIOptionList",
+            title + " — Graphics Options"
+        )
 
     # ================= Default =================
     default = data.get("default")
