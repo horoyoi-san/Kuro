@@ -140,7 +140,7 @@ def send_webhook(data, title, webhook_url, batch_size=1):
         blocks += extract_cmd_options(
             data,
             "RHIOptionList",
-            title + " — Graphics Options"
+            title + " — lang"
         )
 
     # ================= Default =================
