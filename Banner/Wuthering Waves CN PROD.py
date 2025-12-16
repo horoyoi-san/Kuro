@@ -96,10 +96,10 @@ def extract_cmd_options(data, key, title_prefix):
 
         text = cmd.get("text", {})
 
-        desc_lines = [f"**{option}**"]
+        desc_lines = [f"{option}: "]
 
         # เรียงภาษาให้อ่านง่าย
-        for lang in ["en", "ja", "ko", "zh-Hans", "zh-Hant", "de", "fr", "es"]:
+        for lang in ["zh-Hans", "de", "zh-Hant", "ko", "th", "ja", "en", "fr", "es"]:
             if lang in text:
                 desc_lines.append(f"`{lang}` {text[lang]}")
 
