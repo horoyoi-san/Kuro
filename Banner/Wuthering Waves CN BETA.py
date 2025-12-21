@@ -102,7 +102,7 @@ def extract_cmd_options(data, key, title_prefix):
         # เรียงภาษาให้อ่านง่าย
         for lang in ["zh-Hans", "de", "zh-Hant", "ko", "th", "ja", "en", "fr", "es"]:
             if lang in text:
-                desc_lines.append(f"{lang}: {text[lang]}")
+                desc_lines.append(f"{lang}: ```{text[lang]}```")
 
         options.append("\n".join(desc_lines))
 
