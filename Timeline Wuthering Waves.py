@@ -5,11 +5,11 @@ start_dates = {
     "Drip": datetime(2026, 3, 25, 11, 0),     # 2568 พุธ 11:00
     "Beta CN": datetime(2026, 3, 28, 17, 0),  # 2568 เสาร์ 17:00
     "Beta OS": datetime(2026, 4, 4, 17, 0),   # 2568 เสาร์ 17:00
-    "Release": datetime(2026, 5, 30, 10, 0)   # 2568 พฤหัสบดี 10:00
+    "Release": datetime(2026, 4, 30, 10, 0)   # 2568 พฤหัสบดี 10:00
 }
 
-start_version = 3.0
-end_version = 15.0
+start_version = 3.3
+end_version = 8.0
 
 # ระยะห่างวัน
 drip_interval_days = 42
