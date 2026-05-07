@@ -12,7 +12,7 @@ webhook_urls = [
 ]
 
 BOT_NAME = "Wuthering Waves CN PROD"
-BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Hg/webhook/assets/wuwa.png"
+BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Kuro/refs/heads/Webhook/assets/images.png"
 
 # ================= Logging =================
 def log_and_check(api_url, game_name):

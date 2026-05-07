@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 
 # ================= Branding =================
 BOT_NAME = "Wuthering Waves OS BETA"
-BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Hg/webhook/assets/wuwa.png"
+BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Kuro/refs/heads/Webhook/assets/images.png"
 
 # ================= Webhook =================
 webhook_urls = [
