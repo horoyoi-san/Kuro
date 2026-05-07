@@ -4,6 +4,10 @@ import os
 import hashlib
 from datetime import datetime, timezone
 
+# ================= Branding =================
+BOT_NAME = "Wuthering Waves OS PROD"
+BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Hg/webhook/assets/wuwa.png"
+
 # ================= Webhook =================
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
@@ -65,7 +69,7 @@ def split_text_to_embeds(title, text, color=255, max_len=1024):
                 "title": f"{title} {part}",
                 "description": current,
                 "color": color,
-                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+                "thumbnail": {"url": BOT_ICON},
                 "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
             })
             current = line
@@ -77,7 +81,7 @@ def split_text_to_embeds(title, text, color=255, max_len=1024):
             "title": f"{title} {part}",
             "description": current,
             "color": color,
-            "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},
+            "thumbnail": {"url": BOT_ICON},
             "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
         })
     return embeds
@@ -228,7 +232,15 @@ def send_webhook(data, title, webhook_url, batch_size=1):
     # ================= Send in batches =================
     for i, embed in enumerate(blocks, start=1):
         try:
-            response = requests.post(webhook_url, json={"embeds": [embed]}, timeout=10)
+            response = requests.post(
+    webhook_url,
+    json={
+        "username": BOT_NAME,
+        "avatar_url": BOT_ICON,
+        "embeds": [embed]
+    },
+    timeout=10
+)
             if response.status_code == 204:
                 print(f"✅ ส่ง embed {i} ของ {title} แล้ว")
             else:

@@ -81,7 +81,7 @@ def send_webhook(data, url, title, webhook_key, last_data):
                 "description": f"{url}",  
                 "color": 65535,  # สีแดง
                 "fields": embed_fields,
-                "thumbnail": {"url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkmsLi-PweF4K3vppsBMmbrQ2zFikTpYHdNg&s"},  # ✅ ใช้ slogan เป็น thumbnail
+                "thumbnail": {"url": BOT_ICON},  # ✅ ใช้ slogan เป็น thumbnail
                 "image": {"url": first_frame_img}  # ✅ ใช้ firstFrameImage เป็นภาพหลัก
             }
         ]
