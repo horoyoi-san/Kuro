@@ -189,7 +189,7 @@ def send_webhook(data, title, webhook_url, batch_size=1):
                 f"Resources: {cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
             )
 
-            blocks += split_text_to_embeds(title + desc)
+            blocks += split_text_to_embeds(title, desc)
             blocks += split_text_to_embeds(title + " — Hdiff", "\n".join(patch_lines))
 
     # ================= Predownload =================
