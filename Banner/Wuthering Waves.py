@@ -70,7 +70,7 @@ def split_text_to_embeds(title, text, color=255, max_len=1024):
                 "description": current,
                 "color": color,
                 "thumbnail": {"url": BOT_ICON},
-                "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
+                "image": {"url": "https://nanoka.cc/images/ww.webp"}
             })
             current = line
             part += 1
@@ -82,7 +82,7 @@ def split_text_to_embeds(title, text, color=255, max_len=1024):
             "description": current,
             "color": color,
             "thumbnail": {"url": BOT_ICON},
-            "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
+            "image": {"url": "https://nanoka.cc/images/ww.webp"}
         })
     return embeds
 
