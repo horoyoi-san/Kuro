@@ -70,7 +70,7 @@ def split_text_to_embeds(title, text, color=16711680, max_len=1024):
                 "description": current,
                 "color": color,
                 "thumbnail": {"url": BOT_ICON},
-                "image": {"url": "https://github.com/horoyoi-san/Kuro/blob/IM/kuro3.0-3.8.png?raw=true"}
+                "image": {"url": "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"}
             })
             current = line
             part += 1
@@ -82,7 +82,7 @@ def split_text_to_embeds(title, text, color=16711680, max_len=1024):
             "description": current,
             "color": color,
             "thumbnail": {"url": BOT_ICON},
-            "image": {"url": "https://github.com/horoyoi-san/Kuro/blob/IM/kuro3.0-3.8.png?raw=true"}
+            "image": {"url": "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"}
         })
     return embeds
 
