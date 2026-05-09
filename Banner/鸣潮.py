@@ -4,16 +4,15 @@ import os
 import hashlib
 from datetime import datetime, timezone
 
-# ================= Branding =================
-BOT_NAME = "Wuthering Waves CN BETA"
-BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Kuro/refs/heads/Webhook/assets/images.png"
-
 # ================= Webhook =================
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
-    os.environ.get("WEBHOOK4"),
-    os.environ.get("WEBHOOK5"),
+    os.environ.get("WEBHOOK2"),
+    os.environ.get("WEBHOOK3"),
 ]
+
+BOT_NAME = "鸣潮"
+BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Kuro/refs/heads/Webhook/assets/images.png"
 
 # ================= Logging =================
 def log_and_check(api_url, game_name):
@@ -55,7 +54,7 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # ================= Discord =================
-def split_text_to_embeds(title, text, color=16711680, max_len=1024):
+def split_text_to_embeds(title, text, color=65535, max_len=1024):
     """ แบ่งข้อความยาวเป็นหลาย embed """
     if not text:
         return []
@@ -70,7 +69,7 @@ def split_text_to_embeds(title, text, color=16711680, max_len=1024):
                 "description": current,
                 "color": color,
                 "thumbnail": {"url": BOT_ICON},
-                "image": {"url": "https://github.com/horoyoi-san/Kuro/blob/IM/kuro3.0-3.8.png?raw=true"}
+                "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
             })
             current = line
             part += 1
@@ -82,10 +81,9 @@ def split_text_to_embeds(title, text, color=16711680, max_len=1024):
             "description": current,
             "color": color,
             "thumbnail": {"url": BOT_ICON},
-            "image": {"url": "https://github.com/horoyoi-san/Kuro/blob/IM/kuro3.0-3.8.png?raw=true"}
+            "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
         })
     return embeds
-
 
 def extract_cmd_options(data, key, title_prefix):
     options = []
@@ -119,7 +117,6 @@ def extract_cmd_options(data, key, title_prefix):
         color=0x9B59B6  # ม่วง
     )
 
-
 def send_webhooks(data, title):
     for webhook_url in webhook_urls:
         send_webhook(data, title, webhook_url)
@@ -130,6 +127,7 @@ def send_webhook(data, title, webhook_url, batch_size=1):
         return
 
     blocks = []
+
 
     # ================= Launch Commands =================
     if data.get("commandSwitch") == 1:
@@ -226,9 +224,8 @@ def send_webhook(data, title, webhook_url, batch_size=1):
             f"Resources: {cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
         )
 
-        blocks += split_text_to_embeds(title + " — Predownload", desc, color=16711680)
-        blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=16711680)
-
+        blocks += split_text_to_embeds(title + " — Predownload", desc, color=65535)
+        blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=65535)
 
     # ================= Send in batches =================
     for i, embed in enumerate(blocks, start=1):
@@ -252,8 +249,8 @@ def send_webhook(data, title, webhook_url, batch_size=1):
 # ================= Main =================
 def check_for_updates():
     urls = [
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json", "Wuthering Waves BETA-L CN"),
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json", "Wuthering Waves BETA-G CN")
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json", "鸣潮 Launcher"),
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json", "鸣潮 Game")
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)

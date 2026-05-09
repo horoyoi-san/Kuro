@@ -4,15 +4,16 @@ import os
 import hashlib
 from datetime import datetime, timezone
 
+# ================= Branding =================
+BOT_NAME = "Wuthering Waves"
+BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Kuro/refs/heads/Webhook/assets/images.png"
+
 # ================= Webhook =================
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
     os.environ.get("WEBHOOK2"),
     os.environ.get("WEBHOOK3"),
 ]
-
-BOT_NAME = "Wuthering Waves CN PROD"
-BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Kuro/refs/heads/Webhook/assets/images.png"
 
 # ================= Logging =================
 def log_and_check(api_url, game_name):
@@ -54,7 +55,7 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # ================= Discord =================
-def split_text_to_embeds(title, text, color=65535, max_len=1024):
+def split_text_to_embeds(title, text, color=255, max_len=1024):
     """ แบ่งข้อความยาวเป็นหลาย embed """
     if not text:
         return []
@@ -84,6 +85,7 @@ def split_text_to_embeds(title, text, color=65535, max_len=1024):
             "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
         })
     return embeds
+
 
 def extract_cmd_options(data, key, title_prefix):
     options = []
@@ -117,6 +119,7 @@ def extract_cmd_options(data, key, title_prefix):
         color=0x9B59B6  # ม่วง
     )
 
+
 def send_webhooks(data, title):
     for webhook_url in webhook_urls:
         send_webhook(data, title, webhook_url)
@@ -127,7 +130,6 @@ def send_webhook(data, title, webhook_url, batch_size=1):
         return
 
     blocks = []
-
 
     # ================= Launch Commands =================
     if data.get("commandSwitch") == 1:
@@ -224,8 +226,8 @@ def send_webhook(data, title, webhook_url, batch_size=1):
             f"Resources: {cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
         )
 
-        blocks += split_text_to_embeds(title + " — Predownload", desc, color=65535)
-        blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=65535)
+        blocks += split_text_to_embeds(title + " — Predownload", desc, color=255)
+        blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=255)
 
     # ================= Send in batches =================
     for i, embed in enumerate(blocks, start=1):
@@ -249,8 +251,8 @@ def send_webhook(data, title, webhook_url, batch_size=1):
 # ================= Main =================
 def check_for_updates():
     urls = [
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json", "Wuthering Waves PROD-L CN"),
-        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json", "Wuthering Waves PROD-G CN")
+        ("https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json", "Wuthering Waves Launcher"),
+        ("https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json", "Wuthering Waves Game")
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)

@@ -5,14 +5,14 @@ import hashlib
 from datetime import datetime, timezone
 
 # ================= Branding =================
-BOT_NAME = "Wuthering Waves OS PROD"
+BOT_NAME = "鸣潮 BETA"
 BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Kuro/refs/heads/Webhook/assets/images.png"
 
 # ================= Webhook =================
 webhook_urls = [
     os.environ.get("WEBHOOK1"),
-    os.environ.get("WEBHOOK2"),
-    os.environ.get("WEBHOOK3"),
+    os.environ.get("WEBHOOK4"),
+    os.environ.get("WEBHOOK5"),
 ]
 
 # ================= Logging =================
@@ -55,7 +55,7 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # ================= Discord =================
-def split_text_to_embeds(title, text, color=255, max_len=1024):
+def split_text_to_embeds(title, text, color=16711680, max_len=1024):
     """ แบ่งข้อความยาวเป็นหลาย embed """
     if not text:
         return []
@@ -70,7 +70,7 @@ def split_text_to_embeds(title, text, color=255, max_len=1024):
                 "description": current,
                 "color": color,
                 "thumbnail": {"url": BOT_ICON},
-                "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
+                "image": {"url": "https://github.com/horoyoi-san/Kuro/blob/IM/kuro3.0-3.8.png?raw=true"}
             })
             current = line
             part += 1
@@ -82,7 +82,7 @@ def split_text_to_embeds(title, text, color=255, max_len=1024):
             "description": current,
             "color": color,
             "thumbnail": {"url": BOT_ICON},
-            "image": {"url": "https://wutheringwaves.kurogames.com/website-preface/video/bg/bg-poster.webp"}
+            "image": {"url": "https://github.com/horoyoi-san/Kuro/blob/IM/kuro3.0-3.8.png?raw=true"}
         })
     return embeds
 
@@ -226,8 +226,9 @@ def send_webhook(data, title, webhook_url, batch_size=1):
             f"Resources: {cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
         )
 
-        blocks += split_text_to_embeds(title + " — Predownload", desc, color=255)
-        blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=255)
+        blocks += split_text_to_embeds(title + " — Predownload", desc, color=16711680)
+        blocks += split_text_to_embeds(title + " — Predownload Hdiff", "\n".join(patch_lines), color=16711680)
+
 
     # ================= Send in batches =================
     for i, embed in enumerate(blocks, start=1):
@@ -251,8 +252,8 @@ def send_webhook(data, title, webhook_url, batch_size=1):
 # ================= Main =================
 def check_for_updates():
     urls = [
-        ("https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json", "Wuthering Waves PROD-L OS"),
-        ("https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json", "Wuthering Waves PROD-G OS")
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/G152/index.json", "鸣潮 BETA-Launcher"),
+        ("https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10008_Pa0Q0EMFxukjEqX33pF9Uyvdc8MaGPSz/index.json", "鸣潮 BETA-Game")
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)

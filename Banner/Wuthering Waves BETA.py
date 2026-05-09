@@ -5,7 +5,7 @@ import hashlib
 from datetime import datetime, timezone
 
 # ================= Branding =================
-BOT_NAME = "Wuthering Waves OS BETA"
+BOT_NAME = "Wuthering Waves BETA"
 BOT_ICON = "https://raw.githubusercontent.com/horoyoi-san/Kuro/refs/heads/Webhook/assets/images.png"
 
 # ================= Webhook =================
@@ -251,8 +251,8 @@ def send_webhook(data, title, webhook_url, batch_size=1):
 # ================= Main =================
 def check_for_updates():
     urls = [
-        ("https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/index.json", "Wuthering Waves BETA-L OS"),
-        ("https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json", "Wuthering Waves BETA-G OS")
+        ("https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/G153/index.json", "Wuthering Waves BETA-Launcher"),
+        ("https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50013_HiDX7UaJOXpKl3pigJwVxhg5z1wllus5/index.json", "Wuthering Waves BETA-Game")
     ]
     for api_url, game_name in urls:
         changed, data = log_and_check(api_url, game_name)
