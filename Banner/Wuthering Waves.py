@@ -159,7 +159,7 @@ def send_webhook(data, title, webhook_url, batch_size=1):
             path = resource.get("path", "")
             url_full = cdn_list[0]["url"] + path if cdn_list and path else path
             desc = f"Version: {version}\nSize: {size/1024/1024:.2f} MB\nMD5: {md5}\nDownload: {url_full}"
-            blocks += split_text_to_embeds(title + " — Launcher", desc)
+            blocks += split_text_to_embeds(title, desc)
         else:  # Game
             config = default.get("config", {})
             version = config.get("version", "No version")
