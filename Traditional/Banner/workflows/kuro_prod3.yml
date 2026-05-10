@@ -1,13 +1,13 @@
-name: Kuro PROD Monitor 12:00
+name: Kuro PROD Monitor 10:00
 
 on:
   schedule:
-    - cron: "0 5 * * *"   # 12:00 ไทย
+    - cron: "0 3 * * *"   # 10:00 ไทย
   workflow_dispatch:
 
 jobs:
   prod-monitor:
-    name: Run PROD Monitor 12:00
+    name: Run PROD Monitor 10:00
     runs-on: ubuntu-latest
 
     steps:
@@ -33,8 +33,8 @@ jobs:
           WEBHOOK4: ${{ secrets.WEBHOOK4 }}
           WEBHOOK5: ${{ secrets.WEBHOOK5 }}
         run: |
-          python "Banner/鸣潮.py"
-          python "Banner/Wuthering Waves.py"
+          python "Kuro Game/鸣潮.py"
+          python "Kuro Game/Wuthering Waves.py"
        #   python "Banner/Punishing Gray Raven CN PROD.py"
        #   python "Banner/Punishing Gray Raven OS PROD.py"
 

@@ -1,0 +1,89 @@
+name: Kuro PROD Monitor 16:00
+
+on:
+  schedule:
+    - cron: "00 9 * * *"   # 16:00 ไทย
+  workflow_dispatch:
+
+jobs:
+  prod-monitor:
+    name: Run PROD Monitor 05:00
+    runs-on: ubuntu-latest
+
+    steps:
+      # =====================================================
+      # Checkout
+      # =====================================================
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      # =====================================================
+      # Python
+      # =====================================================
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      # =====================================================
+      # Install
+      # =====================================================
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+          pip install -U discord.py
+
+      # =====================================================
+      # Wuthering Waves EN
+      # =====================================================
+
+      - name: Run Wuthering Waves
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN_3 }}
+
+        run: |
+          python "Kuro Game/Wuthering Waves BETA.py"
+
+      # =====================================================
+      # Wuthering Waves CN
+      # =====================================================
+
+      - name: Run 鸣潮
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN_4 }}
+
+        run: |
+          python "Kuro Game/鸣潮 BETA.py"
+
+      # =====================================================
+      # Commit Logs
+      # =====================================================
+
+      - name: Commit and Push PROD logs
+        env:
+          PAT: ${{ secrets.PAT }}
+
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+          mkdir -p Kuro/log
+
+          git add Kuro/log
+
+          if ! git diff --cached --quiet; then
+
+            git commit -m "Update logs [skip ci]"
+
+            git push \
+            https://x-access-token:${PAT}@github.com/${{ github.repository }} \
+            HEAD:Webhook
+
+          else
+            echo "No changes to commit"
+          fi
