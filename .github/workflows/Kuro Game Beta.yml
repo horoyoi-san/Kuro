@@ -1,4 +1,4 @@
-name: Kuro PROD Monitor 05:00
+name: Kuro BETA Monitor 05:00
 
 on:
   schedule:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   prod-monitor:
-    name: Run PROD Monitor 05:00
+    name: Run BETA Monitor 05:00
     runs-on: ubuntu-latest
 
     steps:
@@ -64,7 +64,7 @@ jobs:
       # Commit Logs
       # =====================================================
 
-      - name: Commit and Push PROD logs
+      - name: Commit and Push BETA logs
         env:
           PAT: ${{ secrets.PAT }}
 
