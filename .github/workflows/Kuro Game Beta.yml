@@ -1,13 +1,13 @@
-name: Kuro BETA Monitor 05:00
+name: Kuro BETA Monitor 13:00
 
 on:
   schedule:
-    - cron: "0 22 * * *"
+    - cron: "0 6 * * *"   # 13:00 ไทย
   workflow_dispatch:
 
 jobs:
   prod-monitor:
-    name: Run BETA Monitor 05:00
+    name: Run BETA Monitor 13:00
     runs-on: ubuntu-latest
 
     steps:
