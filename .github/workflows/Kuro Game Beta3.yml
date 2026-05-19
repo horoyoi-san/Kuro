@@ -44,20 +44,10 @@ jobs:
 
       - name: Run Wuthering Waves
         env:
-          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN_3 }}
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN_2 }}
 
         run: |
           python "Kuro Game/Wuthering Waves BETA.py"
-
-      # =====================================================
-      # Wuthering Waves CN
-      # =====================================================
-
-      - name: Run 鸣潮
-        env:
-          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN_4 }}
-
-        run: |
           python "Kuro Game/鸣潮 BETA.py"
 
       # =====================================================
