@@ -44,7 +44,7 @@ jobs:
 
       - name: Run Wuthering Waves
         env:
-          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN_2 }}
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN_1 }}
 
         run: |
           python "Kuro Game/Wuthering Waves BETA.py"
