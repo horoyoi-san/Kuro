@@ -327,73 +327,7 @@ def split_text_to_embeds(
 # =========================================================
 # Extract Command Options
 # =========================================================
-
-def extract_cmd_options(
-    data,
-    key,
-    title_prefix
-):
-
-    options = []
-
-    cmd_list = data.get(
-        key,
-        []
-    )
-
-    for cmd in cmd_list:
-
-        if cmd.get("isShow") != 1:
-            continue
-
-        option = cmd.get(
-            "cmdOption",
-            ""
-        ).strip()
-
-        if not option:
-            continue
-
-        text = cmd.get(
-            "text",
-            {}
-        )
-
-        desc_lines = [
-            f"# {option}"
-        ]
-
-        # language order
-        for lang in [
-            "zh-Hans",
-            "de",
-            "zh-Hant",
-            "ko",
-            "th",
-            "ja",
-            "en",
-            "fr",
-            "es"
-        ]:
-
-            if lang in text:
-
-                desc_lines.append(
-                    f"{lang}: ```{text[lang]}```"
-                )
-
-        options.append(
-            "\n".join(desc_lines)
-        )
-
-    if not options:
-        return []
-
-    return split_text_to_embeds(
-        title_prefix,
-        "\n\n".join(options),
-        color=0x9B59B6
-    )
+ 
 
 # =========================================================
 # Discord Send
@@ -458,29 +392,7 @@ def build_embeds(
 
     blocks = []
      
-    # =====================================================
-    # Launch Commands
-    # =====================================================
-
-    if data.get("commandSwitch") == 1:
-
-        blocks += extract_cmd_options(
-            data,
-            "commandList",
-            title + " — Launch Commands"
-        )
-
-    # =====================================================
-    # RHI Options
-    # =====================================================
-
-    if data.get("RHIOptionSwitch") == 1:
-
-        blocks += extract_cmd_options(
-            data,
-            "RHIOptionList",
-            title + " — lang"
-        )
+ 
 
     # =====================================================
     # Default
