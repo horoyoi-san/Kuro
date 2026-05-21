@@ -165,6 +165,21 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # =========================================================
+# Size Formatter
+# =========================================================
+
+def format_size(size_bytes):
+
+    gb = size_bytes / 1024 / 1024 / 1024
+
+    if gb >= 1:
+        return f"{gb:.2f} GB"
+
+    mb = size_bytes / 1024 / 1024
+
+    return f"{mb:.2f} MB"
+
+# =========================================================
 # Embed Utils
 # =========================================================
 
@@ -459,7 +474,7 @@ def build_embeds(
 
             desc = (
                 f"## Version {version}\n" 
-                f"## Size `{size/1024/1024:.2f}` MB\n"
+                f"## Size `{format_size(size)}`\n"
                 f"## Download\n"
                 f"{url_full}"
             )
@@ -544,7 +559,7 @@ def build_embeds(
             desc = (
                 f"## Version {version}\n" 
 
-                f"## Size `{size/1024/1024:.2f}` MB\n"
+                f"## Size `{format_size(size)}`\n"
 
                 f"## Download\n"
                 f"{url_full}\n"
@@ -647,7 +662,7 @@ def build_embeds(
             f"`{version}`\n\n"
 
             f"## Size\n"
-            f"`{size/1024/1024:.2f} MB`\n\n"
+            f"`{format_size(size)}`\n\n"
 
             f"## MD5\n"
             f"`{md5}`\n\n"

@@ -32,7 +32,64 @@ BOT_ICON = (
     "horoyoi-san/Kuro/refs/heads/Webhook/assets/images.png"
 )
 
-MAIN_IMAGE = "https://nanoka.cc/images/ww.webp"
+# =========================================================
+# Dynamic Background
+# =========================================================
+
+DEFAULT_IMAGE = "https://nanoka.cc/images/ww.webp"
+
+def get_background_image(data):
+
+    try:
+
+        bg_id = data.get(
+            "functionCode",
+            {}
+        ).get(
+            "background"
+        )
+
+        if not bg_id:
+            return DEFAULT_IMAGE
+
+        manifest_url = (
+            "https://prod-alicdn-gamestarter.kurogame.com/"
+            "launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/"
+            f"G153/background/{bg_id}/en.json"
+        )
+
+        print(
+            f"🎨 Background Manifest: {manifest_url}"
+        )
+
+        manifest = requests.get(
+            manifest_url,
+            timeout=10
+        ).json()
+
+        image = manifest.get(
+            "firstFrameImage"
+        )
+
+        if image:
+
+            print(
+                f"🖼️ Background Image: {image}"
+            )
+
+            return image
+
+        print(
+            "⚠️ No firstFrameImage found"
+        )
+
+    except Exception as e:
+
+        print(
+            f"❌ Background fetch error: {e}"
+        )
+
+    return DEFAULT_IMAGE
 
 # =========================================================
 # Channels
@@ -165,6 +222,21 @@ def log_and_check(api_url, game_name):
     return False, data_json
 
 # =========================================================
+# Size Formatter
+# =========================================================
+
+def format_size(size_bytes):
+
+    gb = size_bytes / 1024 / 1024 / 1024
+
+    if gb >= 1:
+        return f"{gb:.2f} GB"
+
+    mb = size_bytes / 1024 / 1024
+
+    return f"{mb:.2f} MB"
+
+# =========================================================
 # Embed Utils
 # =========================================================
 
@@ -172,7 +244,8 @@ def split_text_to_embeds(
     title,
     text,
     color=0x3498DB,
-    max_len=4000
+    max_len=4000,
+    image_url=DEFAULT_IMAGE
 ):
     """
     Split long text into multiple embeds
@@ -204,7 +277,7 @@ def split_text_to_embeds(
             )
 
             embed.set_image(
-                url=MAIN_IMAGE
+                url=image_url
             )
 
             embed.set_footer(
@@ -240,7 +313,7 @@ def split_text_to_embeds(
         )
 
         embed.set_image(
-            url=MAIN_IMAGE
+            url=image_url
         )
 
         embed.set_footer(
@@ -379,11 +452,12 @@ async def send_discord(
 
 def build_embeds(
     data,
-    title
+    title,
+    background_image=DEFAULT_IMAGE
 ):
 
     blocks = []
-
+     
     # =====================================================
     # Launch Commands
     # =====================================================
@@ -459,14 +533,15 @@ def build_embeds(
 
             desc = (
                 f"## Version {version}\n" 
-                f"## Size `{size/1024/1024:.2f}` MB\n"
+                f"## Size `{format_size(size)}`\n"
                 f"## Download\n"
                 f"{url_full}"
             )
 
             blocks += split_text_to_embeds(
                 title,
-                desc
+                desc,
+                image_url=background_image
             )
 
         # =================================================
@@ -544,7 +619,7 @@ def build_embeds(
             desc = (
                 f"## Version {version}\n" 
 
-                f"## Size `{size/1024/1024:.2f}` MB\n"
+                f"## Size `{format_size(size)}`\n"
 
                 f"## Download\n"
                 f"{url_full}\n"
@@ -558,12 +633,14 @@ def build_embeds(
 
             blocks += split_text_to_embeds(
                 title,
-                desc
+                desc,
+                image_url=background_image
             )
 
             blocks += split_text_to_embeds(
                 title + " — Hdiff",
-                "\n".join(patch_lines)
+                "\n".join(patch_lines),
+                image_url=background_image
             )
 
     # =====================================================
@@ -647,7 +724,7 @@ def build_embeds(
             f"`{version}`\n\n"
 
             f"## Size\n"
-            f"`{size/1024/1024:.2f} MB`\n\n"
+            f"`{format_size(size)}`\n\n"
 
             f"## MD5\n"
             f"`{md5}`\n\n"
@@ -665,13 +742,15 @@ def build_embeds(
         blocks += split_text_to_embeds(
             title + " — Predownload",
             desc,
-            color=0xF1C40F
+            color=0xF1C40F,
+            image_url=background_image
         )
 
         blocks += split_text_to_embeds(
             title + " — Predownload Hdiff",
             "\n".join(patch_lines),
-            color=0xF1C40F
+            color=0xF1C40F,
+            image_url=background_image
         )
 
     return blocks
@@ -701,6 +780,8 @@ async def main():
         )
     ]
 
+    launcher_background = DEFAULT_IMAGE
+    
     for api_url, game_name in urls:
 
         changed, data = log_and_check(
@@ -710,9 +791,13 @@ async def main():
 
         if changed and data:
 
+            if "Launcher" in game_name:
+                launcher_background = get_background_image(data)
+
             embeds = build_embeds(
                 data,
-                game_name
+                game_name,
+                launcher_background
             )
 
             for channel_id in CHANNELS:
