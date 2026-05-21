@@ -55,7 +55,7 @@ def get_background_image(data):
         manifest_url = (
             "https://prod-cn-alicdn-gamestarter.kurogame.com/"
             "launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/"
-            f"G153/background/{bg_id}/zh-Hans.json"
+            f"G152/background/{bg_id}/zh-Hans.json"
         )
 
         print(

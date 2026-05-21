@@ -13,8 +13,9 @@ from datetime import datetime, timezone
 # Discord
 # =========================================================
 
-# TOKEN = os.environ.get("DISCORD_TOKEN")
-#TOKEN = ""
+#TOKEN = os.environ.get("DISCORD_TOKEN")
+TOKEN = "nisannnnnnnnnnnnnnnnnnnnn"
+
 intents = discord.Intents.default()
 
 bot = discord.Client(
@@ -25,7 +26,7 @@ bot = discord.Client(
 # Branding
 # =========================================================
 
-BOT_NAME = "Wuthering Waves"
+BOT_NAME = "鸣潮"
 
 BOT_ICON = (
     "https://raw.githubusercontent.com/"
@@ -53,9 +54,9 @@ def get_background_image(data):
             return DEFAULT_IMAGE
 
         manifest_url = (
-            "https://prod-alicdn-gamestarter.kurogame.com/"
-            "launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/"
-            f"G153/background/{bg_id}/en.json"
+            "https://prod-cn-alicdn-gamestarter.kurogame.com/"
+            "launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/"
+            f"G152/background/{bg_id}/zh-Hans.json"
         )
 
         print(
@@ -325,6 +326,7 @@ def split_text_to_embeds(
 # =========================================================
 # Extract Command Options
 # =========================================================
+ 
 
 # =========================================================
 # Discord Send
@@ -389,6 +391,7 @@ def build_embeds(
 
     blocks = []
      
+ 
 
     # =====================================================
     # Default
@@ -445,7 +448,6 @@ def build_embeds(
                 f"## Download\n"
                 f"{url_full}"
             )
-
 
             blocks += split_text_to_embeds(
                 title,
@@ -548,7 +550,7 @@ def build_embeds(
 
             blocks += split_text_to_embeds(
                 title + " — Hdiff",
-                "\n".join(patch_lines),
+                "\n".join(patch_lines),    
                 image_url=background_image
             )
 
@@ -679,13 +681,13 @@ async def main():
     urls = [
 
         (
-            "https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json",
-            "Wuthering Waves Launcher"
+            "https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json",
+            "鸣潮 Launcher"
         ),
 
         (
-            "https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json",
-            "Wuthering Waves Game"
+            "https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json",
+            "鸣潮 Game"
         )
     ]
 
