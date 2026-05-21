@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 # =========================================================
 
 # TOKEN = os.environ.get("DISCORD_TOKEN")
-TOKEN = "MTQ0OTA1NzgxNTQ4MTAyNDYwMg.GkeJGf.Fpc3-uWaZYiwoDLS452nlqo_f4NeAtbHnbdpb8"
+#TOKEN = ""
 intents = discord.Intents.default()
 
 bot = discord.Client(
