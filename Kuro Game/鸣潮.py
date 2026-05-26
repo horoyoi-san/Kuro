@@ -36,7 +36,7 @@ BOT_ICON = (
 # Dynamic Background
 # =========================================================
 
-DEFAULT_IMAGE = "https://nanoka.cc/images/ww.webp"
+DEFAULT_IMAGE = "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"
 
 def get_background_image(data):
 
