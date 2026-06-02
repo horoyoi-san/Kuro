@@ -27,7 +27,7 @@ BOT_NAME = "鸣潮"
 
 BOT_ICON = (
     "https://raw.githubusercontent.com/"
-    "horoyoi-san/Kuro/refs/heads/Webhook/assets/images.png"
+    "horoyoi-san/Kuro/refs/heads/Webhook/assets/ww-cp-cn.png"
 )
 
 # =========================================================
