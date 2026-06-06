@@ -34,8 +34,6 @@ BOT_ICON = (
 # Dynamic Background
 # =========================================================
 
-DEFAULT_IMAGE = "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"
-
 
 def get_background_image(data):
 
@@ -44,7 +42,7 @@ def get_background_image(data):
         bg_id = data.get("functionCode", {}).get("background")
 
         if not bg_id:
-            return DEFAULT_IMAGE
+            return None
 
         manifest_url = (
             "https://prod-alicdn-gamestarter.kurogame.com/"
@@ -70,7 +68,7 @@ def get_background_image(data):
 
         print(f"❌ Background fetch error: {e}")
 
-    return DEFAULT_IMAGE
+    return None
 
 
 # =========================================================
@@ -188,7 +186,7 @@ def format_size(size_bytes):
 
 
 def split_text_to_embeds(
-    title, text, color=0x3498DB, max_len=4000, image_url=DEFAULT_IMAGE
+    title, text, color=0x3498DB, max_len=4000, image_url=None
 ):
     """
     Split long text into multiple embeds
@@ -215,7 +213,8 @@ def split_text_to_embeds(
 
             embed.set_thumbnail(url=BOT_ICON)
 
-            embed.set_image(url=image_url)
+            if image_url:
+                embed.set_image(url=image_url)
 
             embed.set_footer(text="Horoyoi-san ඞ")
 
@@ -239,7 +238,8 @@ def split_text_to_embeds(
 
         embed.set_thumbnail(url=BOT_ICON)
 
-        embed.set_image(url=image_url)
+        if image_url:
+            embed.set_image(url=image_url)
 
         embed.set_footer(text="Horoyoi-san ඞ")
 
@@ -295,7 +295,7 @@ async def send_discord(channel_id, embeds):
 # =========================================================
 
 
-def build_embeds(data, title, background_image=DEFAULT_IMAGE):
+def build_embeds(data, title, background_image=None):
 
     blocks = []
 
@@ -476,7 +476,7 @@ async def main():
         ),
     ]
 
-    launcher_background = DEFAULT_IMAGE
+    launcher_background = None
 
     for api_url, game_name in urls:
 
