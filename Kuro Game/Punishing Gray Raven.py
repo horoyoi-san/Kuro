@@ -22,8 +22,8 @@ from datetime import datetime, timezone
 # Discord
 # =========================================================
 
-#TOKEN = os.environ.get("DISCORD_TOKEN")
-TOKEN = "GAYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
+TOKEN = os.environ.get("DISCORD_TOKEN")
+
 intents = discord.Intents.default()
 
 bot = discord.Client(intents=intents)
@@ -32,7 +32,7 @@ bot = discord.Client(intents=intents)
 # Branding
 # =========================================================
 
-BOT_NAME = "战双帕弥什"
+BOT_NAME = "Punishing Gray Raven"
 
 BOT_ICON = (
 	"https://raw.githubusercontent.com/"
@@ -52,15 +52,14 @@ def get_background_image(data, base_index_url):
 
 		if not bg_id:
 			return None
-
-        # https://prod-alicdn-gamestarter.kurogame.com/launcher/50015_LWdk9D2Ep9mpJmqBZZkcPBU2YNraEWBQ/G143/background/{bg_id}/zh-Hans.json
+        # https://prod-alicdn-gamestarter.kurogame.com/launcher/50015_LWdk9D2Ep9mpJmqBZZkcPBU2YNraEWBQ/G143/background/{bg_id}/en.json
 		# Normalize base so that URLs like
 		# .../launcher/launcher/50015_.../G143/index.json
 		# become
-		# .../launcher/50015_.../G143/background/{bg_id}/zh-Hans.json
+		# .../launcher/50015_.../G143/background/{bg_id}/en.json
 		base = base_index_url.rsplit("/", 1)[0]
 		base = base.replace("/launcher/launcher/", "/launcher/")
-		manifest_url = base + f"/background/{bg_id}/zh-Hans.json"
+		manifest_url = base + f"/background/{bg_id}/en.json"
 
 		print(f"🎨 Background Manifest: {manifest_url}")
 
@@ -88,9 +87,9 @@ def get_background_image(data, base_index_url):
 # =========================================================
 
 CHANNELS = [
-	676767676767676767676767,  # Test
-	#6767676767676767676767,  # 1
-	#676767676767676767676767,  # 2
+	1292097230924283965,  # Test
+	1291728736739131402,  # 1
+	1267379122338791435,  # 2
 ]
 
 # =========================================================
@@ -453,12 +452,12 @@ async def main():
 
 	urls = [
 		(
-			"https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10012_RnIUKs3r59Csliu3N0rl5uRWWBOFDaJL/G148/index.json",
-			"战双帕弥什 Launcher",
+			"https://prod-alicdn-gamestarter.kurogame.com/launcher/launcher/50015_LWdk9D2Ep9mpJmqBZZkcPBU2YNraEWBQ/G143/index.json",
+			"Punishing Gray Raven Launcher",
 		),
 		(
-			"https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G148/10012_RnIUKs3r59Csliu3N0rl5uRWWBOFDaJL/index.json",
-			"战双帕弥什 Game",
+			"https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G143/50015_LWdk9D2Ep9mpJmqBZZkcPBU2YNraEWBQ/index.json",
+			"Punishing Gray Raven Game",
 		),
 	]
 

@@ -22,8 +22,8 @@ from datetime import datetime, timezone
 # Discord
 # =========================================================
 
-#TOKEN = os.environ.get("DISCORD_TOKEN")
-TOKEN = "GAYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
+TOKEN = os.environ.get("DISCORD_TOKEN")
+
 intents = discord.Intents.default()
 
 bot = discord.Client(intents=intents)
@@ -52,12 +52,11 @@ def get_background_image(data, base_index_url):
 
 		if not bg_id:
 			return None
-
-        # https://prod-alicdn-gamestarter.kurogame.com/launcher/50015_LWdk9D2Ep9mpJmqBZZkcPBU2YNraEWBQ/G143/background/{bg_id}/zh-Hans.json
+        # https://prod-alicdn-gamestarter.kurogame.com/launcher/10012_LWdk9D2Ep9mpJmqBZZkcPBU2YNraEWBQ/G148/background/{bg_id}/zh-Hans.json
 		# Normalize base so that URLs like
-		# .../launcher/launcher/50015_.../G143/index.json
+		# .../launcher/launcher/10012_.../G148/index.json
 		# become
-		# .../launcher/50015_.../G143/background/{bg_id}/zh-Hans.json
+		# .../launcher/10012_.../G148/background/{bg_id}/zh-Hans.json
 		base = base_index_url.rsplit("/", 1)[0]
 		base = base.replace("/launcher/launcher/", "/launcher/")
 		manifest_url = base + f"/background/{bg_id}/zh-Hans.json"
@@ -88,9 +87,9 @@ def get_background_image(data, base_index_url):
 # =========================================================
 
 CHANNELS = [
-	676767676767676767676767,  # Test
-	#6767676767676767676767,  # 1
-	#676767676767676767676767,  # 2
+	1292097230924283965,  # Test
+	1291728736739131402,  # 1
+	1267379122338791435,  # 2
 ]
 
 # =========================================================

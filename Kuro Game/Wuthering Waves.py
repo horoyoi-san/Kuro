@@ -43,7 +43,7 @@ def get_background_image(data):
 
         if not bg_id:
             return None
-
+        # https://prod-alicdn-gamestarter.kurogame.com/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/background/{bg_id}/en.json
         manifest_url = (
             "https://prod-alicdn-gamestarter.kurogame.com/"
             "launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/"
