@@ -7,15 +7,6 @@ import json
 import os
 import hashlib
 
-import discord
-import asyncio
-import time
-
-import requests
-import json
-import os
-import hashlib
-
 from datetime import datetime, timezone
 
 # =========================================================
@@ -23,7 +14,7 @@ from datetime import datetime, timezone
 # =========================================================
 
 #TOKEN = os.environ.get("DISCORD_TOKEN")
-TOKEN = "GAYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
+
 intents = discord.Intents.default()
 
 bot = discord.Client(intents=intents)
@@ -32,11 +23,11 @@ bot = discord.Client(intents=intents)
 # Branding
 # =========================================================
 
-BOT_NAME = "战双帕弥什"
+BOT_NAME = "Wuthering Waves"
 
 BOT_ICON = (
-	"https://raw.githubusercontent.com/"
-	"horoyoi-san/Kuro/refs/heads/Webhook/assets/pgr.png"
+    "https://raw.githubusercontent.com/"
+    "horoyoi-san/Kuro/refs/heads/Webhook/assets/ww-cp-os.jpg"
 )
 
 # =========================================================
@@ -44,43 +35,40 @@ BOT_ICON = (
 # =========================================================
 
 
-def get_background_image(data, base_index_url):
+def get_background_image(data):
 
-	try:
+    try:
 
-		bg_id = data.get("functionCode", {}).get("background")
+        bg_id = data.get("functionCode", {}).get("background")
 
-		if not bg_id:
-			return None
+        if not bg_id:
+            return None
+        # https://prod-alicdn-gamestarter.kurogame.com/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/background/{bg_id}/en.json
+        manifest_url = (
+            "https://prod-alicdn-gamestarter.kurogame.com/"
+            "launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/"
+            f"G153/background/{bg_id}/en.json"
+        )
 
-        # https://prod-alicdn-gamestarter.kurogame.com/launcher/50015_LWdk9D2Ep9mpJmqBZZkcPBU2YNraEWBQ/G143/background/{bg_id}/zh-Hans.json
-		# Normalize base so that URLs like
-		# .../launcher/launcher/50015_.../G143/index.json
-		# become
-		# .../launcher/50015_.../G143/background/{bg_id}/zh-Hans.json
-		base = base_index_url.rsplit("/", 1)[0]
-		base = base.replace("/launcher/launcher/", "/launcher/")
-		manifest_url = base + f"/background/{bg_id}/zh-Hans.json"
+        print(f"🎨 Background Manifest: {manifest_url}")
 
-		print(f"🎨 Background Manifest: {manifest_url}")
+        manifest = requests.get(manifest_url, timeout=10).json()
 
-		manifest = requests.get(manifest_url, timeout=10).json()
+        image = manifest.get("firstFrameImage")
 
-		image = manifest.get("firstFrameImage")
+        if image:
 
-		if image:
+            print(f"🖼️ Background Image: {image}")
 
-			print(f"🖼️ Background Image: {image}")
+            return image
 
-			return image
+        print("⚠️ No firstFrameImage found")
 
-		print("⚠️ No firstFrameImage found")
+    except Exception as e:
 
-	except Exception as e:
+        print(f"❌ Background fetch error: {e}")
 
-		print(f"❌ Background fetch error: {e}")
-
-	return None
+    return None
 
 
 # =========================================================
@@ -88,9 +76,9 @@ def get_background_image(data, base_index_url):
 # =========================================================
 
 CHANNELS = [
-	676767676767676767676767,  # Test
-	#6767676767676767676767,  # 1
-	#676767676767676767676767,  # 2
+    1292097230924283965,  # Test
+    1291728736739131402,  # 1
+    1267379122338791435,  # 2
 ]
 
 # =========================================================
@@ -100,79 +88,79 @@ CHANNELS = [
 
 def log_and_check(api_url, game_name):
 
-	try:
-		resp = requests.get(api_url, timeout=10)
+    try:
+        resp = requests.get(api_url, timeout=10)
 
-		data_text = resp.text
+        data_text = resp.text
 
-		data_json = json.loads(data_text)
+        data_json = json.loads(data_text)
 
-	except Exception as e:
+    except Exception as e:
 
-		print(f"❌ Error fetching {game_name}: {e}")
+        print(f"❌ Error fetching {game_name}: {e}")
 
-		return False, None
+        return False, None
 
-	current_hash = hashlib.md5(data_text.encode()).hexdigest()
+    current_hash = hashlib.md5(data_text.encode()).hexdigest()
 
-	log_dir = os.path.join(os.getcwd(), "Kuro", "log", game_name)
+    log_dir = os.path.join(os.getcwd(), "Kuro", "log", game_name)
 
-	os.makedirs(log_dir, exist_ok=True)
+    os.makedirs(log_dir, exist_ok=True)
 
-	hash_file = os.path.join(log_dir, "last_hash.txt")
+    hash_file = os.path.join(log_dir, "last_hash.txt")
 
-	raw_file = os.path.join(log_dir, "raw_log.jsonl")
+    raw_file = os.path.join(log_dir, "raw_log.jsonl")
 
-	# =====================================================
-	# Write Raw Log
-	# =====================================================
+    # =====================================================
+    # Write Raw Log
+    # =====================================================
 
-	try:
+    try:
 
-		with open(raw_file, "a", encoding="utf-8") as f:
+        with open(raw_file, "a", encoding="utf-8") as f:
 
-			f.write(
-				json.dumps(
-					{
-						"timestamp": datetime.now(timezone.utc).isoformat(),
-						"data": data_json,
-					},
-					ensure_ascii=False,
-				)
-				+ "\n"
-			)
+            f.write(
+                json.dumps(
+                    {
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                        "data": data_json,
+                    },
+                    ensure_ascii=False,
+                )
+                + "\n"
+            )
 
-		print(f"✅ Wrote raw log for {game_name}")
+        print(f"✅ Wrote raw log for {game_name}")
 
-	except Exception as e:
+    except Exception as e:
 
-		print(f"❌ Error writing log file for {game_name}: {e}")
+        print(f"❌ Error writing log file for {game_name}: {e}")
 
-	# =====================================================
-	# Read Last Hash
-	# =====================================================
+    # =====================================================
+    # Read Last Hash
+    # =====================================================
 
-	last_hash = ""
+    last_hash = ""
 
-	if os.path.exists(hash_file):
+    if os.path.exists(hash_file):
 
-		with open(hash_file, "r", encoding="utf-8") as f:
+        with open(hash_file, "r", encoding="utf-8") as f:
 
-			last_hash = f.read().strip()
+            last_hash = f.read().strip()
 
-	# =====================================================
-	# Changed
-	# =====================================================
+    # =====================================================
+    # Changed
+    # =====================================================
 
-	if current_hash != last_hash:
+    if current_hash != last_hash:
 
-		with open(hash_file, "w", encoding="utf-8") as f:
+        with open(hash_file, "w", encoding="utf-8") as f:
 
-			f.write(current_hash)
+            f.write(current_hash)
 
-		return True, data_json
+        return True, data_json
 
-	return False, data_json
+    return False, data_json
 
 
 # =========================================================
@@ -182,14 +170,14 @@ def log_and_check(api_url, game_name):
 
 def format_size(size_bytes):
 
-	gb = size_bytes / 1024 / 1024 / 1024
+    gb = size_bytes / 1024 / 1024 / 1024
 
-	if gb >= 1:
-		return f"{gb:.2f} GB"
+    if gb >= 1:
+        return f"{gb:.2f} GB"
 
-	mb = size_bytes / 1024 / 1024
+    mb = size_bytes / 1024 / 1024
 
-	return f"{mb:.2f} MB"
+    return f"{mb:.2f} MB"
 
 
 # =========================================================
@@ -198,58 +186,71 @@ def format_size(size_bytes):
 
 
 def split_text_to_embeds(
-	title, text, color=0x3498DB, max_len=4000, image_url=None
+    title, text, color=0x3498DB, max_len=4000, image_url=None
 ):
-	if not text:
-		return []
+    """
+    Split long text into multiple embeds
+    """
 
-	embeds = []
+    if not text:
+        return []
 
-	lines = text.split("\n")
+    embeds = []
 
-	current = ""
+    lines = text.split("\n")
 
-	part = 1
+    current = ""
 
-	for line in lines:
+    part = 1
 
-		if len(current) + len(line) + 1 > max_len:
+    for line in lines:
 
-			embed = discord.Embed(
-				title=f"{title} {part}", description=current, color=color
-			)
+        if len(current) + len(line) + 1 > max_len:
 
-			embed.set_thumbnail(url=BOT_ICON)
+            embed = discord.Embed(
+                title=f"{title} {part}", description=current, color=color
+            )
 
-			if image_url:
-				embed.set_image(url=image_url)
+            embed.set_thumbnail(url=BOT_ICON)
 
-			embed.set_footer(text="Horoyoi-san ඞ")
+            if image_url:
+                embed.set_image(url=image_url)
 
-			embeds.append(embed)
+            embed.set_footer(text="Horoyoi-san ඞ")
 
-			current = line
+            embeds.append(embed)
 
-			part += 1
+            current = line
 
-		else:
+            part += 1
 
-			current += ("\n" if current else "") + line
+        else:
 
-	if current:
+            current += ("\n" if current else "") + line
 
-		embed = discord.Embed(title=f"{title} {part}", description=current, color=color)
+    # =====================================================
+    # Last Block
+    # =====================================================
 
-		embed.set_thumbnail(url=BOT_ICON)
+    if current:
 
-		if image_url:
-			embed.set_image(url=image_url)
+        embed = discord.Embed(title=f"{title} {part}", description=current, color=color)
 
-		embed.set_footer(text="Horoyoi-san ඞ")
+        embed.set_thumbnail(url=BOT_ICON)
 
-		embeds.append(embed)
+        if image_url:
+            embed.set_image(url=image_url)
 
-	return embeds
+        embed.set_footer(text="Horoyoi-san ඞ")
+
+        embeds.append(embed)
+
+    return embeds
+
+
+# =========================================================
+# Extract Command Options
+# =========================================================
 
 
 # =========================================================
@@ -259,33 +260,34 @@ def split_text_to_embeds(
 
 async def send_discord(channel_id, embeds):
 
-	try:
+    try:
 
-		channel = await bot.fetch_channel(channel_id)
+        channel = await bot.fetch_channel(channel_id)
 
-	except Exception as e:
+    except Exception as e:
 
-		print(f"❌ Channel fetch error: {channel_id}")
+        print(f"❌ Channel fetch error: {channel_id}")
 
-		print(e)
+        print(e)
 
-		return
+        return
 
-	for i, embed in enumerate(embeds, 1):
+    for i, embed in enumerate(embeds, 1):
 
-		try:
+        try:
 
-			await channel.send(embed=embed)
+            await channel.send(embed=embed)
 
-			print(f"✅ sent embed {i} -> {channel_id}")
+            print(f"✅ sent embed {i} -> {channel_id}")
 
-			await asyncio.sleep(1)
+            # anti rate limit
+            await asyncio.sleep(1)
 
-		except Exception as e:
+        except Exception as e:
 
-			print(f"❌ send error -> {channel_id}")
+            print(f"❌ send error -> {channel_id}")
 
-			print(e)
+            print(e)
 
 
 # =========================================================
@@ -295,149 +297,161 @@ async def send_discord(channel_id, embeds):
 
 def build_embeds(data, title, background_image=None):
 
-	blocks = []
+    blocks = []
 
-	default = data.get("default")
+    # =====================================================
+    # Default
+    # =====================================================
 
-	if default:
+    default = data.get("default")
 
-		resource = default.get("resource")
+    if default:
 
-		# =================================================
-		# Launcher
-		# =================================================
+        resource = default.get("resource")
 
-		if resource:
+        # =================================================
+        # Launcher
+        # =================================================
 
-			version = resource.get("version", "No version")
+        if resource:
 
-			size = resource.get("size", 0)
+            version = resource.get("version", "No version")
 
-			cdn_list = default.get("cdnList", [])
+            size = resource.get("size", 0)
 
-			path = resource.get("path", "")
+            md5 = resource.get("md5", "")
 
-			url_full = cdn_list[0]["url"] + path if cdn_list and path else path
+            cdn_list = default.get("cdnList", [])
 
-			desc = (
-				f"## Version {version}\n"
-				f"## Size `{format_size(size)}`\n"
-				f"## Download\n"
-				f"{url_full}"
-			)
+            path = resource.get("path", "")
 
-			blocks += split_text_to_embeds(title, desc, image_url=background_image)
+            url_full = cdn_list[0]["url"] + path if cdn_list and path else path
 
-		# =================================================
-		# Game
-		# =================================================
+            desc = (
+                f"## Version {version}\n"
+                f"## Size `{format_size(size)}`\n"
+                f"## Download\n"
+                f"{url_full}"
+            )
 
-		else:
+            blocks += split_text_to_embeds(title, desc, image_url=background_image)
 
-			config = default.get("config", {})
+        # =================================================
+        # Game
+        # =================================================
 
-			version = config.get("version", "No version")
+        else:
 
-			size = config.get("size", 0)
+            config = default.get("config", {})
 
-			index_file_main = config.get("indexFile", "N/A")
+            version = config.get("version", "No version")
 
-			resources_file = default.get("resources", "N/A")
+            size = config.get("size", 0)
 
-			cdn_list = default.get("cdnList", [])
+            md5 = config.get("indexFileMd5", "")
 
-			patch_lines = []
+            index_file_main = config.get("indexFile", "N/A")
 
-			for patch in config.get("patchConfig", []):
+            resources_file = default.get("resources", "N/A")
 
-				ver = patch.get("version")
+            cdn_list = default.get("cdnList", [])
 
-				index_file = patch.get("indexFile")
+            patch_lines = []
 
-				full_url_patch = (
-					cdn_list[0]["url"] + index_file if cdn_list else index_file
-				)
+            for patch in config.get("patchConfig", []):
 
-				patch_lines.append(f"{ver}: {full_url_patch}")
+                ver = patch.get("version")
 
-			url_full = patch_lines[-1] if patch_lines else "No URL"
+                index_file = patch.get("indexFile")
 
-			desc = (
-				f"## Version {version}\n"
-				f"## Size `{format_size(size)}`\n"
-				f"## Download\n"
-				f"{url_full}\n"
-				f"## IndexFile\n"
-				f"{cdn_list[0]['url'] + index_file_main if cdn_list else index_file_main}\n"
-				f"## Resources\n"
-				f"{cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
-			)
+                full_url_patch = (
+                    cdn_list[0]["url"] + index_file if cdn_list else index_file
+                )
 
-			blocks += split_text_to_embeds(title, desc, image_url=background_image)
+                patch_lines.append(f"{ver}: {full_url_patch}")
 
-			blocks += split_text_to_embeds(
-				title + " — Hdiff", "\n".join(patch_lines), image_url=background_image
-			)
+            url_full = patch_lines[-1] if patch_lines else "No URL"
 
-	predownload = data.get("predownload")
+            desc = (
+                f"## Version {version}\n"
+                f"## Size `{format_size(size)}`\n"
+                f"## Download\n"
+                f"{url_full}\n"
+                f"## IndexFile\n"
+                f"{cdn_list[0]['url'] + index_file_main if cdn_list else index_file_main}\n"
+                f"## Resources\n"
+                f"{cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
+            )
 
-	if predownload:
+            blocks += split_text_to_embeds(title, desc, image_url=background_image)
 
-		config = predownload.get("config", {})
+            blocks += split_text_to_embeds(
+                title + " — Hdiff", "\n".join(patch_lines), image_url=background_image
+            )
 
-		version = config.get("version", "No version")
+    # =====================================================
+    # Predownload
+    # =====================================================
 
-		size = config.get("size", 0)
+    predownload = data.get("predownload")
 
-		md5 = config.get("indexFileMd5", "")
+    if predownload:
 
-		index_file_main = config.get("indexFile", "N/A")
+        config = predownload.get("config", {})
 
-		resources_file = predownload.get("resources", "N/A")
+        version = config.get("version", "No version")
 
-		cdn_list = default.get("cdnList", [])
+        size = config.get("size", 0)
 
-		patch_lines = []
+        md5 = config.get("indexFileMd5", "")
 
-		for patch in config.get("patchConfig", []):
+        index_file_main = config.get("indexFile", "N/A")
 
-			ver = patch.get("version")
+        resources_file = predownload.get("resources", "N/A")
 
-			index_file = patch.get("indexFile")
+        cdn_list = default.get("cdnList", [])
 
-			full_url_patch = cdn_list[0]["url"] + index_file if cdn_list else index_file
+        patch_lines = []
 
-			patch_lines.append(f"{ver}: {full_url_patch}")
+        for patch in config.get("patchConfig", []):
 
-		full_url_predownload = patch_lines[-1] if patch_lines else "No URL"
+            ver = patch.get("version")
 
-		desc = (
-			f"## Version\n"
-			f"`{version}`\n\n"
-			f"## Size\n"
-			f"`{format_size(size)}`\n\n"
-			f"## MD5\n"
-			f"`{md5}`\n\n"
-			f"## Download\n"
-			f"{full_url_predownload}\n\n"
-			f"## IndexFile\n"
-			f"{cdn_list[0]['url'] + index_file_main if cdn_list else index_file_main}\n\n"
-			f"## Resources\n"
-			f"{cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
-		)
+            index_file = patch.get("indexFile")
 
-		blocks += split_text_to_embeds(
-			title + " — Predownload", desc, color=0xF1C40F, image_url=background_image
-		)
+            full_url_patch = cdn_list[0]["url"] + index_file if cdn_list else index_file
 
-		blocks += split_text_to_embeds(
-			title + " — Predownload Hdiff",
-			"\n".join(patch_lines),
-			color=0xF1C40F,
-			image_url=background_image,
-		)
+            patch_lines.append(f"{ver}: {full_url_patch}")
 
-	return blocks
+        full_url_predownload = patch_lines[-1] if patch_lines else "No URL"
+
+        desc = (
+            f"## Version\n"
+            f"`{version}`\n\n"
+            f"## Size\n"
+            f"`{format_size(size)}`\n\n"
+            f"## MD5\n"
+            f"`{md5}`\n\n"
+            f"## Download\n"
+            f"{full_url_predownload}\n\n"
+            f"## IndexFile\n"
+            f"{cdn_list[0]['url'] + index_file_main if cdn_list else index_file_main}\n\n"
+            f"## Resources\n"
+            f"{cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
+        )
+
+        blocks += split_text_to_embeds(
+            title + " — Predownload", desc, color=0xF1C40F, image_url=background_image
+        )
+
+        blocks += split_text_to_embeds(
+            title + " — Predownload Hdiff",
+            "\n".join(patch_lines),
+            color=0xF1C40F,
+            image_url=background_image,
+        )
+
+    return blocks
 
 
 # =========================================================
@@ -447,41 +461,41 @@ def build_embeds(data, title, background_image=None):
 
 async def main():
 
-	await bot.login(TOKEN)
+    await bot.login(TOKEN)
 
-	print(f"✅ Logged in as {bot.user}")
+    print(f"✅ Logged in as {bot.user}")
 
-	urls = [
-		(
-			"https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10012_RnIUKs3r59Csliu3N0rl5uRWWBOFDaJL/G148/index.json",
-			"战双帕弥什 Launcher",
-		),
-		(
-			"https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G148/10012_RnIUKs3r59Csliu3N0rl5uRWWBOFDaJL/index.json",
-			"战双帕弥什 Game",
-		),
-	]
+    urls = [
+        (
+            "https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json",
+            "Wuthering Waves Launcher",
+        ),
+        (
+            "https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json",
+            "Wuthering Waves Game",
+        ),
+    ]
 
-	launcher_background = None
+    launcher_background = None
 
-	for api_url, game_name in urls:
+    for api_url, game_name in urls:
 
-		changed, data = log_and_check(api_url, game_name)
+        changed, data = log_and_check(api_url, game_name)
 
-		if changed and data:
+        if changed and data:
 
-			if "Launcher" in game_name:
-				launcher_background = get_background_image(data, api_url)
+            if "Launcher" in game_name:
+                launcher_background = get_background_image(data)
 
-			embeds = build_embeds(data, game_name, launcher_background)
+            embeds = build_embeds(data, game_name, launcher_background)
 
-			for channel_id in CHANNELS:
+            for channel_id in CHANNELS:
 
-				await send_discord(channel_id, embeds)
+                await send_discord(channel_id, embeds)
 
-		else:
+        else:
 
-			print(f"[{game_name}] No changes detected")
+            print(f"[{game_name}] No changes detected")
 
 
 # =========================================================
@@ -491,17 +505,17 @@ async def main():
 
 async def runner():
 
-	task = asyncio.create_task(bot.start(TOKEN))
+    task = asyncio.create_task(bot.start(TOKEN))
 
-	await asyncio.sleep(5)
+    await asyncio.sleep(5)
 
-	await main()
+    await main()
 
-	await asyncio.sleep(15)
+    await asyncio.sleep(15)
 
-	await bot.close()
+    await bot.close()
 
-	await task
+    await task
 
 
 asyncio.run(runner())
