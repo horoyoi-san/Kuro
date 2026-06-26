@@ -27,7 +27,7 @@ BOT_NAME = "Wuthering Waves"
 
 BOT_ICON = (
     "https://raw.githubusercontent.com/"
-    "horoyoi-san/Kuro/refs/heads/Webhook/assets/ww-cp-os.jpg"
+    "horoyoi-san/Kuro/refs/heads/Webhook/assets/ww.jpg"
 )
 
 # =========================================================
