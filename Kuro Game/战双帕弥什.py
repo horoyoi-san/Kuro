@@ -467,20 +467,18 @@ async def main():
 
 		changed, data = log_and_check(api_url, game_name)
 
-		if changed and data:
+		if not data:
+			continue
 
-			if "Launcher" in game_name:
-				launcher_background = get_background_image(data, api_url)
+		# ดึงรูปใหม่ทุกครั้ง
+		if "Launcher" in game_name:
+			launcher_background = get_background_image(data)
 
+		if changed:
 			embeds = build_embeds(data, game_name, launcher_background)
 
 			for channel_id in CHANNELS:
-
 				await send_discord(channel_id, embeds)
-
-		else:
-
-			print(f"[{game_name}] No changes detected")
 
 
 # =========================================================
