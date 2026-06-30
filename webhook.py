@@ -15,7 +15,7 @@ BOT_TOKEN = "YOUR_BOT_TOKEN"
 CHANNEL_ID = "YOUR_CHANNEL_ID"
 
 DATA_URL = ""
-DATA_FILE = REPO_ROOT / "data" / "wuwa.txt"
+DATA_FILE = REPO_ROOT / "data" / "wuwa_legacy.txt"
 
 GAME_NAME = "Wuthering Waves"
 TITLE_PREFIX = "Wuthering Waves Timeline (STC)"
