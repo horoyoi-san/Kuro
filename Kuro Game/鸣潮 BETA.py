@@ -27,7 +27,7 @@ BOT_NAME = "鸣潮 BETA"
 
 BOT_ICON = (
     "https://raw.githubusercontent.com/"
-    "horoyoi-san/Kuro/refs/heads/Webhook/assets/ ww2.png"
+    "horoyoi-san/Kuro/refs/heads/Webhook/assets/ww2.png"
 )
 
 MAIN_IMAGE = "https://static1.anpoimages.com/wordpress/wp-content/uploads/2024/05/wuthering-waves-hero-resized-16-9.jpg"

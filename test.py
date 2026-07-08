@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 # =========================================================
 
 #TOKEN = os.environ.get("DISCORD_TOKEN")
-
+TOKEN = "20+20+20+7=67"
 intents = discord.Intents.default()
 
 bot = discord.Client(intents=intents)
@@ -27,7 +27,7 @@ BOT_NAME = "Wuthering Waves"
 
 BOT_ICON = (
     "https://raw.githubusercontent.com/"
-    "horoyoi-san/Kuro/refs/heads/Webhook/assets/ww-cp-os.jpg"
+    "horoyoi-san/Kuro/refs/heads/Webhook/assets/ww2.png"
 )
 
 # =========================================================
