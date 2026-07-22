@@ -5,9 +5,12 @@ on:
     - cron: "0 22 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   prod-monitor:
-    name: Run PROD Monitor 05:00
+    name: Run Monitor 13:00
     runs-on: ubuntu-latest
 
     steps:
@@ -16,16 +19,16 @@ jobs:
       # =====================================================
 
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          fetch-depth: 0
 
       # =====================================================
       # Python
       # =====================================================
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
@@ -35,6 +38,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install requests
           pip install -U discord.py
 
@@ -45,7 +49,6 @@ jobs:
       - name: Run Wuthering Waves
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN_1 }}
-
         run: |
           python "Kuro Game/Wuthering Waves.py"
           python "Kuro Game/鸣潮.py"
@@ -54,10 +57,7 @@ jobs:
       # Commit Logs
       # =====================================================
 
-      - name: Commit and Push PROD logs
-        env:
-          PAT: ${{ secrets.PAT }}
-
+      - name: Commit and Push logs
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
@@ -66,14 +66,11 @@ jobs:
 
           git add Kuro/log
 
-          if ! git diff --cached --quiet; then
-
-            git commit -m "Update logs [skip ci]"
-
-            git push \
-            https://x-access-token:${PAT}@github.com/${{ github.repository }} \
-            HEAD:Webhook
-
-          else
+          if git diff --cached --quiet; then
             echo "No changes to commit"
+            exit 0
           fi
+
+          git commit -m "Update logs [skip ci]"
+
+          git push origin HEAD:Webhook
