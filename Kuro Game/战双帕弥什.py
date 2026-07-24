@@ -472,7 +472,7 @@ async def main():
 
 		# ดึงรูปใหม่ทุกครั้ง
 		if "Launcher" in game_name:
-			launcher_background = get_background_image(data)
+			launcher_background = get_background_image(data, api_url)
 
 		if changed:
 			embeds = build_embeds(data, game_name, launcher_background)
