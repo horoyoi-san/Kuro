@@ -76,4 +76,5 @@ jobs:
 
           git commit -m "Update logs [skip ci]"
 
+          git pull --rebase origin Webhook
           git push origin HEAD:Webhook
