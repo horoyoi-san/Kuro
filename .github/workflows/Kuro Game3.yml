@@ -7,7 +7,7 @@ on:
 
 jobs:
   prod-monitor:
-    name: Run Monitor 13:00
+    name: Run Monitor 12:00
     runs-on: ubuntu-latest
 
     steps:
