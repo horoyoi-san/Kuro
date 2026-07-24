@@ -49,7 +49,12 @@ jobs:
         run: |
           python "Kuro Game/Wuthering Waves.py"
           python "Kuro Game/鸣潮.py"
+          
+          python "Kuro Game/Punishing Gray Raven.py"
+          python "Kuro Game/战双帕弥什.py"
 
+          python "Kuro Game/Punishing Gray Raven.py"
+          python "Kuro Game/战双帕弥什.py"
       # =====================================================
       # Commit Logs
       # =====================================================
