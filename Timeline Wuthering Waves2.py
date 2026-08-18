@@ -5,8 +5,8 @@ CONFIG = {
     "game_name": "Wuthering Waves",
     "start_dates": {
         #"Drip": bangkok_datetime(2025, 7, 29, 11, 0),
-        "Beta": bangkok_datetime(2026, 7, 13, 13, 0),
-        "Release": bangkok_datetime(2026, 10, 20, 10, 0),
+        "Beta": bangkok_datetime(2026, 7, 25, 13, 0),
+        "Release": bangkok_datetime(2026, 8, 13, 10, 0),
     },
     "intervals": {
         #"Drip": 42,
