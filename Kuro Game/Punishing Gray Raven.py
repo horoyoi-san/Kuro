@@ -197,7 +197,7 @@ def format_size(size_bytes):
 
 
 def split_text_to_embeds(
-	title, text, color=0x3498DB, max_len=4000, image_url=None
+	title, text, color=0xff0000, max_len=4000, image_url=None
 ):
 	if not text:
 		return []
@@ -426,13 +426,13 @@ def build_embeds(data, title, background_image=None):
 		)
 
 		blocks += split_text_to_embeds(
-			title + " — Predownload", desc, color=0xF1C40F, image_url=background_image
+			title + " — Predownload", desc, color=0xff0000, image_url=background_image
 		)
 
 		blocks += split_text_to_embeds(
 			title + " — Predownload Hdiff",
 			"\n".join(patch_lines),
-			color=0xF1C40F,
+			color=0xff0000,
 			image_url=background_image,
 		)
 
