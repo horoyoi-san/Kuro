@@ -40,12 +40,12 @@ def get_background_image(data):
     try:
 
         bg_id = (
-    data.get("config", {})
-        .get("functionCode", {})
-        .get("background")
-)
+            data.get("config", {}).get("functionCode", {}).get("background")
+            or data.get("functionCode", {}).get("background")
+        )
 
         if not bg_id:
+            print("⚠️ ไม่พบ Background ID ใน JSON")
             return None
         # https://prod-alicdn-gamestarter.kurogame.com/launcher/game/50004_P7xcUZnEr1AXIGON25E6KjpOgTlVrg6e/G153/background/{bg_id}/en.json
         manifest_url = (
