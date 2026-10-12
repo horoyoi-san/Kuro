@@ -46,7 +46,7 @@ def get_background_image(data):
 
         manifest_url = (
             "https://prod-volcdn-gamestarter.kurogame.xyz/"
-            "launcher/game/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/"
+            "launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/"
             f"G152/official/background/{bg_id}/zh-Hans.json"
         )
 
