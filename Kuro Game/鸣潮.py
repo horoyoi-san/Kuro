@@ -47,7 +47,7 @@ def get_background_image(data):
         manifest_url = (
             "https://prod-cn-alicdn-gamestarter.kurogame.com/"
             "launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/"
-            f"G152/background/{bg_id}/zh-Hans.json"
+            f"G152/official/background/{bg_id}/zh-Hans.json"
         )
 
         print(f"🎨 Background Manifest: {manifest_url}")
@@ -467,11 +467,11 @@ async def main():
 
     urls = [
         (
-            "https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json",
+            "https://prod-volcdn-gamestarter.kurogame.xyz/launcher/app/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/index.json",
             "鸣潮 Launcher",
         ),
         (
-            "https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/index.json",
+            "https://prod-volcdn-gamestarter.kurogame.xyz/launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/G152/official/index.json",
             "鸣潮 Game",
         ),
     ]

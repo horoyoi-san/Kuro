@@ -43,11 +43,11 @@ def get_background_image(data):
 
         if not bg_id:
             return None
-        # https://prod-alicdn-gamestarter.kurogame.com/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/background/{bg_id}/en.json
+        # https://prod-alicdn-gamestarter.kurogame.com/launcher/50004_P7xcUZnEr1AXIGON25E6KjpOgTlVrg6e/G153/background/{bg_id}/en.json
         manifest_url = (
             "https://prod-alicdn-gamestarter.kurogame.com/"
-            "launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/"
-            f"G153/background/{bg_id}/en.json"
+            "launcher/50004_P7xcUZnEr1AXIGON25E6KjpOgTlVrg6e/"
+            f"G153/official/background/{bg_id}/en.json"
         )
 
         print(f"🎨 Background Manifest: {manifest_url}")
@@ -467,11 +467,11 @@ async def main():
 
     urls = [
         (
-            "https://prod-volcdn-gamestarter.kurogame.net/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json",
+            "https://prod-alicdn-gamestarter.kurogame.com/launcher/app/50004_P7xcUZnEr1AXIGON25E6KjpOgTlVrg6e/index.json",
             "Wuthering Waves Launcher",
         ),
         (
-            "https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json",
+            "https://prod-alicdn-gamestarter.kurogame.com/launcher/game/50004_P7xcUZnEr1AXIGON25E6KjpOgTlVrg6e/G153/official/index.json",
             "Wuthering Waves Game",
         ),
     ]
