@@ -38,6 +38,12 @@ BOT_ICON = (
 def get_background_image(data):
 
     try:
+        print("[DEBUG] Background JSON keys:", list(data.keys()))
+        print("[DEBUG] functionCode:", data.get("functionCode"))
+        print(
+            "[DEBUG] config.functionCode:",
+            data.get("config", {}).get("functionCode")
+        )
 
         bg_id = (
             data.get("config", {}).get("functionCode", {}).get("background")
@@ -490,8 +496,11 @@ async def main():
             continue
 
         # ดึงรูปใหม่ทุกครั้ง
-        if "Launcher" in game_name:
+
+        # ดึง Background ID จาก JSON ของ Game
+        if "Game" in game_name:
             launcher_background = get_background_image(data)
+
 
         if changed:
             embeds = build_embeds(data, game_name, launcher_background)
