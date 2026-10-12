@@ -461,6 +461,53 @@ def build_embeds(data, title, background_image=None):
             image_url=background_image,
         )
 
+    # รองรับ Game JSON รูปแบบใหม่ที่ไม่มี top-level "default"
+    if not default and (
+        data.get("config")
+        or data.get("resourcePacks")
+        or data.get("bundles")
+    ):
+        config = data.get("config") or {}
+        function_code = config.get("functionCode") or {}
+        background_id = function_code.get("background", "N/A")
+
+        resource_packs = data.get("resourcePacks")
+        bundles = data.get("bundles")
+
+        resource_count = (
+            len(resource_packs)
+            if isinstance(resource_packs, (dict, list))
+            else 0
+        )
+        bundle_count = (
+            len(bundles)
+            if isinstance(bundles, (dict, list))
+            else 0
+        )
+
+        version = (
+            config.get("version")
+            or config.get("gameVersion")
+            or "ไม่พบ Version ใน JSON"
+        )
+
+        desc = (
+            "## Game Index ตรวจพบการเปลี่ยนแปลง\n"
+            f"**Version:** `{version}`\n"
+            f"**Resource Packs:** `{resource_count}`\n"
+            f"**Bundles:** `{bundle_count}`\n"
+            f"**Background ID:** `{background_id}`\n"
+            f"**Predownload:** "
+            f"`{'มีข้อมูล' if data.get('predownload') else 'ไม่มีข้อมูล'}`"
+        )
+
+        blocks += split_text_to_embeds(
+            title,
+            desc,
+            color=0x00E5FF,
+            image_url=background_image,
+        )
+
     return blocks
 
 
