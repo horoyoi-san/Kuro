@@ -233,7 +233,7 @@ def add_embed_image(embed: discord.Embed, image_url: str | None):
 def split_text_to_embeds(
     title,
     text,
-    color=0x00E5FF,
+    color=0x0000ff,
     max_len=3900,
     image_url=None,
 ):
@@ -408,7 +408,7 @@ def build_game_embeds(data, title, background_image=None):
         blocks += split_text_to_embeds(
             f"{title} — {bundle_name}",
             desc,
-            color=0x00E5FF,
+            color=0x0000ff,
             image_url=background_image,
         )
 
@@ -439,7 +439,7 @@ def build_game_embeds(data, title, background_image=None):
         blocks += split_text_to_embeds(
             f"{title} — Hdiff",
             "\n\n".join(hdiff_lines),
-            color=0x00E5FF,
+            color=0x0000ff,
             image_url=background_image,
         )
 
