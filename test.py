@@ -1,508 +1,548 @@
-import discord
-import asyncio
-import time
 
-import requests
+import asyncio
+import hashlib
 import json
 import os
-import hashlib
-
-import discord
-import asyncio
-import time
-
-import requests
-import json
-import os
-import hashlib
-
 from datetime import datetime, timezone
+
+import discord
+import requests
+
 
 # =========================================================
 # Discord
 # =========================================================
+TOKEN = "Nigga"
+#TOKEN = os.environ.get("DISCORD_TOKEN")
 
-TOKEN = "676767"
+if not TOKEN:
+    raise RuntimeError("ไม่พบ DISCORD_TOKEN ใน Environment Variables")
 
 intents = discord.Intents.default()
-
 bot = discord.Client(intents=intents)
 
-# =========================================================
-# Branding
-# =========================================================
-
-BOT_NAME = "战双帕弥什"
+BOT_NAME = "鸣潮"
 
 BOT_ICON = (
-	"https://raw.githubusercontent.com/"
-	"horoyoi-san/Kuro/refs/heads/Webhook/assets/pgr.png"
+    "https://raw.githubusercontent.com/"
+    "horoyoi-san/Kuro/refs/heads/Webhook/assets/ww.png"
 )
+
+CHANNELS = [
+    1292097230924283965,  # Test
+    #1291728736739131402,  # 1
+    #1267379122338791435,  # 2
+]
+
+
+# =========================================================
+# API URLs
+# =========================================================
+
+URLS = [
+    (
+        "https://prod-volcdn-gamestarter.kurogame.xyz/"
+        "launcher/app/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/"
+        "index.json",
+        "鸣潮 Launcher",
+    ),
+    (
+        "https://prod-volcdn-gamestarter.kurogame.xyz/"
+        "launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/"
+        "G152/official/index.json",
+        "鸣潮 Game",
+    ),
+]
+
+
+# =========================================================
+# HTTP
+# =========================================================
+
+SESSION = requests.Session()
+SESSION.headers.update({
+    "User-Agent": "Mozilla/5.0 WutheringWavesMonitor/1.0"
+})
+
+
+def fetch_json(url):
+    response = SESSION.get(url, timeout=20)
+    response.raise_for_status()
+    return response.json(), response.text
+
+
+# =========================================================
+# Logging / Change Detection
+# =========================================================
+
+def log_and_check(api_url, game_name):
+    try:
+        data, raw_text = fetch_json(api_url)
+    except Exception as exc:
+        print(f"❌ Error fetching {game_name}: {exc}")
+        return False, None
+
+    current_hash = hashlib.md5(
+        raw_text.encode("utf-8")
+    ).hexdigest()
+
+    log_dir = os.path.join(
+        os.getcwd(), "Kuro", "log", game_name
+    )
+    os.makedirs(log_dir, exist_ok=True)
+
+    hash_file = os.path.join(log_dir, "last_hash.txt")
+    raw_file = os.path.join(log_dir, "raw_log.jsonl")
+
+    try:
+        with open(raw_file, "a", encoding="utf-8") as file:
+            file.write(
+                json.dumps(
+                    {
+                        "timestamp": datetime.now(
+                            timezone.utc
+                        ).isoformat(),
+                        "data": data,
+                    },
+                    ensure_ascii=False,
+                ) + "\n"
+            )
+    except Exception as exc:
+        print(f"❌ Error writing log: {exc}")
+
+    try:
+        with open(hash_file, "r", encoding="utf-8") as file:
+            last_hash = file.read().strip()
+    except FileNotFoundError:
+        last_hash = ""
+
+    changed = current_hash != last_hash
+
+    if changed:
+        try:
+            with open(hash_file, "w", encoding="utf-8") as file:
+                file.write(current_hash)
+        except Exception as exc:
+            print(f"❌ Error saving hash: {exc}")
+
+    return changed, data
+
+
+# =========================================================
+# Size / Version Utilities
+# =========================================================
+
+def format_size(size_bytes):
+    size_bytes = int(size_bytes or 0)
+
+    units = ["B", "KB", "MB", "GB", "TB", "PB"]
+    size = float(size_bytes)
+
+    for unit in units:
+        if size < 1024 or unit == units[-1]:
+            return f"{size:.2f} {unit}"
+        size /= 1024
+
+    return f"{size:.2f} PB"
+
+
+def version_key(version):
+    """เรียง Version เช่น 1.0.0, 3.6.0, 3.6.1"""
+    try:
+        return tuple(int(part) for part in str(version).split("."))
+    except (TypeError, ValueError):
+        return (0,)
+
+
+def join_url(base_url, path):
+    if not path:
+        return ""
+
+    if str(path).startswith(("https://", "http://")):
+        return str(path)
+
+    if not base_url:
+        return str(path)
+
+    return base_url.rstrip("/") + "/" + str(path).lstrip("/")
+
+
+def get_cdn_base(data):
+    for item in data.get("cdnList") or []:
+        if isinstance(item, dict) and item.get("url"):
+            return item["url"].rstrip("/") + "/"
+
+    return ""
+
 
 # =========================================================
 # Dynamic Background
 # =========================================================
 
 
-def get_background_image(data, base_index_url):
+def get_background_image(data):
+    try:
+        bg_id = (
+            (data.get("config") or {})
+            .get("functionCode", {})
+            .get("background")
+            or data.get("functionCode", {}).get("background")
+        )
 
-	try:
+        if not bg_id:
+            print("⚠️ ไม่พบ Background ID")
+            return None
 
-		bg_id = (
-    data.get("config", {})
-        .get("functionCode", {})
-        .get("background")
-)
+        manifest_url = (
+            "https://prod-volcdn-gamestarter.kurogame.xyz/"
+            "launcher/game/10003_oLNgHF1CESo51DGHN2odtp40e3oI1HfZ/"
+            f"G152/official/background/{bg_id}/zh-Hans.json"
+        )
 
-		if not bg_id:
-			return None
-        # https://prod-alicdn-gamestarter.kurogame.com/launcher/10012_LWdk9D2Ep9mpJmqBZZkcPBU2YNraEWBQ/G148/background/{bg_id}/zh-Hans.json
-		# Normalize base so that URLs like
-		# .../launcher/launcher/10012_.../G148/index.json
-		# become
-		# .../launcher/10012_.../G148/background/{bg_id}/zh-Hans.json
-		base = base_index_url.rsplit("/", 1)[0]
-		base = base.replace("/launcher/launcher/", "/launcher/")
-		manifest_url = base + f"/background/{bg_id}/zh-Hans.json"
+        manifest, _ = fetch_json(manifest_url)
+        image_url = manifest.get("firstFrameImage")
 
-		print(f"🎨 Background Manifest: {manifest_url}")
+        if image_url and image_url.startswith("https://"):
+            print(f"🖼️ Background: {image_url}")
+            return image_url
 
-		manifest = requests.get(manifest_url, timeout=10).json()
+        print("⚠️ ไม่พบ firstFrameImage ใน manifest")
+        return None
 
-		image = manifest.get("firstFrameImage")
+    except Exception as exc:
+        print(f"⚠️ Background fetch error: {exc}")
+        return None
 
-		if image:
-
-			print(f"🖼️ Background Image: {image}")
-
-			return image
-
-		print("⚠️ No firstFrameImage found")
-
-	except Exception as e:
-
-		print(f"❌ Background fetch error: {e}")
-
-	return None
 
 
 # =========================================================
-# Channels
-# =========================================================
-
-CHANNELS = [
-	1292097230924283965,  # Test
-	#1291728736739131402,  # 1
-	#1267379122338791435,  # 2
-]
-
-# =========================================================
-# Logging
+# Embed Utilities
 # =========================================================
 
 
-def log_and_check(api_url, game_name):
 
-	try:
-		resp = requests.get(api_url, timeout=10)
+def add_embed_image(embed: discord.Embed, image_url: str | None):
+    embed.set_thumbnail(url=BOT_ICON)
 
-		data_text = resp.text
+    if image_url and image_url.startswith("https://"):
+        embed.set_image(url=image_url)
 
-		data_json = json.loads(data_text)
-
-	except Exception as e:
-
-		print(f"❌ Error fetching {game_name}: {e}")
-
-		return False, None
-
-	current_hash = hashlib.md5(data_text.encode()).hexdigest()
-
-	log_dir = os.path.join(os.getcwd(), "Kuro", "log", game_name)
-
-	os.makedirs(log_dir, exist_ok=True)
-
-	hash_file = os.path.join(log_dir, "last_hash.txt")
-
-	raw_file = os.path.join(log_dir, "raw_log.jsonl")
-
-	# =====================================================
-	# Write Raw Log
-	# =====================================================
-
-	try:
-
-		with open(raw_file, "a", encoding="utf-8") as f:
-
-			f.write(
-				json.dumps(
-					{
-						"timestamp": datetime.now(timezone.utc).isoformat(),
-						"data": data_json,
-					},
-					ensure_ascii=False,
-				)
-				+ "\n"
-			)
-
-		print(f"✅ Wrote raw log for {game_name}")
-
-	except Exception as e:
-
-		print(f"❌ Error writing log file for {game_name}: {e}")
-
-	# =====================================================
-	# Read Last Hash
-	# =====================================================
-
-	last_hash = ""
-
-	if os.path.exists(hash_file):
-
-		with open(hash_file, "r", encoding="utf-8") as f:
-
-			last_hash = f.read().strip()
-
-	# =====================================================
-	# Changed
-	# =====================================================
-
-	if current_hash != last_hash:
-
-		with open(hash_file, "w", encoding="utf-8") as f:
-
-			f.write(current_hash)
-
-		return True, data_json
-
-	return False, data_json
-
-
-# =========================================================
-# Size Formatter
-# =========================================================
-
-
-def format_size(size_bytes):
-
-	gb = size_bytes / 1024 / 1024 / 1024
-
-	if gb >= 1:
-		return f"{gb:.2f} GB"
-
-	mb = size_bytes / 1024 / 1024
-
-	return f"{mb:.2f} MB"
-
-
-# =========================================================
-# Embed Utils
-# =========================================================
+    return embed
 
 
 def split_text_to_embeds(
-	title, text, color=0x3498DB, max_len=4000, image_url=None
+    title,
+    text,
+    color=0x00E5FF,
+    max_len=3900,
+    image_url=None,
 ):
-	if not text:
-		return []
+    if not text:
+        return []
 
-	embeds = []
+    lines = []
 
-	lines = text.split("\n")
+    for line in text.splitlines():
+        while len(line) > max_len:
+            lines.append(line[:max_len])
+            line = line[max_len:]
 
-	current = ""
+        lines.append(line)
 
-	part = 1
+    embeds = []
+    current = ""
+    part = 1
 
-	for line in lines:
+    for line in lines:
+        candidate = current + ("\n" if current else "") + line
 
-		if len(current) + len(line) + 1 > max_len:
+        if len(candidate) > max_len and current:
+            embed = discord.Embed(
+                title=title if part == 1 else f"{title} {part}",
+                description=current,
+                color=color,
+            )
 
-			embed = discord.Embed(
-				title=f"{title} {part}", description=current, color=color
-			)
+            add_embed_image(embed, image_url)
+            embed.set_footer(text="Horoyoi-san ඞ")
+            embeds.append(embed)
 
-			embed.set_thumbnail(url=BOT_ICON)
+            current = line
+            part += 1
+        else:
+            current = candidate
 
-			if image_url:
-				embed.set_image(url=image_url)
+    if current:
+        embed = discord.Embed(
+            title=title if part == 1 else f"{title} {part}",
+            description=current,
+            color=color,
+        )
 
-			embed.set_footer(text="Horoyoi-san ඞ")
+        add_embed_image(embed, image_url)
+        embed.set_footer(text="Horoyoi-san ඞ")
+        embeds.append(embed)
 
-			embeds.append(embed)
-
-			current = line
-
-			part += 1
-
-		else:
-
-			current += ("\n" if current else "") + line
-
-	if current:
-
-		embed = discord.Embed(title=f"{title} {part}", description=current, color=color)
-
-		embed.set_thumbnail(url=BOT_ICON)
-
-		if image_url:
-			embed.set_image(url=image_url)
-
-		embed.set_footer(text="Horoyoi-san ඞ")
-
-		embeds.append(embed)
-
-	return embeds
+    return embeds
 
 
 # =========================================================
-# Discord Send
+# Launcher Embed
 # =========================================================
 
+def build_launcher_embeds(data, title, background_image=None):
+    default = data.get("default") or {}
+    resource = default.get("resource") or {}
 
-async def send_discord(channel_id, embeds):
+    if not resource:
+        return split_text_to_embeds(
+            title,
+            "ไม่พบ default.resource ใน Launcher JSON",
+            image_url=background_image,
+        )
 
-	try:
+    version = resource.get("version", "ไม่ทราบ")
+    size = resource.get("size", 0)
+    path = resource.get("path", "")
+    cdn_base = get_cdn_base(default)
+    download_url = join_url(cdn_base, path)
 
-		channel = await bot.fetch_channel(channel_id)
+    desc = (
+        f"## Version `{version}`\n\n"
+        f"## Size `{format_size(size)}`\n\n"
+        f"## Download\n"
+        f"{download_url or 'ไม่พบ Download URL'}"
+    )
 
-	except Exception as e:
+    return split_text_to_embeds(
+        title,
+        desc,
+        image_url=background_image,
+    )
 
-		print(f"❌ Channel fetch error: {channel_id}")
 
-		print(e)
+# =========================================================
+# Game Embed
+# =========================================================
 
-		return
+def build_game_embeds(data, title, background_image=None):
+    packs = data.get("resourcePacks") or {}
+    bundles = data.get("bundles") or {}
+    cdn_base = get_cdn_base(data)
 
-	for i, embed in enumerate(embeds, 1):
+    if not packs:
+        return split_text_to_embeds(
+            title,
+            "ไม่พบ resourcePacks ใน Game Index JSON",
+            image_url=background_image,
+        )
 
-		try:
+    blocks = []
 
-			await channel.send(embed=embed)
+    # ดึง Bundle ทุกประเภทที่ API มีจริง
+    for bundle_name in ("common", "SD", "HD", "UHD"):
+        bundle = bundles.get(bundle_name)
 
-			print(f"✅ sent embed {i} -> {channel_id}")
+        if not isinstance(bundle, dict):
+            print(f"ℹ️ ไม่พบ Bundle: {bundle_name}")
+            continue
 
-			await asyncio.sleep(1)
+        selected_names = bundle.get("resourcePacks") or []
 
-		except Exception as e:
+        if not selected_names:
+            print(f"⚠️ {bundle_name} ไม่มี resourcePacks")
+            continue
 
-			print(f"❌ send error -> {channel_id}")
+        selected_packs = [
+            (name, packs[name])
+            for name in selected_names
+            if isinstance(packs.get(name), dict)
+        ]
 
-			print(e)
+        if not selected_packs:
+            continue
+
+        version = next(
+            (
+                pack.get("version")
+                for _, pack in selected_packs
+                if pack.get("version")
+            ),
+            "ไม่ทราบ",
+        )
+
+        total_size = sum(
+            int(pack.get("size", 0) or 0)
+            for _, pack in selected_packs
+        )
+
+        index_lines = []
+        resource_lines = []
+
+        for name, pack in selected_packs:
+            index_file = pack.get("indexFile")
+            base_url = pack.get("baseUrl")
+
+            if index_file:
+                index_lines.append(
+                    f"**{name.upper()}**\n"
+                    f"{join_url(cdn_base, index_file)}"
+                )
+
+            if base_url:
+                resource_lines.append(
+                    f"**{name.upper()}**\n"
+                    f"{join_url(cdn_base, base_url)}"
+                )
+
+        desc = (
+            f"## Bundle `{bundle_name}`\n\n"
+            f"## Version `{version}`\n\n"
+            f"## Size `{format_size(total_size)}`\n\n"
+            f"## IndexFile\n"
+            f"{chr(10).join(index_lines) or 'ไม่พบ indexFile'}\n\n"
+            f"## Resources\n"
+            f"{chr(10).join(resource_lines) or 'ไม่พบ baseUrl'}"
+        )
+
+        blocks += split_text_to_embeds(
+            f"{title} — {bundle_name}",
+            desc,
+            color=0x00E5FF,
+            image_url=background_image,
+        )
+
+    # แสดง Hdiff จาก common.patchConfig
+    common_pack = packs.get("common") or {}
+    patches = common_pack.get("patchConfig") or []
+
+    valid_patches = [
+        patch for patch in patches
+        if isinstance(patch, dict)
+        and patch.get("version")
+        and patch.get("indexFile")
+    ]
+
+    valid_patches.sort(
+        key=lambda item: version_key(item["version"])
+    )
+
+    if valid_patches:
+        hdiff_lines = []
+
+        for patch in valid_patches:
+            hdiff_lines.append(
+                f"**{patch['version']}**\n"
+                f"{join_url(cdn_base, patch['indexFile'])}"
+            )
+
+        blocks += split_text_to_embeds(
+            f"{title} — Hdiff",
+            "\n\n".join(hdiff_lines),
+            color=0x00E5FF,
+            image_url=background_image,
+        )
+
+    return blocks
+
 
 
 # =========================================================
 # Build Embeds
 # =========================================================
 
-
 def build_embeds(data, title, background_image=None):
+    if "Launcher" in title:
+        return build_launcher_embeds(
+            data, title, background_image
+        )
 
-	blocks = []
+    return build_game_embeds(
+        data, title, background_image
+    )
 
-	default = data.get("default")
 
-	if default:
+# =========================================================
+# Discord Send
+# =========================================================
 
-		resource = default.get("resource")
+async def send_discord(channel_id, embeds):
+    try:
+        channel = await bot.fetch_channel(channel_id)
+    except Exception as exc:
+        print(f"❌ Channel fetch error: {channel_id}: {exc}")
+        return
 
-		# =================================================
-		# Launcher
-		# =================================================
-
-		if resource:
-
-			version = resource.get("version", "No version")
-
-			size = resource.get("size", 0)
-
-			cdn_list = default.get("cdnList", [])
-
-			path = resource.get("path", "")
-
-			url_full = cdn_list[0]["url"] + path if cdn_list and path else path
-
-			desc = (
-				f"## Version {version}\n"
-				f"## Size `{format_size(size)}`\n"
-				f"## Download\n"
-				f"{url_full}"
-			)
-
-			blocks += split_text_to_embeds(title, desc, image_url=background_image)
-
-		# =================================================
-		# Game
-		# =================================================
-
-		else:
-
-			config = default.get("config", {})
-
-			version = config.get("version", "No version")
-
-			size = config.get("size", 0)
-
-			index_file_main = config.get("indexFile", "N/A")
-
-			resources_file = default.get("resources", "N/A")
-
-			cdn_list = default.get("cdnList", [])
-
-			patch_lines = []
-
-			for patch in config.get("patchConfig", []):
-
-				ver = patch.get("version")
-
-				index_file = patch.get("indexFile")
-
-				full_url_patch = (
-					cdn_list[0]["url"] + index_file if cdn_list else index_file
-				)
-
-				patch_lines.append(f"{ver}: {full_url_patch}")
-
-			url_full = patch_lines[-1] if patch_lines else "No URL"
-
-			desc = (
-				f"## Version {version}\n"
-				f"## Size `{format_size(size)}`\n"
-				f"## Download\n"
-				f"{url_full}\n"
-				f"## IndexFile\n"
-				f"{cdn_list[0]['url'] + index_file_main if cdn_list else index_file_main}\n"
-				f"## Resources\n"
-				f"{cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
-			)
-
-			blocks += split_text_to_embeds(title, desc, image_url=background_image)
-
-			blocks += split_text_to_embeds(
-				title + " — Hdiff", "\n".join(patch_lines), image_url=background_image
-			)
-
-	predownload = data.get("predownload")
-
-	if predownload:
-
-		config = predownload.get("config", {})
-
-		version = config.get("version", "No version")
-
-		size = config.get("size", 0)
-
-		md5 = config.get("indexFileMd5", "")
-
-		index_file_main = config.get("indexFile", "N/A")
-
-		resources_file = predownload.get("resources", "N/A")
-
-		cdn_list = default.get("cdnList", [])
-
-		patch_lines = []
-
-		for patch in config.get("patchConfig", []):
-
-			ver = patch.get("version")
-
-			index_file = patch.get("indexFile")
-
-			full_url_patch = cdn_list[0]["url"] + index_file if cdn_list else index_file
-
-			patch_lines.append(f"{ver}: {full_url_patch}")
-
-		full_url_predownload = patch_lines[-1] if patch_lines else "No URL"
-
-		desc = (
-			f"## Version\n"
-			f"`{version}`\n\n"
-			f"## Size\n"
-			f"`{format_size(size)}`\n\n"
-			f"## MD5\n"
-			f"`{md5}`\n\n"
-			f"## Download\n"
-			f"{full_url_predownload}\n\n"
-			f"## IndexFile\n"
-			f"{cdn_list[0]['url'] + index_file_main if cdn_list else index_file_main}\n\n"
-			f"## Resources\n"
-			f"{cdn_list[0]['url'] + resources_file if cdn_list else resources_file}"
-		)
-
-		blocks += split_text_to_embeds(
-			title + " — Predownload", desc, color=0xF1C40F, image_url=background_image
-		)
-
-		blocks += split_text_to_embeds(
-			title + " — Predownload Hdiff",
-			"\n".join(patch_lines),
-			color=0xF1C40F,
-			image_url=background_image,
-		)
-
-	return blocks
+    for index, embed in enumerate(embeds, 1):
+        try:
+            await channel.send(embed=embed)
+            print(f"✅ Sent Embed {index} -> {channel_id}")
+            await asyncio.sleep(1)
+        except Exception as exc:
+            print(f"❌ Send error -> {channel_id}: {exc}")
 
 
 # =========================================================
 # Main
 # =========================================================
 
-
 async def main():
+    results = []
 
-	await bot.login(TOKEN)
+    # โหลด JSON ทั้งสองชุดก่อน เพื่อให้ Launcher ใช้ Background ได้
+    for api_url, game_name in URLS:
+        changed, data = log_and_check(api_url, game_name)
 
-	print(f"✅ Logged in as {bot.user}")
+        if data is not None:
+            results.append((changed, data, game_name))
 
-	urls = [
-		(
-			"https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10012_RnIUKs3r59Csliu3N0rl5uRWWBOFDaJL/G148/index.json",
-			"战双帕弥什 Launcher",
-		),
-		(
-			"https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G148/10012_RnIUKs3r59Csliu3N0rl5uRWWBOFDaJL/index.json",
-			"战双帕弥什 Game",
-		),
-	]
+    game_data = next(
+        (
+            data for _, data, name in results
+            if "Game" in name
+        ),
+        None,
+    )
 
-	launcher_background = None
+    background_image = (
+        get_background_image(game_data)
+        if game_data else None
+    )
 
-	for api_url, game_name in urls:
+    for changed, data, game_name in results:
+        if not changed:
+            print(f"ℹ️ No changes: {game_name}")
+            continue
 
-		changed, data = log_and_check(api_url, game_name)
+        embeds = build_embeds(
+            data,
+            game_name,
+            background_image,
+        )
 
-		if not data:
-			continue
-
-		# ดึงรูปใหม่ทุกครั้ง
-		if "Launcher" in game_name:
-			launcher_background = get_background_image(data, api_url)
-
-		if changed:
-			embeds = build_embeds(data, game_name, launcher_background)
-
-			for channel_id in CHANNELS:
-				await send_discord(channel_id, embeds)
+        for channel_id in CHANNELS:
+            await send_discord(channel_id, embeds)
 
 
 # =========================================================
 # Start
 # =========================================================
 
-
 async def runner():
+    async with bot:
+        task = asyncio.create_task(bot.start(TOKEN))
 
-	task = asyncio.create_task(bot.start(TOKEN))
+        try:
+            await bot.wait_until_ready()
+            print(f"✅ Logged in as {bot.user}")
 
-	await asyncio.sleep(5)
+            await main()
 
-	await main()
+            await asyncio.sleep(5)
 
-	await asyncio.sleep(15)
-
-	await bot.close()
-
-	await task
+        finally:
+            await bot.close()
+            await task
 
 
 asyncio.run(runner())

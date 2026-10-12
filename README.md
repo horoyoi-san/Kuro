@@ -45,3 +45,9 @@ PET
 ```
 Token
 ```
+
+cd
+```
+& C:\python314\python.exe -m pip install -U discord.py
+& C:\python314\python.exe -m pip install requests
+```
