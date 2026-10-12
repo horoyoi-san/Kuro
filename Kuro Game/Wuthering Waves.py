@@ -190,6 +190,54 @@ def format_size(size_bytes):
     return f"{mb:.2f} MB"
 
 
+def collect_game_file_links(data, limit=20):
+    found = []
+    seen = set()
+
+    def walk(obj, location="$"):
+        if isinstance(obj, dict):
+            for key, value in obj.items():
+                key_lower = str(key).lower()
+                current = f"{location}.{key}"
+
+                if isinstance(value, str):
+                    is_url = value.startswith(("https://", "http://"))
+                    is_path = (
+                        key_lower in {
+                            "path", "filepath", "file_path",
+                            "downloadpath", "download_path",
+                            "url", "downloadurl", "download_url",
+                        }
+                        and value.strip()
+                    )
+
+                    if is_url or is_path:
+                        item = (current, value)
+                        if item not in seen:
+                            seen.add(item)
+                            found.append(item)
+                else:
+                    walk(value, current)
+
+        elif isinstance(obj, list):
+            for index, value in enumerate(obj):
+                walk(value, f"{location}[{index}]")
+
+    walk(data)
+
+    lines = []
+    for location, value in found[:limit]:
+        if value.startswith(("https://", "http://")):
+            lines.append(f"**File URL**\n{value}")
+        else:
+            lines.append(f"**File Path**\n`{value}`")
+
+    if len(found) > limit:
+        lines.append(f"... ยังมีข้อมูลอีก {len(found) - limit} รายการ")
+
+    return "\n\n".join(lines) if lines else "ไม่พบ URL หรือ Path ใน JSON"
+
+
 # =========================================================
 # Embed Utils
 # =========================================================
@@ -491,6 +539,7 @@ def build_embeds(data, title, background_image=None):
             or "ไม่พบ Version ใน JSON"
         )
 
+        file_links = collect_game_file_links(data)
         desc = (
             "## Game Index ตรวจพบการเปลี่ยนแปลง\n"
             f"**Version:** `{version}`\n"
@@ -498,7 +547,8 @@ def build_embeds(data, title, background_image=None):
             f"**Bundles:** `{bundle_count}`\n"
             f"**Background ID:** `{background_id}`\n"
             f"**Predownload:** "
-            f"`{'มีข้อมูล' if data.get('predownload') else 'ไม่มีข้อมูล'}`"
+            f"`{'มีข้อมูล' if data.get('predownload') else 'ไม่มีข้อมูล'}`\n\n"
+            f"## File URLs / Paths\n{file_links}"
         )
 
         blocks += split_text_to_embeds(
