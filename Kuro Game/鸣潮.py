@@ -39,7 +39,11 @@ def get_background_image(data):
 
     try:
 
-        bg_id = data.get("functionCode", {}).get("background")
+        bg_id = (
+    data.get("config", {})
+        .get("functionCode", {})
+        .get("background")
+)
 
         if not bg_id:
             return None
